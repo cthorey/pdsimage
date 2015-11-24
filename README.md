@@ -4,6 +4,16 @@
 Library  to easily  acces part  of the  PDS IMAGES  from LOLA/LROC_WAC
 Experiment. Given a location and a radius, for instance the latitude, the longitude and the radius of the crater, this library allows to easily extract both Topography (LOLA) and WAC images of the desired area.
 
+## Example
+
+Let's say, we want to get some idea about the crater Copernicus.
+
+    C = Copernicus('n','Copernicus',racine,'Crater')
+    C.Overlay(True)
+
+![Alt](https://raw.githubusercontent.com/cthorey/CraterInspector/master/Image/Crater_Copernicus.png)
+
+
 ## CraterInspec
 
 Contain:
@@ -28,10 +38,7 @@ Contain:
 
 * PDS_FILE
 	- Binary image .IMG files to download on the [PDS node](http://pds-geosciences.wustl.edu/)
-	- Library optimize  for LOLA  and LROC_WAC Images  (FOLDERs inside
-      PDS_FILE). Nevertheless, It could  be easily extended to account
-      fo other type of data.
-      
+	- Library optimize for LOLA and LROC_WAC Images (FOLDERs inside PDS_FILE). Nevertheless, It could be easily extended to account fo other type of data.
 ## Requirement
 
 - numpy
@@ -41,6 +48,7 @@ Contain:
 - os, sys
 - pvl to read binary header
 - urlib,requests for downloading PDS FILES
+
 
 
 
