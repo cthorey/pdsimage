@@ -1,36 +1,128 @@
-
+# Import library
 import numpy as np
 import pickle
 import pandas as pd
 import os,sys
+
+#Library to help read header in binary WAC FILE
+import pvl
 from pvl import load as load_label
+
+# Helper to catch images from URL
+import urllib,requests
 
         
 class BinaryTable(object):
+    ''' Class which is able to read PDS image file for LOLA/WAC images.
 
-    def __init__(self,file_data):
+    LOLA - All information can be found at
+    http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/aareadme.txt
+    In particular, HEADER in a separate file .LBL that contains all the informations.
+    Read manually
+
+    WAC - All information can be found at
+    http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/AAREADME.TXT
+    In particular, HEADER in the binary file that contain all the information -
+    Read with the module pvl
+
+    This class has a method able to download the images, though it might be better to download
+    them before as it takes a lot of time, especially for larger resolution.
+
+    Both are NASA PDS FILE - Meaning, they are binary table whose format depends on
+    the file. All the information can be found in the Header whose reference are above.
+    Line usualy index latitude while sample on the line refers to longitude.
+
+    THIS CLASS SUPPORT ONLY A FEW RESOLUTION FOR ONLY CYLINDRICAL PROJECTION.
+    FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.
+
+    parameter:
+    - fname : name of the binary file without the extension
+    - self.PDS_FILE : Path where the binary images are download. It should
+    consit of two folder, LOLA and LROC_WAC.
+    - self.LOLApath : path for LOLA images
+    - self.WACpath : path for WAC images
+
+    method:
+    - self._Category() : Identify WAC or LOLA Image according to name formating
+    - self._Load_Info_LBL : Load the Header of the file (using pvl for WAC and the .LBL
+    file for LOLA) and return all the specification as attribute of the class.
+    - self.Lat_id : From line return lat
+    - self.Long_id : From sample, return long
+    - self.Sample_id : From long, return sample
+    - self.Line_id : From lat, return line
+    - self.Array : Read the binary file where it should and return the values in an
+    array
+    - self.Extract_All() : Extract the whole image in the file
+    - self.Extract_Grid() : Extract only part of the image centered around the structure
+    -self.Lamber_Window, self.cylindrical_Window : Return longmin,longmax,latmin,latmax in
+    both configuration.
+    
+    '''
+
+    def __init__(self,fname):
         ''' Parameter
-        self.img : nom du fichier
-        self.lbl : '''
+        self.name : name of the file
+        self._Category : Identify weither its WAC/LOLA image
+        self._Load_Info_LBL : Load corresponding information '''
 
-        self.name = file_data
+        self.fname = fname
+        self.PDS_FILE = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector/PDS_FILE/'
+        self.LOLApath = os.path.join(self.PDS_FILE,'LOLA')
+        self.WACpath = os.path.join(self.PDS_FILE,'LROC_WAC')
         self._Category()
+        self._maybe_download()
         self._Load_Info_LBL()
 
     def _Category(self):
-        if self.name.split('/')[-1].split('_')[0] == 'WAC':
+            
+        if self.fname.split('_')[0] == 'WAC':
             self.Grid = 'WAC'
-            self.img = self.name+'.IMG'
+            self.img = os.path.join(self.WACpath, self.fname+'.IMG')
             self.lbl = ''
-        elif self.name.split('/')[-1].split('_')[0] == 'ldem':
+        elif self.fname.split('_')[0] == 'LDEM':
             self.Grid = 'LOLA'
-            self.img = self.name+'.img'
-            self.lbl = self.name+'.lbl'
+            self.img = os.path.join(self.LOLApath, self.fname+'.IMG')
+            self.lbl = os.path.join(self.LOLApath, self.fname+'.LBL')
         else:
-            self.Grid = 'GRAIL'
-            self.img =  self.name + '.dat'
+            print 'Not implemented yet'
+            raise Exception
 
+    def _report(self,blocknr, blocksize, size):
+        ''' helper for downloading the file '''
+        current = blocknr*blocksize
+        sys.stdout.write("\r{0:.2f}%".format(100.0*current/size))
+
+    def _downloadFile(self,url,fname):
+        ''' Download the file '''
+        print "The file %s need to be download - Wait\n "%(fname.split('/')[-1])
+        urllib.urlretrieve(url, fname, self._report)
+        print "\n The download of the file %s has succeded \n "%(fname.split('/')[-1])
         
+    def _maybe_download(self):
+        if self.Grid == 'WAC':
+            urlpath = 'http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/'
+            r = requests.get(urlpath) # List file in the cloud        
+            images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]
+            if not os.path.isfile(self.img):
+                urlname = os.path.join(urlpath , self.img.split('/')[-1])
+                self._downloadFile(urlname,self.img)
+            elif self.fname not in images:
+                print 'The image does not exist on the cloud !'
+                raise NameError
+
+        elif self.Grid == 'LOLA':
+            urlpath = 'http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/'        
+            r = requests.get(urlpath) # List file in this server        
+            images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]                      
+            if (not os.path.isfile(self.img)) and (self.fname in images):
+                urlname = os.path.join(urlpath , self.img.split('/')[-1])
+                self._downloadFile(urlname,self.img)
+                urlname = os.path.join(urlpath , self.lbl.split('/')[-1])
+                self._downloadFile(urlname,self.lbl)
+            elif self.fname not in images:
+                print 'The image does not exist on the cloud !'
+                raise NameError
+                
     def _Load_Info_LBL(self):
         if self.Grid == 'WAC':
             label = load_label(self.img)
@@ -59,6 +151,7 @@ class BinaryTable(object):
             self.dtype = np.int16
                 
     def Lat_id(self,line):
+        ''' Return the corresponding line latitude'''
         if self.Grid == 'WAC':
             lat = ((1 + self.LINE_PROJECTION_OFFSET- line)*self.MAP_SCALE*1e-3/self.A_AXIS_RADIUS)
             return lat*180/np.pi
@@ -67,6 +160,7 @@ class BinaryTable(object):
             return lat
     
     def Long_id(self,sample):
+        ''' Return the corresponding sample longitude'''            
         if self.Grid == 'WAC':
             lon = self.CENTER_LONGITUDE + (sample - self.SAMPLE_PROJECTION_OFFSET -1)*self.MAP_SCALE*1e-3/(self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0))
             return lon*180/np.pi
@@ -75,6 +169,7 @@ class BinaryTable(object):
             return lon
     
     def Sample_id(self,lon):
+        ''' Return the corresponding longitude sample'''            
         if self.Grid == 'WAC':
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET)+1.0+\
                 (lon*np.pi/180.0-float(self.CENTER_LONGITUDE))*self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0)/(self.MAP_SCALE*1e-3))
@@ -82,6 +177,7 @@ class BinaryTable(object):
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + float(self.MAP_RESOLUTION)\
                            * (lon - float(self.CENTER_LONGITUDE))) + 1
     def Line_id(self,lat):
+        ''' Return the corresponding latitude line'''            
         if self.Grid == 'WAC':
             return np.rint(1.0 + self.LINE_PROJECTION_OFFSET-self.A_AXIS_RADIUS*np.pi*lat/(self.MAP_SCALE*1e-3*180))
         else:
@@ -92,7 +188,7 @@ class BinaryTable(object):
         ''' Read part of the binary file
         size_chunk : taille du truc a lire
         start : debut
-        bytesize : taille en bye int16 = 2'''
+        bytesize : taille en byte '''
 
         with open(self.img,'rb') as f1:
             f1.seek(self.start_byte+start*self.bytesize)
@@ -101,7 +197,8 @@ class BinaryTable(object):
             return Z
 
     def Extract_All(self):
-        
+        ''' Extract all the image and return three tables X (longitude),
+        Y(latitude) and Z(values) '''
         longmin,longmax,latmin,latmax = 0.01,359.9,-89.0,89.0
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
@@ -122,6 +219,9 @@ class BinaryTable(object):
         return X , Y , Z
         
     def Extract_Grid(self,radius,lat0,long0):
+        ''' Extract part of the image centered around (lat0,long0) with
+        a given radius window of radius.
+        Return three tables X (longitude),Y(latitude) and Z(values) '''
         
         longmin,longmax,latmin,latmax = self.Cylindrical_Window(radius,lat0,long0)
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
@@ -143,26 +243,29 @@ class BinaryTable(object):
         return X , Y , Z
                 
     def Boundary(self):
+        ''' Return the boundary of the image considered '''
         self._Load_Info_LBL()
-        print 
         return (int(self.WESTERNMOST_LONGITUDE),
                 int(self.EASTERNMOST_LONGITUDE),
                 int(self.MINIMUM_LATITUDE),
                 int(self.MAXIMUM_LATITUDE))
 
-    def kp_func(self,lat,lon,lat0,long0):
+    def _kp_func(self,lat,lon,lat0,long0):
+            
         kp = float(1.0) + np.sin(lat0)*np.sin(lat) + np.cos(lat0)*np.cos(lat)*np.cos(lon-long0)
         kp = np.sqrt(float(2)/kp)
         return kp
         
     def Lambert_Window(self,radius,lat0,long0):
-
+        ''' Return the equal area squared azimutahl projection of a window centered
+        at (lat0,long0)  with a given radius of radius.'''
+        
         radius = radius*360.0/(np.pi*2*1734.4)
         radius = radius*np.pi / 180.0
         lat0 = lat0*np.pi/180.0
         long0 = long0*np.pi/180.0
 
-        bot = self.kp_func(lat0-radius,long0,lat0,long0)
+        bot = self._kp_func(lat0-radius,long0,lat0,long0)
         bot = bot * ( np.cos(lat0)*np.sin(lat0-radius) - np.sin(lat0)*np.cos(lat0-radius) )
         x = bot
         y = bot
@@ -183,7 +286,9 @@ class BinaryTable(object):
         return longll,longtr,latll,lattr
 
     def Cylindrical_Window(self,radius,lat0,long0):
-
+        ''' Return the cylindrical projection of a window centered
+        at (lat0,long0)  with a given radius of radius.'''
+        
         # Passage en radian
         radi = radius*2*np.pi/(2*1734.4*np.pi)
         lamb0 = long0*np.pi/180.0
