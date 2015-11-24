@@ -222,12 +222,12 @@ class BinaryTable(object):
 
         return X , Y , Z
         
-    def Extract_Grid(self,radius,lat0,long0):
-        ''' Extract part of the image centered around (lat0,long0), both in degree,
-        with a given radius window ( in km ).
+    def Extract_Grid(self,longmin,longmax,latmin,latmax):
+        ''' Extract part of the image centered defined by a rectangle (longmin,
+        longmax,latmin,latmax) - all in degree.
+        
         Return three tables X (longitude),Y(latitude) and Z(values) '''
         
-        longmin,longmax,latmin,latmax = self.Cylindrical_Window(radius,lat0,long0)
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
         
@@ -330,15 +330,18 @@ class WacMap(object):
     Image : Return a BinaryTable Class containing the image.
     
     '''
-    def __init__(self,lon_m,lon_M,lat_m,lat_M,ppd):
+    def __init__(self,lonm,lonM,latm,latM,ppd):
         self.ppd = ppd
-        self.lonm = lon_m
-        self.lonM = lon_M
-        self.latm = lat_m
-        self.latM = lat_M
-        # All resolution are not implemented
-        assert self.ppd in [4,8,16,32,128]
+        self.lonm = lonm
+        self.lonM = lonM
+        self.latm = latm
+        self.latM = latM
+        self._Confirm_Resolution()
 
+    def _Confirm_Resolution(self):
+        # All resolution are not implemented
+        assert self.ppd in [4,8,16,32,64,128]
+        
     def _map_center(self,coord,val):
 
         ''' Identitify the center of the Image correspond to one coordinate.
@@ -353,13 +356,13 @@ class WacMap(object):
         
         if self.ppd in [4,8,16,32,64]:
             res = {'lat' : 0, 'long' : 360}
+            return res[coord]/2.0
         elif self.ppd in [128]:
             res = {'lat' : 45, 'long' : 90}
+            return (val//res[coord]+1)*res[coord]-res[coord]/2.0
         else:
             print 'Not implemented'
             raise Exception
-            
-        return (val//res[self.ppd][coord]+1)*res[self.ppd][coord]-res[self.ppd][coord]/2.0
 
     def _Define_Case(self):
         ''' Identify case:
@@ -396,10 +399,14 @@ class WacMap(object):
         return loncenter
 
     def _format_lat(self,lat):
-        if lat<0:
-            latcenter = '450S'
-        else:
-            latcenter = '450N'
+        if self.ppd in [4,8,16,32,64]:
+            latcenter = '000N'
+        elif self.ppd in [128]:
+            if lat<0:
+                latcenter = '450S'
+            else:
+                latcenter = '450N'
+
         return latcenter
 
     def _Cas_1(self):
@@ -407,77 +414,96 @@ class WacMap(object):
 
         lonc = self._format_lon(self.lonm)
         latc = self._format_lat(self.latm)
-        wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,str(self.ppd)+'P'])
-        return BinaryTable(wac)
+        wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
+        self.Images = [wac]
+        wac = BinaryTable(wac)
+        return wac.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
     def Image(self):
+        ''' Return three array X,Y,Z corresponding tp
+        X : longitudes
+        Y : latitudes
+        Z : values
+
+        '''
         return self._Define_Case()
         
-class LolaMap(object):
+class LolaMap(WacMap):
+            
+    ''' Class used to identified the image (or the groupe of images) necessary
+    to extract an array around a particular structure.
+    4 Cases are possible:
+    1 - The desired structure is entirely contained into one image.
+    2 - The span in latitude of the image is ok but not longitudes (2 images).
+    3 - The span in longitude of the image is ok but not latitudes (2 images).
+    4 - Both latitude and longitude are not contained in one image (4 images).
+
+    ONLY THE FIRST CASE IS IMPLEMENTED FOR THE MOMENT
     
-    def __init__(self,lon_m,lon_M,lat_m,lat_M,ppd,racine):
-        self.racine = racine
-        self.ppd = ppd
-        self.lonm = lon_m
-        self.lonM = lon_M
-        self.latm = lat_m
-        self.latM = lat_M
+    parameters:
+    ppd : Resolution required
+    lonm,lonM,latm,latM : Parameterize the window around the structure
 
-    def map_center(self,coord,val):
-        res = {512 : {'lat' : 45,'long' : 90}}
-        return (val//res[self.ppd][coord]+1)*res[self.ppd][coord]-res[self.ppd][coord]/2.0
+    methods:
+    Image : Return X,Y,Z values for the window.
+    
+    '''
+    def _Confirm_Resolution(self):
+        # All resolution are not implemented
+        assert self.ppd in [4,16,64,128,512]
+                            
+    def _map_center(self,coord,val):
 
-    def map_border(self,coord,val):
+        ''' Identitify the center of the Image correspond to one coordinate.
+
+        parameters:
+        coord : "lat" or "long"
+        val : value of the coordinate
+
+        variable:
+        res : {Correspond lat center for the image +
+        longitude span of the image}'''
+        
+        if self.ppd in [4,16,64,128]:
+            res = {'lat' : 0, 'long' : 360}
+            return res[coord]/2.0
+        elif self.ppd in [256]:
+            res = {'lat' : 45, 'long' : 90}
+            return (val//res[coord]+1)*res[coord]-res[coord]/2.0
+        else:
+            print 'Not implemented'
+            raise Exception
+
+    def _map_border(self,coord,val):
         res = {512 : {'lat' : 45,'long' : 90}}
         c = (val//res[self.ppd][coord]+1)*res[self.ppd][coord]
         return c-res[self.ppd][coord],c
 
-    def Define_Case(self):
-        ''' Case 1 : 0 Pas d'overlap, crater contenu ds une carte
-        Case 2: 1Overlap au niveau des long
-        Case 3:2 OVerlap au niveau des lat
-        Case 4 :3 Overlap partout
-        Boolean : True si overlap, false sinon'''
-
-        lonBool = self.map_center('long',self.lonM) != self.map_center('long',self.lonm)
-        latBool = self.map_center('lat',self.latM) != self.map_center('lat',self.latm)
-
-        if not lonBool and not latBool:
-            print 'Cas1'
-            return self.Cas_1()
-        elif lonBool and not latBool:
-            print 'Cas2'
-            print 'Pas implementer'
-            #sys.exit()
-        elif not lonBool and latBool:
-            print 'Cas3'
-            print 'Pas implementer'
-            #sys.exit()
-        else:
-            print 'Cas4'
-            print 'Pas implementer'
-            #sys.exit()
-
     def _format_lon(self,lon):
-        lonm,lonM = map(lambda x:"{0:0>3}".format(int(x)),self.map_border('long',lon))
+        lonm,lonM = map(lambda x:"{0:0>3}".format(int(x)),self._map_border('long',lon))
         return lonm,lonM
 
     def _format_lat(self,lat):
         if lat<0:
-            latm,latM = map(lambda x:"{0:0>2}".format(int(np.abs(x)))+'s',self.map_border('lat',lat))
+            latm,latM = map(lambda x:"{0:0>2}".format(int(np.abs(x)))+'s',self._map_border('lat',lat))
         else:
-            latm,latM = map(lambda x:"{0:0>2}".format(int(x))+'n',self.map_border('lat',lat))
+            latm,latM = map(lambda x:"{0:0>2}".format(int(x))+'n',self._map_border('lat',lat))
 
         return latm,latM
-
-    def Cas_1(self):
+        
+    def _Cas_1(self):
         ''' Ni long ni lat ne croise en bord de la carte
         colle le bon wac sur self.wac '''
-        
-        lonm,lonM = self._format_lon(self.lonm)
-        latm,latM = self._format_lat(self.latm)
-        lola = '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
-        return BinaryTable(lola)
 
-    def Name(self):
-        return self.Define_CaseLola()
+        if self.ppd in [4,16,64,128]:
+            lola = '_'.join(['LDEM',str(self.ppd)])
+            
+        elif self.ppd in [512]:
+            lonm,lonM = self._format_lon(self.lonm)
+            latm,latM = self._format_lat(self.latm)
+            lola = '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
+
+            lola = BinaryTable(lola)
+            
+        return lola.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+
