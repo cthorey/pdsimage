@@ -8,7 +8,7 @@ import os,sys
 import pvl
 from pvl import load as load_label
 
-# Helper to catch images from URL
+# Helper to catch images from URLs
 import urllib,requests
 
         
