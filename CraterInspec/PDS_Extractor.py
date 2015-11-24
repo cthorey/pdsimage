@@ -204,14 +204,14 @@ class BinaryTable(object):
         Y(latitude) and Z(values) '''
         
         longmin,longmax,latmin,latmax = self.Boundary()
-        sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
-        line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
+        sample_min,sample_max = map(int,(self.SAMPLE_FIRST_PIXEL,self.SAMPLE_LAST_PIXEL))
+        line_min,line_max = map(int,(self.LINE_FIRST_PIXEL,self.LINE_LAST_PIXEL))
         
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
         for i,line in enumerate(range(int(line_min),int(line_max)+1)):
             start = (line-1)*int(self.SAMPLE_LAST_PIXEL)+sample_min
-            chunk_size = int(sample_max-sample_min+1)
+            chunk_size = int(sample_max-sample_min)
             Za = self.Array(chunk_size,start,self.bytesize)
             if i == 0:
                 Z = Za
@@ -223,8 +223,8 @@ class BinaryTable(object):
         return X , Y , Z
         
     def Extract_Grid(self,radius,lat0,long0):
-        ''' Extract part of the image centered around (lat0,long0) with
-        a given radius window of radius.
+        ''' Extract part of the image centered around (lat0,long0), both in degree,
+        with a given radius window ( in km ).
         Return three tables X (longitude),Y(latitude) and Z(values) '''
         
         longmin,longmax,latmin,latmax = self.Cylindrical_Window(radius,lat0,long0)
@@ -312,7 +312,7 @@ class BinaryTable(object):
 
 
 class WacMap(object):
-    
+    ''' '''
     def __init__(self,lon_m,lon_M,lat_m,lat_M,ppd,racine):
         self.racine = racine
         self.ppd = ppd
