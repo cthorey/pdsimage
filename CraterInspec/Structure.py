@@ -97,7 +97,19 @@ class Structure(object):
 
         return longll*180/np.pi,longtr*180/np.pi,latll*180/np.pi,lattr*180/np.pi
 
-    def Lola_Image(self,save):
+    def Add_Scale(self,m,ax1):
+        lol,loM,lam,laM = self.Lambert_Window(0.6*self.Taille_Window,self.Lat,self.Long)
+        m.drawmapscale(loM,lam, self.Long,self.Lat,10,
+                       barstyle='fancy', units='km',
+                       fontsize=24, yoffset=None,
+                       labelstyle='simple',
+                       fontcolor='k',
+                       fillcolor1='w',
+                       fillcolor2='k', ax=ax1,
+                       format='%d',
+                       zorder=2)
+
+    def Lola_Image(self,save,name = 'BaseLola.png'):
 
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
@@ -118,23 +130,14 @@ class Structure(object):
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
-        lol,loM,lam,laM = self.Lambert_Window(0.6*self.Diameter,self.Lat,self.Long)
-        m.drawmapscale(loM,lam, self.Long,self.Lat,10,
-                       barstyle='fancy', units='km',
-                       fontsize=24, yoffset=None,
-                       labelstyle='simple',
-                       fontcolor='k',
-                       fillcolor1='w',
-                       fillcolor2='k', ax=ax1,
-                       format='%d',
-                       zorder=2)
+        self.Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
-        path = os.path.join(self.racine,'Data','Image','Crater_'+str(self.Name)+'.png')
+        path = os.path.join(self.racine,'Data','Image',name)
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 
-    def Wac_Image(self,save):
+    def Wac_Image(self,save,name = 'BaseWac.png'):
 
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
@@ -153,23 +156,14 @@ class Structure(object):
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
-        lol,loM,lam,laM = self.Lambert_Window(0.6*self.Diameter,self.Lat,self.Long)
-        m.drawmapscale(loM,lam, self.Long,self.Lat,10,
-                       barstyle='fancy', units='km',
-                       fontsize=24, yoffset=None,
-                       labelstyle='simple',
-                       fontcolor='k',
-                       fillcolor1='w',
-                       fillcolor2='k', ax=ax1,
-                       format='%d',
-                       zorder=2)
+        self.Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
-        path = os.path.join(self.racine,'Data','Image','Crater_'+str(self.Name)+'.png')
+        path = os.path.join(self.racine,'Data','Image',name)
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
             
-    def Overlay(self,save):
+    def Overlay(self,save,name = 'BaseOverlay.png'):
 
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
@@ -192,19 +186,10 @@ class Structure(object):
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
-        lol,loM,lam,laM = self.Lambert_Window(0.6*self.Diameter,self.Lat,self.Long)
-        m.drawmapscale(loM,lam, self.Long,self.Lat,10,
-                       barstyle='fancy', units='km',
-                       fontsize=24, yoffset=None,
-                       labelstyle='simple',
-                       fontcolor='k',
-                       fillcolor1='w',
-                       fillcolor2='k', ax=ax1,
-                       format='%d',
-                       zorder=2)
+        self.Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
-        path = os.path.join(self.racine,'Image','Crater_'+str(self.Name)+'.png')
+        path = os.path.join(self.racine,'Image',name)
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 

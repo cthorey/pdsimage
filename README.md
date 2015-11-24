@@ -6,7 +6,7 @@ Experiment. Given a location and a radius, for instance the latitude, the longit
 
 ## Example
 
-Let's say, we want to get some idea about the crater Copernicus.
+Let's say, we want to get some image of the crater Copernicus.
 
     C = Copernicus('n','Copernicus',racine,'Crater')
     C.Overlay(True)
