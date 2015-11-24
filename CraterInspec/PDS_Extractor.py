@@ -123,7 +123,7 @@ class BinaryTable(object):
                 urlname = os.path.join(urlpath , self.lbl.split('/')[-1])
                 self._downloadFile(urlname,self.lbl)
             elif self.fname not in images:
-                print 'The image does not exist on the cloud !'
+                print 'The image %s does not exist on the cloud !'%(self.fname)
                 raise NameError
                 
     def _Load_Info_LBL(self):
@@ -467,7 +467,7 @@ class LolaMap(WacMap):
         if self.ppd in [4,16,64,128]:
             res = {'lat' : 0, 'long' : 360}
             return res[coord]/2.0
-        elif self.ppd in [256]:
+        elif self.ppd in [512]:
             res = {'lat' : 45, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
         else:
@@ -485,9 +485,9 @@ class LolaMap(WacMap):
 
     def _format_lat(self,lat):
         if lat<0:
-            latm,latM = map(lambda x:"{0:0>2}".format(int(np.abs(x)))+'s',self._map_border('lat',lat))
+            latm,latM = map(lambda x:"{0:0>2}".format(int(np.abs(x)))+'S',self._map_border('lat',lat))
         else:
-            latm,latM = map(lambda x:"{0:0>2}".format(int(x))+'n',self._map_border('lat',lat))
+            latm,latM = map(lambda x:"{0:0>2}".format(int(x))+'N',self._map_border('lat',lat))
 
         return latm,latM
         
