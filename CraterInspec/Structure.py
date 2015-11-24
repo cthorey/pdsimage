@@ -1,4 +1,3 @@
-
 # Library import
 from PDS_Extrator import *
 import numpy as np
@@ -7,7 +6,6 @@ import pandas as pd
 from mpl_toolkits.basemap import Basemap
 from matplotlib import cm
 import os,sys
-from pvl import load as load_label
 from palettable.colorbrewer.diverging import RdBu_9_r,BrBG_10_r
 
 
@@ -23,10 +21,10 @@ class Structure(object):
         self.ppdwac = 128
         inde = {'n':'Name','i':'Index'}
         
-        if structure == 'dome':
-            self.structures = Load_Data_Wohler()[['Lat','Long','Name','D','DeltaD','H','DeltaH','c']]
-        elif structure == 'FFC':
-            self.structures = self.Crater_Data()
+        if structure == 'Dome':
+            self.structures = pd.read_csv(os.path.join(racine,'Data','Data_Dome.csv'))
+        elif structure == 'Crater':
+            self.structures = pd.read_csv(os.path.join(racine,'Data','Data_Crater.csv'))
         else:
             raise Exception
             
@@ -37,7 +35,7 @@ class Structure(object):
         [setattr(self,f,float(df[f])) for f in df.columns if f not in ['Name']]
         if self.Long <0.0:
             self.Long = 360+self.Long
-        if structure == 'dome':
+        if structure == 'Dome':
             self.Radius = self.D/(2*1000)
             self.Diameter = 2*self.Radius
             self.Name = df.Name.iloc[0]
@@ -46,8 +44,6 @@ class Structure(object):
             self.Name = df.Name.iloc[0]
         
         self.Taille_Window = 0.8*self.Diameter
-        self.lola = self.load_lola()
-        self.wac = self.load_wac()
 
     def Crater_Data(self):
         Racine = os.path.join(self.racine,'Data')
@@ -92,8 +88,9 @@ class Structure(object):
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(1)
-        X,Y,Z = self.wac.Extract_Grid(self.Taille_Window,self.Lat,self.Long)
         lon_m,lon_M,lat_m,lat_M = self.wac.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
+        X,Y,Z = self.wac.Extract_Grid(self.Taille_Window,self.Lat,self.Long)
+
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
         X,Y = m(X,Y)
