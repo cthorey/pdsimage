@@ -67,7 +67,7 @@ class BinaryTable(object):
         self._Load_Info_LBL : Load corresponding information '''
 
         self.fname = fname
-        self.PDS_FILE = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector/PDS_FILE/'
+        self.PDS_FILE = '/Users/thorey/Documents/These/Projet/FFC/Classification/PDS_FILE/'
         self.LOLApath = os.path.join(self.PDS_FILE,'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE,'LROC_WAC')
         self._Category()
@@ -312,48 +312,85 @@ class BinaryTable(object):
 
 
 class WacMap(object):
-    ''' '''
-    def __init__(self,lon_m,lon_M,lat_m,lat_M,ppd,racine):
-        self.racine = racine
+    ''' Class used to identified the image (or the groupe of images) necessary
+    to extract an array around a particular structure.
+    4 Cases are possible:
+    1 - The desired structure is entirely contained into one image.
+    2 - The span in latitude of the image is ok but not longitudes (2 images).
+    3 - The span in longitude of the image is ok but not latitudes (2 images).
+    4 - Both latitude and longitude are not contained in one image (4 images).
+
+    ONLY THE FIRST CASE IS IMPLEMENTED FOR THE MOMENT
+
+    parameters:
+    ppd : Resolution required
+    lonm,lonM,latm,latM : Parameterize the window around the structure
+
+    methods:
+    Image : Return a BinaryTable Class containing the image.
+    
+    '''
+    def __init__(self,lon_m,lon_M,lat_m,lat_M,ppd):
         self.ppd = ppd
         self.lonm = lon_m
         self.lonM = lon_M
         self.latm = lat_m
         self.latM = lat_M
+        # All resolution are not implemented
+        assert self.ppd in [4,8,16,32,128]
 
-    def map_center(self,coord,val):
-        res = {128 : {'lat' : 45,'long' : 90},
-               8   : {'lat' : 0, 'long' : 180}}
+    def _map_center(self,coord,val):
+
+        ''' Identitify the center of the Image correspond to one coordinate.
+
+        parameters:
+        coord : "lat" or "long"
+        val : value of the coordinate
+
+        variable:
+        res : {Correspond lat center for the image +
+        longitude span of the image}'''
+        
+        if self.ppd in [4,8,16,32,64]:
+            res = {'lat' : 0, 'long' : 360}
+        elif self.ppd in [128]:
+            res = {'lat' : 45, 'long' : 90}
+        else:
+            print 'Not implemented'
+            raise Exception
+            
         return (val//res[self.ppd][coord]+1)*res[self.ppd][coord]-res[self.ppd][coord]/2.0
 
-    def Define_CaseLola(self):
-        ''' Case 1 : 0 Pas d'overlap, crater contenu ds une carte
-        Case 2: 1Overlap au niveau des long
-        Case 3:2 OVerlap au niveau des lat
-        Case 4 :3 Overlap partout
-        Boolean : True si overlap, false sinon'''
-
-        lonBool = self.map_center('long',self.lonM) != self.map_center('long',self.lonm)
-        latBool = self.map_center('lat',self.latM) != self.map_center('lat',self.latm)
+    def _Define_Case(self):
+        ''' Identify case:
+        1 - The desired structure is entirely contained into one image.
+        2 - The span in latitude of the image is ok but not longitudes (2 images).
+        3 - The span in longitude of the image is ok but not latitudes (2 images).
+        4 - Both latitude and longitude are not contained in one image (4 images).
+        
+        '''
+        
+        lonBool = self._map_center('long',self.lonM) != self._map_center('long',self.lonm)
+        latBool = self._map_center('lat',self.latM) != self._map_center('lat',self.latm)
 
         if not lonBool and not latBool:
             print 'Cas1'
-            return self.Cas_1()
+            return self._Cas_1()
         elif lonBool and not latBool:
             print 'Cas2'
             print 'Pas implementer'
-            #sys.exit()
+            raise NameError
         elif not lonBool and latBool:
             print 'Cas3'
             print 'Pas implementer'
-            #sys.exit()
+            raise NameError
         else:
             print 'Cas4'
             print 'Pas implementer'
-            #sys.exit()
+            raise NameError
 
     def _format_lon(self,lon):
-        lonf = self.map_center('long',lon)
+        lonf = self._map_center('long',lon)
         st = str(lonf).split('.')
         loncenter =''.join(("{0:0>3}".format(st[0]),st[1]))
         return loncenter
@@ -365,19 +402,16 @@ class WacMap(object):
             latcenter = '450N'
         return latcenter
 
-    def Cas_1(self):
-        ''' Ni long ni lat ne croise en bord de la carte
-        colle le bon wac sur self.wac '''
+    def _Cas_1(self):
+        '''1 - The desired structure is entirely contained into one image.'''
 
-        print 'hello'
         lonc = self._format_lon(self.lonm)
         latc = self._format_lat(self.latm)
         wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,str(self.ppd)+'P'])
-        f = os.path.join(self.racine,'PDS_FILE','LROC_WAC',wac)
-        return BinaryTable(f)
+        return BinaryTable(wac)
 
-    def Name(self):
-        return self.Define_CaseLola()
+    def Image(self):
+        return self._Define_Case()
         
 class LolaMap(object):
     
@@ -398,7 +432,7 @@ class LolaMap(object):
         c = (val//res[self.ppd][coord]+1)*res[self.ppd][coord]
         return c-res[self.ppd][coord],c
 
-    def Define_CaseLola(self):
+    def Define_Case(self):
         ''' Case 1 : 0 Pas d'overlap, crater contenu ds une carte
         Case 2: 1Overlap au niveau des long
         Case 3:2 OVerlap au niveau des lat
@@ -442,9 +476,8 @@ class LolaMap(object):
         
         lonm,lonM = self._format_lon(self.lonm)
         latm,latM = self._format_lat(self.latm)
-        lola = '_'.join(['ldem',str(self.ppd),latm,latM,lonm,lonM])
-        f = os.path.join(self.racine,'PDS_FILE','Lola',lola)
-        return BinaryTable(f)
+        lola = '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
+        return BinaryTable(lola)
 
     def Name(self):
         return self.Define_CaseLola()
