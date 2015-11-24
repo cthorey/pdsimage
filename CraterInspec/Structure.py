@@ -1,7 +1,6 @@
 # Library import
 from PDS_Extrator import *
 import numpy as np
-import pickle
 import pandas as pd
 from mpl_toolkits.basemap import Basemap
 from matplotlib import cm
