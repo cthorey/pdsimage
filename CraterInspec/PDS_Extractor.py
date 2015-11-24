@@ -32,9 +32,10 @@ class BinaryTable(object):
     the file. All the information can be found in the Header whose reference are above.
     Line usualy index latitude while sample on the line refers to longitude.
 
-    THIS CLASS SUPPORT ONLY A FEW RESOLUTION FOR ONLY CYLINDRICAL PROJECTION.
+    THIS CLASS SUPPORT ONLY CYLINDRICAL PROJECTION.
+    PROJECTION : [WAC : 'EQUIRECTANGULAR', LOLA : '"SIMPLE"']
     FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.
-
+    
     parameter:
     - fname : name of the binary file without the extension
     - self.PDS_FILE : Path where the binary images are download. It should
@@ -72,6 +73,8 @@ class BinaryTable(object):
         self._Category()
         self._maybe_download()
         self._Load_Info_LBL()
+
+        assert self.MAP_PROJECTION_TYPE in ['"SIMPLE','EQUIRECTANGULAR']
 
     def _Category(self):
             
@@ -199,7 +202,8 @@ class BinaryTable(object):
     def Extract_All(self):
         ''' Extract all the image and return three tables X (longitude),
         Y(latitude) and Z(values) '''
-        longmin,longmax,latmin,latmax = 0.01,359.9,-89.0,89.0
+        
+        longmin,longmax,latmin,latmax = self.Boundary()
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
         
@@ -244,7 +248,6 @@ class BinaryTable(object):
                 
     def Boundary(self):
         ''' Return the boundary of the image considered '''
-        self._Load_Info_LBL()
         return (int(self.WESTERNMOST_LONGITUDE),
                 int(self.EASTERNMOST_LONGITUDE),
                 int(self.MINIMUM_LATITUDE),
