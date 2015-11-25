@@ -5,20 +5,26 @@ Experiment. Given a location and a radius, for instance the latitude, the longit
 
 ## Example ##
 
-Let's say, we want to get some idea about the crater Copernicus.
+Let's say, we want to get some detail about the crater Copernicus.
 
     C = Copernicus('n','Copernicus',racine,'Crater')
     C.Overlay(True)
 
 ![Alt](https://raw.githubusercontent.com/cthorey/CraterInspector/master/Image/Copernicus.png)
+
 If we want to focus only on the Central Peak though,
 
     C.Taille_Window = 0.4*C.Diameter
     C.Overlay(True)
 ![Alt](https://raw.githubusercontent.com/cthorey/CraterInspector/master/Image/CopernicusZoom.png)
 
-This library also allows to easily derive histogram for the topography.
-For instance,
+In addition, this library allows to simply extract the corresponding arrays
+
+    Xl , Yl , Zl = C.Get_Arrays('Lola')
+    Xw , Yw , Zw = C.Get_Arrays('Wac')
+
+They can then be used for further analysis, histograms of the topography...
+
 
 ## CraterInspec ##
 
@@ -54,4 +60,3 @@ Contain:
 - os, sys
 - pvl to read binary header
 - urlib,requests for downloading PDS FILES
-
