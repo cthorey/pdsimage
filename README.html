@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+
+</head>
+
+<body>
+
+<h1>CraterInspector</h1>
+
+<p>Library  to easily  access part  of the  PDS IMAGES  from LOLA/LROC_WAC
+Experiment. Given a location and a radius, for instance the latitude, the longitude and the radius of the crater, this library allows to easily extract both Topography (LOLA) and WAC images of the desired area.</p>
+
+<h2>Example</h2>
+
+<p>Let's say, we want to get some idea about the crater Copernicus.</p>
+
+<pre><code>C = Copernicus('n','Copernicus',racine,'Crater')
+C.Overlay(True)
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/cthorey/CraterInspector/master/Image/Copernicus.png" alt="Alt" />
+If we want to focus only on the Central Peak though,</p>
+
+<pre><code>C.Taille_Window = 0.4*C.Diameter
+C.Overlay(True)
+</code></pre>
+
+<p><img src="https://raw.githubusercontent.com/cthorey/CraterInspector/master/Image/CopernicusZoom.png" alt="Alt" /></p>
+
+<p>This library also allows to easily derive histogram for the topography.
+For instance,</p>
+
+<h2>CraterInspec</h2>
+
+<p>Contain:</p>
+
+<ul>
+<li><p>CraterInspec:</p>
+
+<ul>
+<li><strong>PDS_Extractor</strong> : Classes to parse .IMG file from the PDS</li>
+<li><strong>Structure</strong>  :  Usefull  library to  visualize  the  desired
+structure</li>
+</ul></li>
+<li><p>Data:</p>
+
+<ul>
+<li><p><strong>Data_Crater.csv</strong> : Comprehensive dataset of lunar impact craters.</p>
+
+<ul>
+<li>Source of the dataset
+<ul>
+<li><a href="http://www.sciencedirect.com/science/article/pii/S0032063310003405">Salamuniccar et al 2011</a></li>
+<li><a href="http://dx.doi.org/10.1016/j.icarus.2014.10.052">Jozwiak et al 2015</a></li>
+<li><a href="http://adsabs.harvard.edu/abs/2009LPI....40.1532L">Losiak et al 2009</a></li>
+</ul></li>
+<li>Columns
+<ul>
+<li>Name (when given), Lat (degree) , Long (degree) , Diameter (km) + Type (1 = Floor-fractured crater, 0 = Normal impact craters)</li>
+<li>A comprehensive description of FFC can be found <a href="http://www.lpod.org/cwm/DataStuff/ffc.htm">here</a></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Data_Dome.csv</strong></p>
+
+<ul>
+<li>Intrusive domes found in <a href="http://linkinghub.elsevier.com/retrieve/pii/S0019103509003236">Wöhler et al 2009</a></li>
+</ul></li>
+</ul></li>
+<li><p>PDS_FILE</p>
+
+<ul>
+<li>Binary image .IMG files to download on the <a href="http://pds-geosciences.wustl.edu/">PDS node</a></li>
+<li>Library optimize for LOLA and LROC<em>WAC Images (FOLDERs inside PDS</em>FILE). Nevertheless, It could be easily extended to account fo other type of data.
+<h2>Requirement</h2></li>
+</ul></li>
+<li><p>numpy</p></li>
+<li>pandas</li>
+<li>matplotlib</li>
+<li>palettable for beautiful color</li>
+<li>os, sys</li>
+<li>pvl to read binary header</li>
+<li>urlib,requests for downloading PDS FILES</li>
+</ul>
+
+</body>
+</html>

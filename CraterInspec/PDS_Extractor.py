@@ -11,7 +11,7 @@ from pvl import load as load_label
 # Helper to catch images from URLs
 import urllib,requests
 
-        
+
 class BinaryTable(object):
     ''' Class which is able to read PDS image file for LOLA/WAC images.
 
@@ -35,7 +35,7 @@ class BinaryTable(object):
     THIS CLASS SUPPORT ONLY CYLINDRICAL PROJECTION.
     PROJECTION : [WAC : 'EQUIRECTANGULAR', LOLA : '"SIMPLE"']
     FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.
-    
+
     parameter:
     - fname : name of the binary file without the extension
     - self.PDS_FILE : Path where the binary images are download. It should
@@ -57,14 +57,15 @@ class BinaryTable(object):
     - self.Extract_Grid() : Extract only part of the image centered around the structure
     -self.Lamber_Window, self.cylindrical_Window : Return longmin,longmax,latmin,latmax in
     both configuration.
-    
+
     '''
 
     def __init__(self,fname):
         ''' Parameter
         self.name : name of the file
         self._Category : Identify weither its WAC/LOLA image
-        self._Load_Info_LBL : Load corresponding information '''
+        self._Load_Info_LBL : Load corresponding information
+        '''
 
         self.fname = fname
         self.PDS_FILE = '/Users/thorey/Documents/These/Projet/FFC/Classification/PDS_FILE/'
@@ -74,10 +75,11 @@ class BinaryTable(object):
         self._maybe_download()
         self._Load_Info_LBL()
 
-        assert self.MAP_PROJECTION_TYPE in ['"SIMPLE','EQUIRECTANGULAR']
+        assert self.MAP_PROJECTION_TYPE in ['"SIMPLE','EQUIRECTANGULAR'],\
+            "Only cylindrical projection is possible - %s NOT IMPLEMENTED"%(self.MAP_PROJECTION_TYPE)
 
     def _Category(self):
-            
+
         if self.fname.split('_')[0] == 'WAC':
             self.Grid = 'WAC'
             self.img = os.path.join(self.WACpath, self.fname+'.IMG')
@@ -87,8 +89,8 @@ class BinaryTable(object):
             self.img = os.path.join(self.LOLApath, self.fname+'.IMG')
             self.lbl = os.path.join(self.LOLApath, self.fname+'.LBL')
         else:
-            print 'Not implemented yet'
-            raise Exception
+            raise ValueError("%s : This type of image is not recognized. Possible\
+                             images are from %s only"% (self.fname, ', '.join(('WAC','LOLA'))))
 
     def _report(self,blocknr, blocksize, size):
         ''' helper for downloading the file '''
@@ -100,32 +102,32 @@ class BinaryTable(object):
         print "The file %s need to be download - Wait\n "%(fname.split('/')[-1])
         urllib.urlretrieve(url, fname, self._report)
         print "\n The download of the file %s has succeded \n "%(fname.split('/')[-1])
-        
+
     def _maybe_download(self):
         if self.Grid == 'WAC':
             urlpath = 'http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/'
-            r = requests.get(urlpath) # List file in the cloud        
+            r = requests.get(urlpath) # List file in the cloud
             images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]
             if not os.path.isfile(self.img):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
                 self._downloadFile(urlname,self.img)
             elif self.fname not in images:
-                print 'The image does not exist on the cloud !'
-                raise NameError
+                raise ValueError("This image (%s) does not exist.\
+                                 Possible images are: %s"% (self.fname, ', '.join(images)))
 
         elif self.Grid == 'LOLA':
-            urlpath = 'http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/'        
-            r = requests.get(urlpath) # List file in this server        
-            images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]                      
+            urlpath = 'http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/'
+            r = requests.get(urlpath) # List file in this server
+            images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]
             if (not os.path.isfile(self.img)) and (self.fname in images):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
                 self._downloadFile(urlname,self.img)
                 urlname = os.path.join(urlpath , self.lbl.split('/')[-1])
                 self._downloadFile(urlname,self.lbl)
             elif self.fname not in images:
-                print 'The image %s does not exist on the cloud !'%(self.fname)
-                raise NameError
-                
+                raise ValueError("This image (%s) does not exist.\
+                                 Possible images are: %s"% (self.fname, ', '.join(images)))
+
     def _Load_Info_LBL(self):
         if self.Grid == 'WAC':
             label = load_label(self.img)
@@ -152,7 +154,7 @@ class BinaryTable(object):
             self.bytesize = 2
             self.projection = ''
             self.dtype = np.int16
-                
+
     def Lat_id(self,line):
         ''' Return the corresponding line latitude'''
         if self.Grid == 'WAC':
@@ -161,18 +163,18 @@ class BinaryTable(object):
         else:
             lat =  float(self.CENTER_LATITUDE) - (line -float(self.LINE_PROJECTION_OFFSET) -1)/ float(self.MAP_RESOLUTION)
             return lat
-    
+
     def Long_id(self,sample):
-        ''' Return the corresponding sample longitude'''            
+        ''' Return the corresponding sample longitude'''
         if self.Grid == 'WAC':
             lon = self.CENTER_LONGITUDE + (sample - self.SAMPLE_PROJECTION_OFFSET -1)*self.MAP_SCALE*1e-3/(self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0))
             return lon*180/np.pi
         else:
             lon = float(self.CENTER_LONGITUDE) + (sample -float(self.SAMPLE_PROJECTION_OFFSET) -1)/ float(self.MAP_RESOLUTION)
             return lon
-    
+
     def Sample_id(self,lon):
-        ''' Return the corresponding longitude sample'''            
+        ''' Return the corresponding longitude sample'''
         if self.Grid == 'WAC':
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET)+1.0+\
                 (lon*np.pi/180.0-float(self.CENTER_LONGITUDE))*self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0)/(self.MAP_SCALE*1e-3))
@@ -180,7 +182,7 @@ class BinaryTable(object):
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + float(self.MAP_RESOLUTION)\
                            * (lon - float(self.CENTER_LONGITUDE))) + 1
     def Line_id(self,lat):
-        ''' Return the corresponding latitude line'''            
+        ''' Return the corresponding latitude line'''
         if self.Grid == 'WAC':
             return np.rint(1.0 + self.LINE_PROJECTION_OFFSET-self.A_AXIS_RADIUS*np.pi*lat/(self.MAP_SCALE*1e-3*180))
         else:
@@ -202,11 +204,11 @@ class BinaryTable(object):
     def Extract_All(self):
         ''' Extract all the image and return three tables X (longitude),
         Y(latitude) and Z(values) '''
-        
+
         longmin,longmax,latmin,latmax = self.Boundary()
         sample_min,sample_max = map(int,(self.SAMPLE_FIRST_PIXEL,self.SAMPLE_LAST_PIXEL))
         line_min,line_max = map(int,(self.LINE_FIRST_PIXEL,self.LINE_LAST_PIXEL))
-        
+
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
         for i,line in enumerate(range(int(line_min),int(line_max)+1)):
@@ -221,16 +223,16 @@ class BinaryTable(object):
         X,Y = np.meshgrid(X,Y)
 
         return X , Y , Z
-        
+
     def Extract_Grid(self,longmin,longmax,latmin,latmax):
         ''' Extract part of the image centered defined by a rectangle (longmin,
         longmax,latmin,latmax) - all in degree.
-        
+
         Return three tables X (longitude),Y(latitude) and Z(values) '''
-        
+
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
-        
+
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
         for i,line in enumerate(range(int(line_min),int(line_max)+1)):
@@ -245,7 +247,7 @@ class BinaryTable(object):
         X,Y = np.meshgrid(X,Y)
 
         return X , Y , Z
-                
+
     def Boundary(self):
         ''' Return the boundary of the image considered '''
         return (int(self.WESTERNMOST_LONGITUDE),
@@ -254,15 +256,15 @@ class BinaryTable(object):
                 int(self.MAXIMUM_LATITUDE))
 
     def _kp_func(self,lat,lon,lat0,long0):
-            
+
         kp = float(1.0) + np.sin(lat0)*np.sin(lat) + np.cos(lat0)*np.cos(lat)*np.cos(lon-long0)
         kp = np.sqrt(float(2)/kp)
         return kp
-        
+
     def Lambert_Window(self,radius,lat0,long0):
         ''' Return the equal area squared azimutahl projection of a window centered
         at (lat0,long0)  with a given radius of radius.'''
-        
+
         radius = radius*360.0/(np.pi*2*1734.4)
         radius = radius*np.pi / 180.0
         lat0 = lat0*np.pi/180.0
@@ -277,7 +279,7 @@ class BinaryTable(object):
         latll = np.arcsin(np.cos(c)*np.sin(lat0)  + y*np.sin(c)*np.cos(lat0)/rho ) * float(180.0) / np.pi
         lon = long0  + np.arctan2(x*np.sin(c), rho*np.cos(lat0)*np.cos(c) - y*np.sin(lat0)*np.sin(c))
         longll = lon * 180.0 / np.pi
-	
+
         x = -bot
         y = -bot
         rho = np.sqrt(x**2 + y**2)
@@ -291,7 +293,7 @@ class BinaryTable(object):
     def Cylindrical_Window(self,radius,lat0,long0):
         ''' Return the cylindrical projection of a window centered
         at (lat0,long0)  with a given radius of radius.'''
-        
+
         # Passage en radian
         radi = radius*2*np.pi/(2*1734.4*np.pi)
         lamb0 = long0*np.pi/180.0
@@ -328,7 +330,7 @@ class WacMap(object):
 
     methods:
     Image : Return a BinaryTable Class containing the image.
-    
+
     '''
     def __init__(self,lonm,lonM,latm,latM,ppd):
         self.ppd = ppd
@@ -340,8 +342,11 @@ class WacMap(object):
 
     def _Confirm_Resolution(self):
         # All resolution are not implemented
-        assert self.ppd in [4,8,16,32,64,128]
-        
+        implemented_res = [4,8,16,32,64,128]
+        assert self.ppd in implemented_res, ' Resolution %d ppd not implemented yet\n.\
+        Consider using one of the implemented resolutions %s'\
+        %(self.ppd, ', '.join([f+' ppd' for f in map(str,implemented_res)]))
+
     def _map_center(self,coord,val):
 
         ''' Identitify the center of the Image correspond to one coordinate.
@@ -353,7 +358,7 @@ class WacMap(object):
         variable:
         res : {Correspond lat center for the image +
         longitude span of the image}'''
-        
+
         if self.ppd in [4,8,16,32,64]:
             res = {'lat' : 0, 'long' : 360}
             return res[coord]/2.0
@@ -370,9 +375,9 @@ class WacMap(object):
         2 - The span in latitude of the image is ok but not longitudes (2 images).
         3 - The span in longitude of the image is ok but not latitudes (2 images).
         4 - Both latitude and longitude are not contained in one image (4 images).
-        
+
         '''
-        
+
         lonBool = self._map_center('long',self.lonM) != self._map_center('long',self.lonm)
         latBool = self._map_center('lat',self.latM) != self._map_center('lat',self.latm)
 
@@ -380,17 +385,14 @@ class WacMap(object):
             print 'Cas1'
             return self._Cas_1()
         elif lonBool and not latBool:
-            print 'Cas2'
-            print 'Pas implementer'
-            raise NameError
+            raise ValueError("This structure overlap on several images - Case 2.\
+                             Not implemented yet !")
         elif not lonBool and latBool:
-            print 'Cas3'
-            print 'Pas implementer'
-            raise NameError
+            raise ValueError("This structure overlap on several images - Case 3.\
+                             Not implemented yet !")
         else:
-            print 'Cas4'
-            print 'Pas implementer'
-            raise NameError
+            raise ValueError("This structure overlap on several images - Case 4.\
+                             Not implemented yet !")
 
     def _format_lon(self,lon):
         lonf = self._map_center('long',lon)
@@ -427,9 +429,9 @@ class WacMap(object):
 
         '''
         return self._Define_Case()
-        
+
 class LolaMap(WacMap):
-            
+
     ''' Class used to identified the image (or the groupe of images) necessary
     to extract an array around a particular structure.
     4 Cases are possible:
@@ -439,19 +441,19 @@ class LolaMap(WacMap):
     4 - Both latitude and longitude are not contained in one image (4 images).
 
     ONLY THE FIRST CASE IS IMPLEMENTED FOR THE MOMENT
-    
+
     parameters:
     ppd : Resolution required
     lonm,lonM,latm,latM : Parameterize the window around the structure
 
     methods:
     Image : Return X,Y,Z values for the window.
-    
+
     '''
     def _Confirm_Resolution(self):
         # All resolution are not implemented
         assert self.ppd in [4,16,64,128,512]
-                            
+
     def _map_center(self,coord,val):
 
         ''' Identitify the center of the Image correspond to one coordinate.
@@ -463,7 +465,7 @@ class LolaMap(WacMap):
         variable:
         res : {Correspond lat center for the image +
         longitude span of the image}'''
-        
+
         if self.ppd in [4,16,64,128]:
             res = {'lat' : 0, 'long' : 360}
             return res[coord]/2.0
@@ -490,20 +492,19 @@ class LolaMap(WacMap):
             latm,latM = map(lambda x:"{0:0>2}".format(int(x))+'N',self._map_border('lat',lat))
 
         return latm,latM
-        
+
     def _Cas_1(self):
         ''' Ni long ni lat ne croise en bord de la carte
         colle le bon wac sur self.wac '''
 
         if self.ppd in [4,16,64,128]:
             lola = '_'.join(['LDEM',str(self.ppd)])
-            
+
         elif self.ppd in [512]:
             lonm,lonM = self._format_lon(self.lonm)
             latm,latM = self._format_lat(self.latm)
             lola = '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
 
             lola = BinaryTable(lola)
-            
-        return lola.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
+        return lola.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)

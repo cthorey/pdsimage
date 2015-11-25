@@ -8,9 +8,8 @@ from matplotlib import cm
 import os,sys
 from palettable.colorbrewer.diverging import RdBu_9_r,BrBG_10_r
 
-
 class Structure(object):
-            
+    ''' '''
     def __init__(self,ide,idx,racine,structure):
         '''n pour le designer par son nom et i pour le designer par son
         index,structure : dome ou FFC '''
@@ -20,15 +19,17 @@ class Structure(object):
         self.ppdlola = 512
         self.ppdwac = 128
         inde = {'n':'Name','i':'Index'}
-        
+
         if structure == 'Dome':
-            self.structures = pd.read_csv(os.path.join(racine,'Data','Data_Dome.csv'))
+            self.structures = pd.read_csv(os.path.join(racine,'Data',
+            'Data_Dome.csv'))
         elif structure == 'Crater':
-            self.structures = pd.read_csv(os.path.join(racine,'Data','Data_Crater.csv'))
+            self.structures = pd.read_csv(os.path.join(racine,'Data',
+            'Data_Crater.csv'))
         else:
-            raise ValueError("Structure %s is not recognized. Possible values are: %s"
-                             % (structure, ', '.join('Dome','Crater')))
-            
+            raise ValueError("Structure %s is not recognized. Possible\
+                             values are: %s"% (structure, ', '.join('Dome','Crater')))
+
         df = self.structures[self.structures[inde[ide]] == idx]
         if len(df) == 0:
             print 'Correpond a aucun %s'%(structure)
@@ -43,14 +44,14 @@ class Structure(object):
         else:
             self.Radius = self.Diameter/2.0
             self.Name = df.Name.iloc[0]
-        
-        self.Taille_Window = 0.8*self.Diameter            
+
+        self.Taille_Window = 0.8*self.Diameter
 
     def kp_func(self,lat,lon,lat0,long0):
         kp = float(1.0) + np.sin(lat0)*np.sin(lat) + np.cos(lat0)*np.cos(lat)*np.cos(lon-long0)
         kp = np.sqrt(float(2)/kp)
         return kp
-        
+
     def Lambert_Window(self,radius,lat0,long0):
 
         radius = radius*360.0/(np.pi*2*1734.4)
@@ -67,7 +68,7 @@ class Structure(object):
         latll = np.arcsin(np.cos(c)*np.sin(lat0)  + y*np.sin(c)*np.cos(lat0)/rho ) * float(180.0) / np.pi
         lon = long0  + np.arctan2(x*np.sin(c), rho*np.cos(lat0)*np.cos(c) - y*np.sin(lat0)*np.sin(c))
         longll = lon * 180.0 / np.pi
-	
+
         x = -bot
         y = -bot
         rho = np.sqrt(x**2 + y**2)
@@ -90,7 +91,7 @@ class Structure(object):
         latll = np.arcsin((-radi+np.sin(phi0)/np.cos(phi0))*np.cos(phi0))
         if np.isnan(latll):
             latll = -90*np.pi/180.0
-            
+
         #Long/lat max (see wikipedia)
         longtr = radi/np.cos(phi0)+lamb0
         lattr = np.arcsin((radi+np.tan(phi0))*np.cos(phi0))
@@ -114,19 +115,19 @@ class Structure(object):
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(3)
-        
+
         lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
 
         lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-                
+
         Xl,Yl,Zl = LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
         Xl,Yl = m(Xl,Yl)
-        
+
         m.pcolormesh(Xl,Yl,Zl,cmap = 'gist_earth' , alpha = .5, ax  = ax1,zorder = 1)
         m.contour(Xl,Yl,Zl,20, colors = 'black', alpha = 1.0 , zorder=2)
-        
+
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
@@ -142,17 +143,17 @@ class Structure(object):
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(3)
-        
+
         lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
 
         lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-        
+
         Xw,Yw,Zw = WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
         Xw,Yw = m(Xw,Yw)
         m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
-        
+
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
@@ -162,27 +163,27 @@ class Structure(object):
         path = os.path.join(self.racine,'Data','Image',name)
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
-            
+
     def Overlay(self,save,name = 'BaseOverlay.png'):
 
-        fig = plt.figure(figsize=(24,14))
+        fig = plt.figure(figsize=(10,8))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(3)
-        
+
         lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
 
         lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-        
+
         Xw,Yw,Zw = WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
         Xw,Yw = m(Xw,Yw)
         m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
-        
+
         Xl,Yl,Zl = LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
         Xl,Yl = m(Xl,Yl)
         m.contourf(Xl,Yl,Zl,100,cmap='gist_earth', alpha = 0.4 , zorder=2 , antialiased=True)
-        
+
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
@@ -195,4 +196,3 @@ class Structure(object):
 
     def Deg(self,radius):
         return radius*360/(2*np.pi*1734.4)
-        
