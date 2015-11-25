@@ -3,14 +3,13 @@ import numpy as np
 import pickle
 import pandas as pd
 import os,sys
-
+from distutils.util import strtobool
 #Library to help read header in binary WAC FILE
 import pvl
 from pvl import load as load_label
 
 # Helper to catch images from URLs
 import urllib,requests
-
 
 class BinaryTable(object):
     ''' Class which is able to read PDS image file for LOLA/WAC images.
@@ -60,6 +59,8 @@ class BinaryTable(object):
 
     '''
 
+    racine = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector'
+
     def __init__(self,fname):
         ''' Parameter
         self.name : name of the file
@@ -68,7 +69,7 @@ class BinaryTable(object):
         '''
 
         self.fname = fname
-        self.PDS_FILE = '/Users/thorey/Documents/These/Projet/FFC/Classification/PDS_FILE/'
+        self.PDS_FILE = os.path.join(BinaryTable.racine,'PDS_FILE')
         self.LOLApath = os.path.join(self.PDS_FILE,'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE,'LROC_WAC')
         self._Category()
@@ -93,40 +94,70 @@ class BinaryTable(object):
                              images are from %s only"% (self.fname, ', '.join(('WAC','LOLA'))))
 
     def _report(self,blocknr, blocksize, size):
+
         ''' helper for downloading the file '''
+
         current = blocknr*blocksize
         sys.stdout.write("\r{0:.2f}%".format(100.0*current/size))
 
     def _downloadFile(self,url,fname):
+            
         ''' Download the file '''
+        
         print "The file %s need to be download - Wait\n "%(fname.split('/')[-1])
         urllib.urlretrieve(url, fname, self._report)
         print "\n The download of the file %s has succeded \n "%(fname.split('/')[-1])
 
+
+
+    def _user_yes_no_query(self,question):
+        sys.stdout.write('%s [y/n]\n' % question)
+        while True:
+            try:
+                return strtobool(raw_input().lower())
+            except ValueError:
+                sys.stdout.write('Please respond with \'y\' or \'n\'.\n')
+            
+    def _detect_size(self,url):
+
+        '''
+        Detect the size of the target and return it 
+        '''
+        site = urllib.urlopen(url)
+        meta = site.info()
+        return float(meta.getheaders("Content-Length")[0])/1e6
+            
     def _maybe_download(self):
+            
         if self.Grid == 'WAC':
+            print 'hello'
             urlpath = 'http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/'
             r = requests.get(urlpath) # List file in the cloud
             images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]
-            if not os.path.isfile(self.img):
+            if self.fname not in images:
+                raise ValueError("%s : Image does not exist\n.\
+                                 Possible images are:\n %s"% (self.fname, '\n, '.join(images[2:])))
+            elif not os.path.isfile(self.img):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
-                self._downloadFile(urlname,self.img)
-            elif self.fname not in images:
-                raise ValueError("This image (%s) does not exist.\
-                                 Possible images are: %s"% (self.fname, ', '.join(images)))
+                print "The size is ?: %.1f Mo \n\n"%(self._detect_size(urlname))
+                download = self._user_yes_no_query('Do you really want to download %s ?\n\n'%(self.fname))
+                if download:
+                    self._downloadFile(urlname,self.img)
+                
 
         elif self.Grid == 'LOLA':
             urlpath = 'http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/'
             r = requests.get(urlpath) # List file in this server
             images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]
-            if (not os.path.isfile(self.img)) and (self.fname in images):
+            if self.fname not in images:
+                raise ValueError("%s : Image does not exist\n.\
+                                 Possible images are:\n %s"% (self.fname, '\n, '.join(images[2:])))
+
+            elif (not os.path.isfile(self.img)) and (self.fname in images):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
                 self._downloadFile(urlname,self.img)
                 urlname = os.path.join(urlpath , self.lbl.split('/')[-1])
                 self._downloadFile(urlname,self.lbl)
-            elif self.fname not in images:
-                raise ValueError("This image (%s) does not exist.\
-                                 Possible images are: %s"% (self.fname, ', '.join(images)))
 
     def _Load_Info_LBL(self):
         if self.Grid == 'WAC':
@@ -235,6 +266,7 @@ class BinaryTable(object):
 
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
+        
         for i,line in enumerate(range(int(line_min),int(line_max)+1)):
             start = (line-1)*int(self.SAMPLE_LAST_PIXEL)+sample_min
             chunk_size = int(sample_max-sample_min+1)
@@ -416,9 +448,9 @@ class WacMap(object):
         lonc = self._format_lon(self.lonm)
         latc = self._format_lat(self.latm)
         wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
-        self.Images = [wac]
-        wac = BinaryTable(wac)
-        return wac.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+        print wac
+        wacmap = BinaryTable(wac)
+        return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
     def Image(self):
         ''' Return three array X,Y,Z corresponding tp
@@ -450,8 +482,18 @@ class LolaMap(WacMap):
 
     '''
 
-    WacMap.implemented_res = [4,16,64,128,512]
+    implemented_res = [4,16,64,128,512]
 
+    def __init__(self,lonm,lonM,latm,latM,ppd):
+        self.ppd = ppd
+        self.lonm = lonm
+        self.lonM = lonM
+        self.latm = latm
+        self.latM = latM
+        print 'hello'
+        self._Confirm_Resolution(LolaMap.implemented_res)
+
+        
     def _map_center(self,coord,val):
 
         ''' Identitify the center of the Image correspond to one coordinate.
@@ -500,6 +542,6 @@ class LolaMap(WacMap):
             latm,latM = self._format_lat(self.latm)
             lola = '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
 
-            lola = BinaryTable(lola)
+        lolamap = BinaryTable(lola)
 
-        return lola.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+        return lolamap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)

@@ -48,8 +48,6 @@ class Structure(object):
     C = Structure('n','Copernicus','Crater')
     -
     '''
-
-    racine = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector'
     
     def __init__(self,ide,idx,structure):
         '''
@@ -62,7 +60,7 @@ class Structure(object):
         '''
 
         self.structure = structure
-        self.racine = Structure.racine
+        self.racine = BinaryTable.racine
         self.ppdlola = 512
         self.ppdwac = 128
 
@@ -173,9 +171,8 @@ class Structure(object):
 
         This method is encouraged to be modified according to specific need.
         '''
-        fig = plt.figure(figsize=(24,14))
+        fig = plt.figure(figsize=(10,8))
         ax1 = fig.add_subplot(111)
-        ax1.set_rasterization_zorder(3)
 
         lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
@@ -208,9 +205,8 @@ class Structure(object):
         This method is encouraged to be modified according to specific need.
         '''
         
-        fig = plt.figure(figsize=(24,14))
+        fig = plt.figure(figsize=(10,8))
         ax1 = fig.add_subplot(111)
-        ax1.set_rasterization_zorder(3)
 
         lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
@@ -230,7 +226,7 @@ class Structure(object):
 
         path = os.path.join(self.racine,'Data','Image',name)
         if save == True:
-            fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
+            fig.savefig(path, dpi=200 , bbox_inches='tight', pad_inches=0.1)
 
     def Overlay(self,save,name = 'BaseOverlay.png'):
 
@@ -245,7 +241,6 @@ class Structure(object):
         
         fig = plt.figure(figsize=(10,8))
         ax1 = fig.add_subplot(111)
-        ax1.set_rasterization_zorder(3)
 
         lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
@@ -269,7 +264,7 @@ class Structure(object):
 
         path = os.path.join(self.racine,'Image',name)
         if save == True:
-            fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
+            fig.savefig(path, dpi=500, bbox_inches='tight', pad_inches=0.1)
 
     def _Deg(self,radius):
         return radius*360/(2*np.pi*1734.4)
