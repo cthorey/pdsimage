@@ -40,13 +40,22 @@ class Structure(object):
     centered at (lat0,long0 with a size radius). See
     Wikipedia
 
+    - Get_Arrays : Return X,Y,Z of the region for the img asked.
+    img is either 'Lola' for the topography or
+    'wac' for WAC image.
+
+    - Lola_Image, Wac_Image, Overlay : Return the corresponding
+    plot. A blue triangle is added as well as a scale for completnesss
+    of the plot.
     
     Example:
     
     For instance, say we want to image the crater Copernicus. We can the
     define an instance of the class
+    
     C = Structure('n','Copernicus','Crater')
-    -
+    C.Overlay(True)
+    
     '''
     
     def __init__(self,ide,idx,structure):
@@ -162,6 +171,22 @@ class Structure(object):
                        fillcolor2='k', ax=ax1,
                        format='%d',
                        zorder=2)
+
+    def Get_Arrays(self,img):
+        '''
+        Return X,Y,Z of the region for the img asked.
+        img is either 'Lola' for the topography or
+        'wac' for WAC image.
+        '''
+            
+        lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
+        if img == 'Lola':
+            return LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
+        elif img == 'Wac':
+            return WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
+        else:
+            raise ValueError('The argument as to be either "Lola" or "Wac"')
+        
 
     def Lola_Image(self,save,name = 'BaseLola.png'):
         '''

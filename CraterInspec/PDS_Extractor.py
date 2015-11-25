@@ -143,6 +143,8 @@ class BinaryTable(object):
                 download = self._user_yes_no_query('Do you really want to download %s ?\n\n'%(self.fname))
                 if download:
                     self._downloadFile(urlname,self.img)
+                else:
+                    raise ValueError("You need to download the file somehow")
                 
 
         elif self.Grid == 'LOLA':
@@ -155,7 +157,13 @@ class BinaryTable(object):
 
             elif (not os.path.isfile(self.img)) and (self.fname in images):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
-                self._downloadFile(urlname,self.img)
+                print "The size is ?: %.1f Mo \n\n"%(self._detect_size(urlname))
+                download = self._user_yes_no_query('Do you really want to download %s ?\n\n'%(self.fname))
+                if download:
+                    self._downloadFile(urlname,self.img)
+                else:
+                    raise ValueError("You need to download the file somehow")
+                
                 urlname = os.path.join(urlpath , self.lbl.split('/')[-1])
                 self._downloadFile(urlname,self.lbl)
 
