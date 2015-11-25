@@ -332,17 +332,19 @@ class WacMap(object):
     Image : Return a BinaryTable Class containing the image.
 
     '''
+
+    implemented_res = [4,8,16,32,64,128]
+    
     def __init__(self,lonm,lonM,latm,latM,ppd):
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
         self.latm = latm
         self.latM = latM
-        self._Confirm_Resolution()
-
-    def _Confirm_Resolution(self):
+        self._Confirm_Resolution(WacMap.implemented_res)
+        
+    def _Confirm_Resolution(self,implemented_res):
         # All resolution are not implemented
-        implemented_res = [4,8,16,32,64,128]
         assert self.ppd in implemented_res, ' Resolution %d ppd not implemented yet\n.\
         Consider using one of the implemented resolutions %s'\
         %(self.ppd, ', '.join([f+' ppd' for f in map(str,implemented_res)]))
@@ -365,9 +367,6 @@ class WacMap(object):
         elif self.ppd in [128]:
             res = {'lat' : 45, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
-        else:
-            print 'Not implemented'
-            raise Exception
 
     def _Define_Case(self):
         ''' Identify case:
@@ -450,9 +449,8 @@ class LolaMap(WacMap):
     Image : Return X,Y,Z values for the window.
 
     '''
-    def _Confirm_Resolution(self):
-        # All resolution are not implemented
-        assert self.ppd in [4,16,64,128,512]
+
+    WacMap.implemented_res = [4,16,64,128,512]
 
     def _map_center(self,coord,val):
 
@@ -472,9 +470,6 @@ class LolaMap(WacMap):
         elif self.ppd in [512]:
             res = {'lat' : 45, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
-        else:
-            print 'Not implemented'
-            raise Exception
 
     def _map_border(self,coord,val):
         res = {512 : {'lat' : 45,'long' : 90}}

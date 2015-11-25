@@ -8,58 +8,106 @@ from matplotlib import cm
 import os,sys
 from palettable.colorbrewer.diverging import RdBu_9_r,BrBG_10_r
 
+
 class Structure(object):
-    ''' '''
-    def __init__(self,ide,idx,racine,structure):
-        '''n pour le designer par son nom et i pour le designer par son
-        index,structure : dome ou FFC '''
+    ''' A class able to gather information on Topography and Image about
+    a specified area around a geological unit (Crater or dome).
+
+    parameters:
+
+    - structure : Name of the structure. Either "Crater" or "Dome".
+    - ide : This class allow to defined the unit by its name "n" or its
+    index "i".
+    - idx : Corresponding name or index
+
+    attributes:
+
+    - structure : Type of the geological unit (Crater/Dome)
+    - racine : path for project
+    - ppdlola : resolution of the Lola image
+    - ppdwac : resolution of the Wac image
+    - Name/Diameter/Radius/Lat/Long : property of the geological unit
+    - Taille_Window : Size of the window to consider around the unit
+
+    methods:
+    
+    - Lambert_Window :  This method is used to determine the bottom-left
+    and upper-right coordinates for a square Lambert Azimuthal
+    equal area projection centered at (lat0,long0 with a size radius).
+
+    - Cylindrical_Window : This method is used to determine the bottom-left
+    and upper-right coordinates for a cylindrical projection
+    centered at (lat0,long0 with a size radius). See
+    Wikipedia
+
+    
+    Example:
+    
+    For instance, say we want to image the crater Copernicus. We can the
+    define an instance of the class
+    C = Structure('n','Copernicus','Crater')
+    -
+    '''
+
+    racine = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector'
+    
+    def __init__(self,ide,idx,structure):
+        '''
+        - structure : Name of the structure. Either "Crater" or "Dome".
+        - ide : This class allow to defined the unit by its name "n" or its
+        index "i".
+        - idx : Corresponding name or index
+
+        
+        '''
 
         self.structure = structure
-        self.racine = racine
+        self.racine = Structure.racine
         self.ppdlola = 512
         self.ppdwac = 128
-        inde = {'n':'Name','i':'Index'}
 
         if structure == 'Dome':
-            self.structures = pd.read_csv(os.path.join(racine,'Data',
+            self.structures = pd.read_csv(os.path.join(self.racine,'Data',
             'Data_Dome.csv'))
         elif structure == 'Crater':
-            self.structures = pd.read_csv(os.path.join(racine,'Data',
+            self.structures = pd.read_csv(os.path.join(self.racine,'Data',
             'Data_Crater.csv'))
         else:
-            raise ValueError("Structure %s is not recognized. Possible\
-                             values are: %s"% (structure, ', '.join('Dome','Crater')))
+            raise ValueError("Structure %s is not recognized. Possible\n\
+                             values are: %s"% (structure, ', '.join(['Dome','Crater'])))
 
+        inde = {'n':'Name','i':'Index'}
         df = self.structures[self.structures[inde[ide]] == idx]
         if len(df) == 0:
-            print 'Correpond a aucun %s'%(structure)
-            raise Exception
+            raise ValueError("The tuple (%s,%s) does not correspond\n \
+                             to any structure in the dataset. "%(ide,idx))
+            
         [setattr(self,f,float(df[f])) for f in df.columns if f not in ['Name']]
-        if self.Long <0.0:
-            self.Long = 360+self.Long
-        if structure == 'Dome':
-            self.Radius = self.D/(2*1000)
-            self.Diameter = 2*self.Radius
-            self.Name = df.Name.iloc[0]
-        else:
-            self.Radius = self.Diameter/2.0
-            self.Name = df.Name.iloc[0]
 
+        assert self.Long>0.0, 'Longitude has to span 0-360 !!!'
+        self.Name = df.Name.iloc[0]
         self.Taille_Window = 0.8*self.Diameter
 
-    def kp_func(self,lat,lon,lat0,long0):
+        
+
+    def _kp_func(self,lat,lon,lat0,long0):
         kp = float(1.0) + np.sin(lat0)*np.sin(lat) + np.cos(lat0)*np.cos(lat)*np.cos(lon-long0)
         kp = np.sqrt(float(2)/kp)
         return kp
 
     def Lambert_Window(self,radius,lat0,long0):
-
+        '''
+        This method is used to determine the bottom-left
+        and upper-right coordinates for a square Lambert Azimuthal
+        equal area projection centered at (lat0,long0 with a size radius).
+        '''
+        
         radius = radius*360.0/(np.pi*2*1734.4)
         radius = radius*np.pi / 180.0
         lat0 = lat0*np.pi/180.0
         long0 = long0*np.pi/180.0
 
-        bot = self.kp_func(lat0-radius,long0,lat0,long0)
+        bot = self._kp_func(lat0-radius,long0,lat0,long0)
         bot = bot * ( np.cos(lat0)*np.sin(lat0-radius) - np.sin(lat0)*np.cos(lat0-radius) )
         x = bot
         y = bot
@@ -80,7 +128,12 @@ class Structure(object):
         return longll,longtr,latll,lattr
 
     def Cylindrical_Window(self,radius,lat0,long0):
-
+        '''
+        This method is used to determine the bottom-left
+        and upper-right coordinates for a cylindrical projection
+        centered at (lat0,long0 with a size radius). See
+        Wikipedia
+        '''
         # Radian conversion
         radi = radius*2*np.pi/(2*1734.4*np.pi)
         lamb0 = long0*np.pi/180.0
@@ -98,7 +151,9 @@ class Structure(object):
 
         return longll*180/np.pi,longtr*180/np.pi,latll*180/np.pi,lattr*180/np.pi
 
-    def Add_Scale(self,m,ax1):
+    def _Add_Scale(self,m,ax1):
+        ''' Add scale to the map instance '''
+        
         lol,loM,lam,laM = self.Lambert_Window(0.6*self.Taille_Window,self.Lat,self.Long)
         m.drawmapscale(loM,lam, self.Long,self.Lat,10,
                        barstyle='fancy', units='km',
@@ -111,7 +166,13 @@ class Structure(object):
                        zorder=2)
 
     def Lola_Image(self,save,name = 'BaseLola.png'):
+        '''
+        Return the lola image corresponding to the window.
+        A blue triangle is added as well as a scale for completnesss
+        of the plot.
 
+        This method is encouraged to be modified according to specific need.
+        '''
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(3)
@@ -131,7 +192,7 @@ class Structure(object):
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
-        self.Add_Scale(m,ax1)
+        self._Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
         path = os.path.join(self.racine,'Data','Image',name)
@@ -139,7 +200,14 @@ class Structure(object):
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 
     def Wac_Image(self,save,name = 'BaseWac.png'):
+        '''
+        Return the Wac image corresponding to the window.
+        A blue triangle is added as well as a scale for completnesss
+        of the plot.
 
+        This method is encouraged to be modified according to specific need.
+        '''
+        
         fig = plt.figure(figsize=(24,14))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(3)
@@ -157,7 +225,7 @@ class Structure(object):
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
-        self.Add_Scale(m,ax1)
+        self._Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
         path = os.path.join(self.racine,'Data','Image',name)
@@ -166,6 +234,15 @@ class Structure(object):
 
     def Overlay(self,save,name = 'BaseOverlay.png'):
 
+        '''
+        Return an ovelay of Lola image over the Wac image
+        corresponding to the window.
+        A blue triangle is added as well as a scale for completnesss
+        of the plot.
+
+        This method is encouraged to be modified according to specific need.
+        '''
+        
         fig = plt.figure(figsize=(10,8))
         ax1 = fig.add_subplot(111)
         ax1.set_rasterization_zorder(3)
@@ -187,12 +264,12 @@ class Structure(object):
         xc,yc = m(self.Long,self.Lat)
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
-        self.Add_Scale(m,ax1)
+        self._Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
         path = os.path.join(self.racine,'Image',name)
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 
-    def Deg(self,radius):
+    def _Deg(self,radius):
         return radius*360/(2*np.pi*1734.4)
