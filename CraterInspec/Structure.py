@@ -8,6 +8,7 @@ import os,sys
 from PDS_Extractor import *
 import numpy as np
 import pandas as pd
+import scipy.ndimage
 import matplotlib.pylab as plt
 from mpl_toolkits.basemap import Basemap
 from matplotlib import cm
@@ -99,7 +100,11 @@ class Structure(object):
 
         assert self.Long>0.0, 'Longitude has to span 0-360 !!!'
         self.Name = df.Name.iloc[0]
-        self.Taille_Window = 0.8*self.Diameter
+        self.Change_window(0.8*self.Diameter)
+        
+
+    def Change_window(self,Taille_Window):
+        self.Taille_Window = Taille_Window
         self.window = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
         
 
@@ -191,18 +196,98 @@ class Structure(object):
             return WacMap(self.ppdwac,*self.window).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
-        
 
-    def Get_Profile(self, img_type , Coordinates):
+    def _format_coordinate_cartopy(self,ax):
+        '''
+        Format the cartopy plot to show lat/long properly
+        '''
+        lonm,lonM,latm,latM = self.window
+        xlocs = np.linspace(lonm,lonM,5)
+        ylocs = np.linspace(latm,latM,5)
+        ax.gridlines(xlocs = xlocs , ylocs = ylocs, crs = ccrs.PlateCarree())
+        ax.set_xticks(xlocs, crs=ccrs.PlateCarree())
+        ax.set_yticks(ylocs, crs=ccrs.PlateCarree())
+        lon_formatter = LongitudeFormatter(number_format='.1f',
+                                           degree_symbol='')
+        lat_formatter = LatitudeFormatter(number_format='.1f',
+                                          degree_symbol='')
+        ax.xaxis.set_major_formatter(lon_formatter)
+        ax.yaxis.set_major_formatter(lat_formatter)
+        ax.tick_params(labelsize = 18)
+
+    def Get_Profile(self, img_type, coordinate, num_points):
         '''
         Extract the profiles from (lat1,lon1) to (lat2,lon2)
 
         parameter:
 
-        Coordinates : tupples ((lon1,lat1,lon2,lat2), ... )'''
+        img_type : Type of the image
+        coordinate : (lon0,lon1,lat0,lat1) Be carefull, longitude has to be in between
+        0-360 ! 
+        num_points : Number of points in the interpolation
+        '''
 
+        lon0, lon1, lat0, lat1 = coordinate
+        X, Y, Z = self.Get_Arrays(img_type)
+        x0, y0 = np.argmin(np.abs(X[0,:]-lon0)),np.argmin(np.abs(Y[:,0]-lat0))
+        x1, y1 = np.argmin(np.abs(X[0,:]-lon1)),np.argmin(np.abs(Y[:,0]-lat1))
+        x, y = np.linspace(x0,x1, num_points), np.linspace(y0, y1, num_points)
+        zi = scipy.ndimage.map_coordinates(Z, np.vstack((x,y)))
         
+        return  zi
+
+
+    def Draw_Profile(self, coordinates, img_type = 'Lola', num_points = 100,
+                     save = False, name = 'BaseProfile.png'):
+
+        '''
+        Draw profile between a point (lon0,lat0) and (lon1,lat1).
+
+        parameters:
+        coordinates : a tuple which itself contain tupple of coordinates.
+        The format is (lon0,lon1,lat0,lat1). For instance, self.window is
+        an example.
+        img_type : Type of the image to do the profile
+        num_points : Number of points for the interpolation
+        save : Save or not the figure
+        name : Name of the figure.
+
+        Example
+        C2 = Structure('n','M13','Dome')
+        midlon = (C2.window[0]+C2.window[1])/2.0
+        midlat = (C2.window[2]+C2.window[3])/2.0
+        profile1 = (midlon,midlon,C2.window[2],C2.window[3]) #Vertical profile
+        profile2 = (C2.window[0],C2.window[1],midlat,midlat) #Horizontal profile
+        C2.Draw_Profile((profile1,profile2,C2.window))
         
+        '''
+        
+        fig = plt.figure(figsize=(24,len(coordinates)*5))
+        gs = gridspec.GridSpec(len(coordinates), 3)
+        for i,coordinate in enumerate(coordinates):
+
+            ax1 = plt.subplot(gs[i, 0], projection=ccrs.LambertCylindrical())
+            ax2 = plt.subplot(gs[i,1:])
+
+            # Image unit
+            X, Y , Z = self.Get_Arrays(img_type)
+            ax1.pcolormesh(X, Y, Z,
+                           transform=ccrs.PlateCarree(),
+                           cmap='spectral')            
+            lon1,lon0,lat1,lat0 = coordinate
+            ax1.plot([lon1,lon0],[lat1,lat0], 'ro-',transform = ccrs.PlateCarree())
+            self._format_coordinate_cartopy(ax1)
+
+            # Profile
+            print(coordinate)
+            z_interpolated = self.Get_Profile(img_type,coordinate,num_points)
+            ax2.plot(z_interpolated[::-1])
+            ax2.set_ylabel('Topographic profile (m)',fontsize = 24)
+            ax2.tick_params(labelsize = 18)
+            
+            path = os.path.join(self.racine,'Image',name)
+            if save == True:
+                fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 
             
     def Lola_Image(self, save = False ,name = 'BaseLola.png'):
@@ -232,7 +317,7 @@ class Structure(object):
         self._Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
-        path = os.path.join(self.racine,'Data','Image',name)
+        path = os.path.join(self.racine,'Image',name)
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 
