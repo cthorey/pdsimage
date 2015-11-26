@@ -264,6 +264,12 @@ class Structure(object):
         
         fig = plt.figure(figsize=(24,len(coordinates)*5))
         gs = gridspec.GridSpec(len(coordinates), 3)
+        
+        if len(coordinates) == 4:
+            assert type(coordinates[0])==tuple,\
+                "If only one tupple is given,\n\
+                the correct syntax is (tuple,) !! Not (tuple) ;)"
+            
         for i,coordinate in enumerate(coordinates):
 
             ax1 = plt.subplot(gs[i, 0], projection=ccrs.LambertCylindrical())
