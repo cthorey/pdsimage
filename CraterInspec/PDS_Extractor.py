@@ -1,4 +1,5 @@
 # Import library
+from __future__ import print_function
 import numpy as np
 import pickle
 import pandas as pd
@@ -104,9 +105,9 @@ class BinaryTable(object):
             
         ''' Download the file '''
         
-        print "The file %s need to be download - Wait\n "%(fname.split('/')[-1])
+        print("The file %s need to be download - Wait\n "%(fname.split('/')[-1]))
         urllib.urlretrieve(url, fname, self._report)
-        print "\n The download of the file %s has succeded \n "%(fname.split('/')[-1])
+        print("\n The download of the file %s has succeded \n "%(fname.split('/')[-1]))
 
 
 
@@ -130,7 +131,6 @@ class BinaryTable(object):
     def _maybe_download(self):
             
         if self.Grid == 'WAC':
-            print 'hello'
             urlpath = 'http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/'
             r = requests.get(urlpath) # List file in the cloud
             images = [elt.split('"')[7].split('.')[0] for elt in r.iter_lines() if len(elt.split('"'))>7]
@@ -139,7 +139,7 @@ class BinaryTable(object):
                                  Possible images are:\n %s"% (self.fname, '\n, '.join(images[2:])))
             elif not os.path.isfile(self.img):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
-                print "The size is ?: %.1f Mo \n\n"%(self._detect_size(urlname))
+                print("The size is ?: %.1f Mo \n\n"%(self._detect_size(urlname)))
                 download = self._user_yes_no_query('Do you really want to download %s ?\n\n'%(self.fname))
                 if download:
                     self._downloadFile(urlname,self.img)
@@ -157,7 +157,7 @@ class BinaryTable(object):
 
             elif (not os.path.isfile(self.img)) and (self.fname in images):
                 urlname = os.path.join(urlpath , self.img.split('/')[-1])
-                print "The size is ?: %.1f Mo \n\n"%(self._detect_size(urlname))
+                print("The size is ?: %.1f Mo \n\n"%(self._detect_size(urlname)))
                 download = self._user_yes_no_query('Do you really want to download %s ?\n\n'%(self.fname))
                 if download:
                     self._downloadFile(urlname,self.img)
@@ -348,8 +348,6 @@ class BinaryTable(object):
         longtr = radi/np.cos(phi0)+lamb0
         lattr = np.arcsin((radi+np.tan(phi0))*np.cos(phi0))
 
-        # print latll*180/np.pi,lat0,lattr*180/np.pi
-        # print longll*180/np.pi,long0,longtr*180/np.pi
         return longll*180/np.pi,longtr*180/np.pi,latll*180/np.pi,lattr*180/np.pi
 
 
@@ -375,7 +373,7 @@ class WacMap(object):
 
     implemented_res = [4,8,16,32,64,128]
     
-    def __init__(self,lonm,lonM,latm,latM,ppd):
+    def __init__(self,ppd,lonm,lonM,latm,latM):
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
@@ -421,7 +419,7 @@ class WacMap(object):
         latBool = self._map_center('lat',self.latM) != self._map_center('lat',self.latm)
 
         if not lonBool and not latBool:
-            print 'Cas1'
+            print('Cas1')
             return self._Cas_1()
         elif lonBool and not latBool:
             raise ValueError("This structure overlap on several images - Case 2.\
@@ -456,7 +454,6 @@ class WacMap(object):
         lonc = self._format_lon(self.lonm)
         latc = self._format_lat(self.latm)
         wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
-        print wac
         wacmap = BinaryTable(wac)
         return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
@@ -492,13 +489,12 @@ class LolaMap(WacMap):
 
     implemented_res = [4,16,64,128,512]
 
-    def __init__(self,lonm,lonM,latm,latM,ppd):
+    def __init__(self,ppd,lonm,lonM,latm,latM):
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
         self.latm = latm
         self.latM = latM
-        print 'hello'
         self._Confirm_Resolution(LolaMap.implemented_res)
 
         

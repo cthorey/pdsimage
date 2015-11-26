@@ -1,12 +1,20 @@
+# To be able to pass *(tuple) to function
+from __future__ import print_function
 # Library import
+import os,sys
+
+
+# Load specific library
 from PDS_Extractor import *
 import numpy as np
 import pandas as pd
 import matplotlib.pylab as plt
 from mpl_toolkits.basemap import Basemap
 from matplotlib import cm
-import os,sys
-from palettable.colorbrewer.diverging import RdBu_9_r,BrBG_10_r
+import cartopy
+import matplotlib.gridspec as gridspec
+import cartopy.crs as ccrs
+from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 
 class Structure(object):
@@ -64,8 +72,6 @@ class Structure(object):
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
-
-        
         '''
 
         self.structure = structure
@@ -94,7 +100,7 @@ class Structure(object):
         assert self.Long>0.0, 'Longitude has to span 0-360 !!!'
         self.Name = df.Name.iloc[0]
         self.Taille_Window = 0.8*self.Diameter
-
+        self.window = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
         
 
     def _kp_func(self,lat,lon,lat0,long0):
@@ -172,7 +178,7 @@ class Structure(object):
                        format='%d',
                        zorder=2)
 
-    def Get_Arrays(self,lonm,lonM,latm,latM,type_img):
+    def Get_Arrays(self,type_img):
         '''
         Return X,Y,Z of the region for the img asked.
         img is either 'Lola' for the topography or
@@ -180,26 +186,26 @@ class Structure(object):
         '''
             
         if type_img == 'Lola':
-            return LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
+            return LolaMap(self.ppdlola,*self.window).Image()
         elif type_img == 'Wac':
-            return WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
+            return WacMap(self.ppdwac,*self.window).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
         
 
-    def Get_Profile(self, Coordinates, img_type):
+    def Get_Profile(self, img_type , Coordinates):
         '''
         Extract the profiles from (lat1,lon1) to (lat2,lon2)
 
         parameter:
 
-        Coordinates : tupples ((lat1,lon1,lat2,lon2), ... )'''
+        Coordinates : tupples ((lon1,lat1,lon2,lat2), ... )'''
 
         
         
 
             
-    def Lola_Image(self,save = False ,name = 'BaseLola.png'):
+    def Lola_Image(self, save = False ,name = 'BaseLola.png'):
         '''
         Return the lola image corresponding to the window.
         A blue triangle is added as well as a scale for completnesss
@@ -214,9 +220,7 @@ class Structure(object):
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
 
-        lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-
-        Xl,Yl,Zl = self.Get_Arrays(lonm,lonM,latm,latM,'Lola')
+        Xl,Yl,Zl = self.Get_Arrays('Lola')
         Xl,Yl = m(Xl,Yl)
 
         m.pcolormesh(Xl,Yl,Zl,cmap = 'gist_earth' , alpha = .5, ax  = ax1,zorder = 1)
@@ -248,9 +252,7 @@ class Structure(object):
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
 
-        lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-
-        Xw,Yw,Zw = self.Get_Arrays(lonm,lonM,latm,latM,'Wac')
+        Xw,Yw,Zw = self.Get_Arrays('Wac')
         Xw,Yw = m(Xw,Yw)
         m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
 
@@ -274,7 +276,6 @@ class Structure(object):
 
         This method is encouraged to be modified according to specific need.
         '''
-        
         fig = plt.figure(figsize=(10,8))
         ax1 = fig.add_subplot(111)
 
@@ -282,13 +283,11 @@ class Structure(object):
         m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
 
-        lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-
-        Xw,Yw,Zw = self.Get_Arrays(lonm,lonM,latm,latM,'Wac')
+        Xw,Yw,Zw = self.Get_Arrays('Wac')
         Xw,Yw = m(Xw,Yw)
         m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
 
-        Xl,Yl,Zl = self.Get_Arrays(lonm,lonM,latm,latM,'Lola')
+        Xl,Yl,Zl = self.Get_Arrays('Lola')
         Xl,Yl = m(Xl,Yl)
         m.contourf(Xl,Yl,Zl,100,cmap='gist_earth', alpha = 0.4 , zorder=2 , antialiased=True)
 
