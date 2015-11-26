@@ -12,13 +12,12 @@ This library has been designed to facilitate the extraction of subpart of a PDS 
 # Requirement
 
 - numpy
+- scipy
 - pandas
-- matplotlib
-- palettable for beautiful color
-- os, sys
+- os, sys, distutils
 - pvl to read binary header
 - urlib,requests for downloading PDS FILES
-- cartopy/matplotlib for plotting
+- cartopy/matplotlib/mpl_toolkits(basemap) for plotting
 
 # Setup
 

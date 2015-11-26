@@ -1,7 +1,6 @@
 # Import library
 from __future__ import print_function
 import numpy as np
-import pickle
 import pandas as pd
 import os,sys
 from distutils.util import strtobool
