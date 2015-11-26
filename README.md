@@ -3,7 +3,9 @@
 This library has been designed to facilitate the extraction of subpart of a PDS IMAGES from the LOLA/LROC_WAC experiment. 
 
 - **Highlighted features**
-		- Unlike previous python PDS library, this module allows to easily extract part of a PDS image without loading the whole thing into memory (Sizes can be up to Gigabytes).
+		- Unlike previous  python PDS  library, this module  allows to
+          easily extract part of a PDS image without loading the whole
+          thing into memory (Sizes can be up to Gigabytes).
 		- Great for looking at geological unit on the Moon (Currently built to deal with crater and domes
 
 # Requirement
