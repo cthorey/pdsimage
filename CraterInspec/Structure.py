@@ -172,23 +172,34 @@ class Structure(object):
                        format='%d',
                        zorder=2)
 
-    def Get_Arrays(self,img):
+    def Get_Arrays(self,lonm,lonM,latm,latM,type_img):
         '''
         Return X,Y,Z of the region for the img asked.
         img is either 'Lola' for the topography or
         'wac' for WAC image.
         '''
             
-        lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-        if img == 'Lola':
+        if type_img == 'Lola':
             return LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
-        elif img == 'Wac':
+        elif type_img == 'Wac':
             return WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
         else:
-            raise ValueError('The argument as to be either "Lola" or "Wac"')
+            raise ValueError('The img type has to be either "Lola" or "Wac"')
         
 
-    def Lola_Image(self,save,name = 'BaseLola.png'):
+    def Get_Profile(self, Coordinates, img_type):
+        '''
+        Extract the profiles from (lat1,lon1) to (lat2,lon2)
+
+        parameter:
+
+        Coordinates : tupples ((lat1,lon1,lat2,lon2), ... )'''
+
+        
+        
+
+            
+    def Lola_Image(self,save = False ,name = 'BaseLola.png'):
         '''
         Return the lola image corresponding to the window.
         A blue triangle is added as well as a scale for completnesss
@@ -205,7 +216,7 @@ class Structure(object):
 
         lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
 
-        Xl,Yl,Zl = LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
+        Xl,Yl,Zl = self.Get_Arrays(lonm,lonM,latm,latM,'Lola')
         Xl,Yl = m(Xl,Yl)
 
         m.pcolormesh(Xl,Yl,Zl,cmap = 'gist_earth' , alpha = .5, ax  = ax1,zorder = 1)
@@ -221,7 +232,7 @@ class Structure(object):
         if save == True:
             fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
 
-    def Wac_Image(self,save,name = 'BaseWac.png'):
+    def Wac_Image(self, save = False, name = 'BaseWac.png'):
         '''
         Return the Wac image corresponding to the window.
         A blue triangle is added as well as a scale for completnesss
@@ -239,7 +250,7 @@ class Structure(object):
 
         lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
 
-        Xw,Yw,Zw = WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
+        Xw,Yw,Zw = self.Get_Arrays(lonm,lonM,latm,latM,'Wac')
         Xw,Yw = m(Xw,Yw)
         m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
 
@@ -253,7 +264,7 @@ class Structure(object):
         if save == True:
             fig.savefig(path, dpi=200 , bbox_inches='tight', pad_inches=0.1)
 
-    def Overlay(self,save,name = 'BaseOverlay.png'):
+    def Overlay(self, save = False,name = 'BaseOverlay.png'):
 
         '''
         Return an ovelay of Lola image over the Wac image
@@ -273,11 +284,11 @@ class Structure(object):
 
         lonm,lonM,latm,latM = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
 
-        Xw,Yw,Zw = WacMap(lonm,lonM,latm,latM,self.ppdwac).Image()
+        Xw,Yw,Zw = self.Get_Arrays(lonm,lonM,latm,latM,'Wac')
         Xw,Yw = m(Xw,Yw)
         m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
 
-        Xl,Yl,Zl = LolaMap(lonm,lonM,latm,latM,self.ppdlola).Image()
+        Xl,Yl,Zl = self.Get_Arrays(lonm,lonM,latm,latM,'Lola')
         Xl,Yl = m(Xl,Yl)
         m.contourf(Xl,Yl,Zl,100,cmap='gist_earth', alpha = 0.4 , zorder=2 , antialiased=True)
 
