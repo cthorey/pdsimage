@@ -10,7 +10,7 @@ This library has been designed to facilitate the extraction of subpart of a PDS 
     - Great for looking at geological unit on the Moon (Currently built to deal with crater and domes
 
 # Requirement
-
+- python 2.7>
 - numpy
 - scipy
 - pandas
