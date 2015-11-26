@@ -260,7 +260,7 @@ class Structure(object):
         self._Add_Scale(m,ax1)
         ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
-        path = os.path.join(self.racine,'Data','Image',name)
+        path = os.path.join(self.racine,'Image',name)
         if save == True:
             fig.savefig(path, dpi=200 , bbox_inches='tight', pad_inches=0.1)
 
