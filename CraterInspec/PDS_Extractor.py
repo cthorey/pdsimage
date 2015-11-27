@@ -199,23 +199,30 @@ class BinaryTable(object):
             lat = ((1 + self.LINE_PROJECTION_OFFSET- line)*self.MAP_SCALE*1e-3/self.A_AXIS_RADIUS)
             return lat*180/np.pi
         else:
-            lat =  float(self.CENTER_LATITUDE) - (line -float(self.LINE_PROJECTION_OFFSET) -1)/ float(self.MAP_RESOLUTION)
+            lat =  float(self.CENTER_LATITUDE) - \
+                   (line -float(self.LINE_PROJECTION_OFFSET) -1)\
+                   / float(self.MAP_RESOLUTION)
             return lat
 
     def Long_id(self,sample):
         ''' Return the corresponding sample longitude'''
         if self.Grid == 'WAC':
-            lon = self.CENTER_LONGITUDE + (sample - self.SAMPLE_PROJECTION_OFFSET -1)*self.MAP_SCALE*1e-3/(self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0))
+            lon = self.CENTER_LONGITUDE + (sample - self.SAMPLE_PROJECTION_OFFSET -1)\
+                  *self.MAP_SCALE*1e-3/(self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0))
             return lon*180/np.pi
         else:
-            lon = float(self.CENTER_LONGITUDE) + (sample -float(self.SAMPLE_PROJECTION_OFFSET) -1)/ float(self.MAP_RESOLUTION)
+            lon = float(self.CENTER_LONGITUDE) + \
+                  (sample -float(self.SAMPLE_PROJECTION_OFFSET) -1)\
+                  / float(self.MAP_RESOLUTION)
             return lon
 
     def Sample_id(self,lon):
         ''' Return the corresponding longitude sample'''
         if self.Grid == 'WAC':
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET)+1.0+\
-                (lon*np.pi/180.0-float(self.CENTER_LONGITUDE))*self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0)/(self.MAP_SCALE*1e-3))
+                             (lon*np.pi/180.0-float(self.CENTER_LONGITUDE))*\
+                             self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0)\
+                             /(self.MAP_SCALE*1e-3))
         else:
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + float(self.MAP_RESOLUTION)\
                            * (lon - float(self.CENTER_LONGITUDE))) + 1
@@ -270,14 +277,13 @@ class BinaryTable(object):
 
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
-
-        print(sample_min,sample_max,line_min,line_max)
+        
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
-        
+
         for i,line in enumerate(range(int(line_min),int(line_max)+1)):
             start = (line-1)*int(self.SAMPLE_LAST_PIXEL)+sample_min
-            chunk_size = int(sample_max-sample_min+1)
+            chunk_size = int(sample_max-sample_min)
             Za = self.Array(chunk_size,start,self.bytesize)
             if i == 0:
                 Z = Za
