@@ -456,6 +456,15 @@ class WacMap(object):
         wacmap = BinaryTable(wac)
         return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
+    def _Cas_2(self):
+        '''1 - The desired structure is entirely contained into one image.'''
+
+        lonc = self._format_lon(self.lonm)
+        latc = self._format_lat(self.latm)
+        wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
+        wacmap = BinaryTable(wac)
+        return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+        
     def Image(self):
         ''' Return three array X,Y,Z corresponding tp
         X : longitudes
@@ -495,7 +504,7 @@ class LolaMap(WacMap):
         self.latm = latm
         self.latM = latM
         self._Confirm_Resolution(LolaMap.implemented_res)
-
+        
         
     def _map_center(self,coord,val):
 
