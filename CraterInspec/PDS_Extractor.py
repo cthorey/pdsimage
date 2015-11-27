@@ -271,6 +271,7 @@ class BinaryTable(object):
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
 
+        print(sample_min,sample_max,line_min,line_max)
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
         
@@ -428,8 +429,9 @@ class WacMap(object):
             print('Latitude overlap - Processing could take a few seconds')
             return self._Cas_3()
         else:
-            raise ValueError("This structure overlap on several images - Case 4.\
-                             Not implemented yet !")
+            print('Latitude/Longidude overlaps - Processing could take a few\
+                  10s of seconds')
+            return self._Cas_4()
 
     def _format_lon(self,lon):
         lonf = self._map_center('long',lon)
@@ -519,7 +521,66 @@ class WacMap(object):
         
         return X_new, Y_new, Z_new
 
+    def _Cas_4(self):
+        '''1 - Neither the span in longitude, nor the span in
+        latitudes is ok. Required the ensemble of 4 images'''
 
+        lonc_left = self._format_lon(self.lonm)
+        lonc_right = self._format_lon(self.lonM)
+        latc_top = self._format_lat(self.latM)
+        latc_bot = self._format_lat(self.latm)
+        
+        wac_name_00 = '_'.join(['WAC','GLOBAL',\
+                                'E'+latc_top+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
+        wac_00 = BinaryTable(wac_name_00)
+        print(wac_name_00)
+        print(self.lonm,
+              wac_00.EASTERNMOST_LONGITUDE,
+              wac_00.MINIMUM_LATITUDE,
+              self.latM)
+        X_00,Y_00,Z_00  = wac_00.Extract_Grid(self.lonm,
+                                              wac_00.EASTERNMOST_LONGITUDE,
+                                              wac_00.MINIMUM_LATITUDE,
+                                              self.latM)
+
+        wac_name_01 = '_'.join(['WAC','GLOBAL',\
+                                  'E'+latc_top+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
+        wac_01 = BinaryTable(wac_name_01)
+        X_01,Y_01,Z_01  = wac_01.Extract_Grid(wac_01.WESTERNMOST_LONGITUDE,
+                                              self.lonM,
+                                              wac_01.MINIMUM_LATITUDE,
+                                              self.latM)
+        
+        wac_name_01 = '_'.join(['WAC','GLOBAL',\
+                                'E'+latc_bot+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
+        wac_10 = BinaryTable(wac_name_10)
+        X_10,Y_10,Z_10  = wac_10.Extract_Grid(self.lonm,
+                                              wac_10.EASTERNMOST_LONGITUDE,
+                                              self.latm,
+                                              wac_10.MAXIMUM_LATITUDE)
+
+        wac_name_11 = '_'.join(['WAC','GLOBAL',\
+                                'E'+latc_bot+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
+        wac_11 = BinaryTable(wac_name_11)
+        X_11,Y_11,Z_11  = wac_11.Extract_Grid(wac_11.WESTERNMOST_LONGITUDE,
+                                              self.lonM,
+                                              self.latm,
+                                              wac_11.MAXIMUM_LATITUDE)
+        
+        X_new_top = np.hstack((X_00,X_01))
+        X_new_bot = np.hstack((X_10,X_11))
+        X_new = np.vstack((X_new_top,X_new_bot))
+
+        Y_new_top = np.hstack((Y_00,Y_01))
+        Y_new_bot = np.hstack((Y_10,Y_11))
+        Y_new = np.vstack((Y_new_top,Y_new_bot))
+
+        Z_new_top = np.hstack((Z_00,Z_01))
+        Z_new_bot = np.hstack((Z_10,Z_11))
+        Z_new = np.vstack((Z_new_top,Z_new_bot))
+        
+        return X_new, Y_new, Z_new
+        
         
     def Image(self):
         ''' Return three array X,Y,Z corresponding tp
