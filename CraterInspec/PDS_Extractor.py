@@ -395,14 +395,14 @@ class WacMap(object):
         val : value of the coordinate
 
         variable:
-        res : {Correspond lat center for the image +
+        res : {Correspond lat span for the image +
         longitude span of the image}'''
 
         if self.ppd in [4,8,16,32,64]:
             res = {'lat' : 0, 'long' : 360}
             return res[coord]/2.0
         elif self.ppd in [128]:
-            res = {'lat' : 45, 'long' : 90}
+            res = {'lat' : 90, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
 
     def _Define_Case(self):
@@ -416,16 +416,17 @@ class WacMap(object):
 
         lonBool = self._map_center('long',self.lonM) != self._map_center('long',self.lonm)
         latBool = self._map_center('lat',self.latM) != self._map_center('lat',self.latm)
+        print(self._map_center('lat',self.latM),self._map_center('lat',self.latm))
 
         if not lonBool and not latBool:
-            print('Cas1')
+            print('No overlap - Processing should be quick')
             return self._Cas_1()
         elif lonBool and not latBool:
-            raise ValueError("This structure overlap on several images - Case 2.\
-                             Not implemented yet !")
+            print('Longitude overlap - Processing could take a few seconds')
+            return self._Cas_2()
         elif not lonBool and latBool:
-            raise ValueError("This structure overlap on several images - Case 3.\
-                             Not implemented yet !")
+            print('Latitude overlap - Processing could take a few seconds')
+            return self._Cas_3()
         else:
             raise ValueError("This structure overlap on several images - Case 4.\
                              Not implemented yet !")
@@ -461,28 +462,64 @@ class WacMap(object):
         not longitudes (2 images). The desired structure longitude
         are overlap on two different map .'''
 
-        lonc_right = self._format_lon(self.lonm)
-        lonc_left = self._format_lon(self.lonM)
+        lonc_left = self._format_lon(self.lonm)
+        lonc_right = self._format_lon(self.lonM)
         latc = self._format_lat(self.latm)
         
-        wac_left = '_'.join(['WAC','GLOBAL',\
-                             'E'+latc+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
-        wac_left = BinaryTable(wac_left)
+        wac_name_left = '_'.join(['WAC','GLOBAL',\
+                                  'E'+latc+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
+
+        wac_left = BinaryTable(wac_name_left)
         X_left,Y_left,Z_left  = wac_left.Extract_Grid(self.lonm,
-                                                      wac_left.WESTERNMOST_LONGITUDE,
+                                                      wac_left.EASTERNMOST_LONGITUDE,
                                                       self.latm,self.latM)
 
-        wac_right = '_'.join(['WAC','GLOBAL',\
-                             'E'+latc+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
-        wac_right = BinaryTable(wac_left)
-        X_right,Y_right,Z_right  = wac_right.Extract_Grid(self.lonm,
-                                                      wac_right.EASTERNMOST_LONGITUDE,
-                                                      self.latm,self.latM)
+        wac_name_right = '_'.join(['WAC','GLOBAL',\
+                                   'E'+latc+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
+
+        wac_right = BinaryTable(wac_name_right)
+        X_right,Y_right,Z_right  = wac_right.Extract_Grid(wac_right.WESTERNMOST_LONGITUDE,
+                                                      self.lonM,
+                                                          self.latm,self.latM)
+
         X_new = np.hstack((X_left,X_right))
         Y_new = np.hstack((Y_left,Y_right))
-        Z_new = np.vstack((Z_left,Z_right))
+        Z_new = np.hstack((Z_left,Z_right))
         
         return X_new, Y_new, Z_new
+
+    def _Cas_3(self):
+        '''1 - The span in longitude of the image is ok but
+        not latitudes (2 images). The desired structure latitude
+        are overlaped on two different maps .'''
+
+        lonc = self._format_lon(self.lonm)
+        latc_top = self._format_lat(self.latM)
+        latc_bot = self._format_lat(self.latm)
+        
+        wac_name_top = '_'.join(['WAC','GLOBAL',\
+                                  'E'+latc_top+lonc,"{0:0>3}".format(self.ppd)+'P'])
+        wac_top = BinaryTable(wac_name_top)
+        X_top,Y_top,Z_top  = wac_top.Extract_Grid(self.lonm,
+                                                  self.lonM,
+                                                  wac_top.MINIMUM_LATITUDE,
+                                                  self.latM)
+
+        wac_name_bottom = '_'.join(['WAC','GLOBAL',\
+                                   'E'+latc_bot+lonc,"{0:0>3}".format(self.ppd)+'P'])
+        wac_bottom = BinaryTable(wac_name_bottom)
+        X_bottom,Y_bottom,Z_bottom  = wac_bottom.Extract_Grid(self.lonm,
+                                                              self.lonM,
+                                                              self.latm,
+                                                              wac_bottom.MAXIMUM_LATITUDE)
+
+        X_new = np.vstack((X_top,X_bottom))
+        Y_new = np.vstack((Y_top,Y_bottom))
+        Z_new = np.vstack((Z_top,Z_bottom))
+        
+        return X_new, Y_new, Z_new
+
+
         
     def Image(self):
         ''' Return three array X,Y,Z corresponding tp
