@@ -219,17 +219,25 @@ class BinaryTable(object):
     def Sample_id(self,lon):
         ''' Return the corresponding longitude sample'''
         if self.Grid == 'WAC':
-            return np.rint(float(self.SAMPLE_PROJECTION_OFFSET)+1.0+\
+            sample =  np.rint(float(self.SAMPLE_PROJECTION_OFFSET)+1.0+\
                              (lon*np.pi/180.0-float(self.CENTER_LONGITUDE))*\
                              self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0)\
-                             /(self.MAP_SCALE*1e-3))
+                              /(self.MAP_SCALE*1e-3))
+            if sample == 0:
+                return 1
+            else:
+                return sample
         else:
             return np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + float(self.MAP_RESOLUTION)\
                            * (lon - float(self.CENTER_LONGITUDE))) + 1
     def Line_id(self,lat):
         ''' Return the corresponding latitude line'''
         if self.Grid == 'WAC':
-            return np.rint(1.0 + self.LINE_PROJECTION_OFFSET-self.A_AXIS_RADIUS*np.pi*lat/(self.MAP_SCALE*1e-3*180))
+            li = np.rint(1.0 + self.LINE_PROJECTION_OFFSET-self.A_AXIS_RADIUS*np.pi*lat/(self.MAP_SCALE*1e-3*180))
+            if li == 0:
+                return 1
+            else:
+                return li
         else:
             return np.rint(float(self.LINE_PROJECTION_OFFSET) - float(self.MAP_RESOLUTION)\
                            * (lat - float(self.CENTER_LATITUDE))) + 1
@@ -277,7 +285,7 @@ class BinaryTable(object):
 
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
-        
+        print(sample_min,sample_max,line_min,line_max)
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
 
@@ -539,16 +547,11 @@ class WacMap(object):
         wac_name_00 = '_'.join(['WAC','GLOBAL',\
                                 'E'+latc_top+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
         wac_00 = BinaryTable(wac_name_00)
-        print(wac_name_00)
-        print(self.lonm,
-              wac_00.EASTERNMOST_LONGITUDE,
-              wac_00.MINIMUM_LATITUDE,
-              self.latM)
         X_00,Y_00,Z_00  = wac_00.Extract_Grid(self.lonm,
                                               wac_00.EASTERNMOST_LONGITUDE,
                                               wac_00.MINIMUM_LATITUDE,
                                               self.latM)
-
+        
         wac_name_01 = '_'.join(['WAC','GLOBAL',\
                                   'E'+latc_top+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
         wac_01 = BinaryTable(wac_name_01)
@@ -557,7 +560,7 @@ class WacMap(object):
                                               wac_01.MINIMUM_LATITUDE,
                                               self.latM)
         
-        wac_name_01 = '_'.join(['WAC','GLOBAL',\
+        wac_name_10 = '_'.join(['WAC','GLOBAL',\
                                 'E'+latc_bot+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
         wac_10 = BinaryTable(wac_name_10)
         X_10,Y_10,Z_10  = wac_10.Extract_Grid(self.lonm,
@@ -568,11 +571,14 @@ class WacMap(object):
         wac_name_11 = '_'.join(['WAC','GLOBAL',\
                                 'E'+latc_bot+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
         wac_11 = BinaryTable(wac_name_11)
+        print(wac_name_11)
+        print(wac_11.WESTERNMOST_LONGITUDE,self.lonM,self.latm,wac_11.MAXIMUM_LATITUDE)
         X_11,Y_11,Z_11  = wac_11.Extract_Grid(wac_11.WESTERNMOST_LONGITUDE,
                                               self.lonM,
                                               self.latm,
                                               wac_11.MAXIMUM_LATITUDE)
-        
+
+        # return Z_00,Z_01,Z_10,Z_11
         X_new_top = np.hstack((X_00,X_01))
         X_new_bot = np.hstack((X_10,X_11))
         X_new = np.vstack((X_new_top,X_new_bot))
