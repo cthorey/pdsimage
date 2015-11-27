@@ -457,13 +457,32 @@ class WacMap(object):
         return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
     def _Cas_2(self):
-        '''1 - The desired structure is entirely contained into one image.'''
+        '''1 - The span in latitude of the image is ok but
+        not longitudes (2 images). The desired structure longitude
+        are overlap on two different map .'''
 
-        lonc = self._format_lon(self.lonm)
+        lonc_right = self._format_lon(self.lonm)
+        lonc_left = self._format_lon(self.lonM)
         latc = self._format_lat(self.latm)
-        wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
-        wacmap = BinaryTable(wac)
-        return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+        
+        wac_left = '_'.join(['WAC','GLOBAL',\
+                             'E'+latc+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
+        wac_left = BinaryTable(wac_left)
+        X_left,Y_left,Z_left  = wac_left.Extract_Grid(self.lonm,
+                                                      wac_left.WESTERNMOST_LONGITUDE,
+                                                      self.latm,self.latM)
+
+        wac_right = '_'.join(['WAC','GLOBAL',\
+                             'E'+latc+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
+        wac_right = BinaryTable(wac_left)
+        X_right,Y_right,Z_right  = wac_right.Extract_Grid(self.lonm,
+                                                      wac_right.EASTERNMOST_LONGITUDE,
+                                                      self.latm,self.latM)
+        X_new = np.hstack((X_left,X_right))
+        Y_new = np.hstack((Y_left,Y_right))
+        Z_new = np.vstack((Z_left,Z_right))
+        
+        return X_new, Y_new, Z_new
         
     def Image(self):
         ''' Return three array X,Y,Z corresponding tp
@@ -474,6 +493,7 @@ class WacMap(object):
         '''
         return self._Define_Case()
 
+        
 class LolaMap(WacMap):
 
     ''' Class used to identified the image (or the groupe of images) necessary
