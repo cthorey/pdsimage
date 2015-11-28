@@ -396,7 +396,7 @@ class WacMap(object):
 
     '''
 
-    implemented_res = [4,8,16,32,64,128]
+    implemented_res = [4,8,16,32,64,128,256]
     
     def __init__(self,ppd,lonm,lonM,latm,latM):
         self.ppd = ppd
@@ -408,9 +408,15 @@ class WacMap(object):
         
     def _Confirm_Resolution(self,implemented_res):
         # All resolution are not implemented
-        assert self.ppd in implemented_res, ' Resolution %d ppd not implemented yet\n.\
-        Consider using one of the implemented resolutions %s'\
-        %(self.ppd, ', '.join([f+' ppd' for f in map(str,implemented_res)]))
+        assert self.ppd in implemented_res, \
+            ' Resolution %d ppd not implemented yet\n.\
+            Consider using one of the implemented resolutions %s'\
+            %(self.ppd, ', '.join([f+' ppd' for f in map(str,implemented_res)]))
+
+        if self.ppd == 256:
+            assert (np.abs(self.latM) < 60) and (np.abs(self.latm)<60),\
+                'This resolution is available in\n \
+                in cylindrical geometry only for -60<latitude<60 '
 
     def _map_center(self,coord,val):
 
@@ -429,6 +435,9 @@ class WacMap(object):
             return res[coord]/2.0
         elif self.ppd in [128]:
             res = {'lat' : 90, 'long' : 90}
+            return (val//res[coord]+1)*res[coord]-res[coord]/2.0
+        elif self.ppd in [256]:
+            res = {'lat' : 60, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
 
     def _Define_Case(self):
@@ -637,7 +646,7 @@ class LolaMap(WacMap):
 
     '''
 
-    implemented_res = [4,16,64,128,512]
+    implemented_res = [4,16,64,128,256,512,1024]
 
     def __init__(self,ppd,lonm,lonM,latm,latM):
         self.ppd = ppd
@@ -662,8 +671,16 @@ class LolaMap(WacMap):
         if self.ppd in [4,16,64,128]:
             res = {'lat' : 0, 'long' : 360}
             return res[coord]/2.0
+        elif self.ppd in [256]:
+            res = {'lat' : 90, 'long' : 180}
+            c = (val//res[coord]+1)*res[coord]            
+            return c-res[coord], c
         elif self.ppd in [512]:
             res = {'lat' : 45, 'long' : 90}
+            c = (val//res[coord]+1)*res[coord]            
+            return c-res[coord], c
+        elif self.ppd in [1024]:
+            res = {'lat' : 15, 'long' : 30}
             c = (val//res[coord]+1)*res[coord]            
             return c-res[coord], c
         
