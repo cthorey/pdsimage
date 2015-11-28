@@ -12,6 +12,7 @@ from pvl import load as load_label
 import urllib,requests
 
 class BinaryTable(object):
+    
     ''' Class which is able to read PDS image file for LOLA/WAC images.
 
     LOLA - All information can be found at
@@ -420,6 +421,12 @@ class WacMap(object):
             res = {'lat' : 90, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
 
+    def _format_name_map(self,lonc,latc):
+        '''
+        Return the name of the map in the good format
+        '''
+        return '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
+                
     def _Define_Case(self):
         ''' Identify case:
         1 - The desired structure is entirely contained into one image.
@@ -469,9 +476,10 @@ class WacMap(object):
 
         lonc = self._format_lon(self.lonm)
         latc = self._format_lat(self.latm)
-        wac = '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
-        wacmap = BinaryTable(wac)
-        return wacmap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+        img = self._format_name_map(lonc,latc)
+        img_map = BinaryTable(img)
+
+        return img_map.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
 
     def _Cas_2(self):
         '''1 - The span in latitude of the image is ok but
@@ -481,22 +489,20 @@ class WacMap(object):
         lonc_left = self._format_lon(self.lonm)
         lonc_right = self._format_lon(self.lonM)
         latc = self._format_lat(self.latm)
-        
-        wac_name_left = '_'.join(['WAC','GLOBAL',\
-                                  'E'+latc+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
 
-        wac_left = BinaryTable(wac_name_left)
-        X_left,Y_left,Z_left  = wac_left.Extract_Grid(self.lonm,
-                                                      wac_left.EASTERNMOST_LONGITUDE,
-                                                      self.latm,self.latM)
+        img_name_left = self._format_name_map(lonc_left,latc)
+        img_left = BinaryTable(img_name_left)
+        X_left,Y_left,Z_left  = img_left.Extract_Grid(self.lonm,
+                                                      img_left.EASTERNMOST_LONGITUDE,
+                                                      self.latm,
+                                                      self.latM)
 
-        wac_name_right = '_'.join(['WAC','GLOBAL',\
-                                   'E'+latc+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
-
-        wac_right = BinaryTable(wac_name_right)
-        X_right,Y_right,Z_right  = wac_right.Extract_Grid(wac_right.WESTERNMOST_LONGITUDE,
-                                                      self.lonM,
-                                                          self.latm,self.latM)
+        img_name_right = self._format_name_map(lonc_right,latc)
+        img_right = BinaryTable(img_name_right)
+        X_right,Y_right,Z_right  = img_right.Extract_Grid(img_right.WESTERNMOST_LONGITUDE,
+                                                          self.lonM,
+                                                          self.latm,
+                                                          self.latM)
 
         X_new = np.hstack((X_left,X_right))
         Y_new = np.hstack((Y_left,Y_right))
@@ -512,22 +518,20 @@ class WacMap(object):
         lonc = self._format_lon(self.lonm)
         latc_top = self._format_lat(self.latM)
         latc_bot = self._format_lat(self.latm)
-        
-        wac_name_top = '_'.join(['WAC','GLOBAL',\
-                                  'E'+latc_top+lonc,"{0:0>3}".format(self.ppd)+'P'])
-        wac_top = BinaryTable(wac_name_top)
-        X_top,Y_top,Z_top  = wac_top.Extract_Grid(self.lonm,
+
+        img_name_top = self._format_name_map(lonc,latc_top)
+        img_top = BinaryTable(img_name_top)
+        X_top,Y_top,Z_top  = img_top.Extract_Grid(self.lonm,
                                                   self.lonM,
-                                                  wac_top.MINIMUM_LATITUDE,
+                                                  img_top.MINIMUM_LATITUDE,
                                                   self.latM)
 
-        wac_name_bottom = '_'.join(['WAC','GLOBAL',\
-                                   'E'+latc_bot+lonc,"{0:0>3}".format(self.ppd)+'P'])
-        wac_bottom = BinaryTable(wac_name_bottom)
-        X_bottom,Y_bottom,Z_bottom  = wac_bottom.Extract_Grid(self.lonm,
+        img_name_bottom = self._format_name_map(lonc,latc_bot)
+        img_bottom = BinaryTable(img_name_bottom)
+        X_bottom,Y_bottom,Z_bottom  = img_bottom.Extract_Grid(self.lonm,
                                                               self.lonM,
                                                               self.latm,
-                                                              wac_bottom.MAXIMUM_LATITUDE)
+                                                              img_bottom.MAXIMUM_LATITUDE)
 
         X_new = np.vstack((X_top,X_bottom))
         Y_new = np.vstack((Y_top,Y_bottom))
@@ -543,42 +547,35 @@ class WacMap(object):
         lonc_right = self._format_lon(self.lonM)
         latc_top = self._format_lat(self.latM)
         latc_bot = self._format_lat(self.latm)
-        
-        wac_name_00 = '_'.join(['WAC','GLOBAL',\
-                                'E'+latc_top+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
-        wac_00 = BinaryTable(wac_name_00)
-        X_00,Y_00,Z_00  = wac_00.Extract_Grid(self.lonm,
-                                              wac_00.EASTERNMOST_LONGITUDE,
-                                              wac_00.MINIMUM_LATITUDE,
-                                              self.latM)
-        
-        wac_name_01 = '_'.join(['WAC','GLOBAL',\
-                                  'E'+latc_top+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
-        wac_01 = BinaryTable(wac_name_01)
-        X_01,Y_01,Z_01  = wac_01.Extract_Grid(wac_01.WESTERNMOST_LONGITUDE,
-                                              self.lonM,
-                                              wac_01.MINIMUM_LATITUDE,
-                                              self.latM)
-        
-        wac_name_10 = '_'.join(['WAC','GLOBAL',\
-                                'E'+latc_bot+lonc_left,"{0:0>3}".format(self.ppd)+'P'])
-        wac_10 = BinaryTable(wac_name_10)
-        X_10,Y_10,Z_10  = wac_10.Extract_Grid(self.lonm,
-                                              wac_10.EASTERNMOST_LONGITUDE,
-                                              self.latm,
-                                              wac_10.MAXIMUM_LATITUDE)
 
-        wac_name_11 = '_'.join(['WAC','GLOBAL',\
-                                'E'+latc_bot+lonc_right,"{0:0>3}".format(self.ppd)+'P'])
-        wac_11 = BinaryTable(wac_name_11)
-        print(wac_name_11)
-        print(wac_11.WESTERNMOST_LONGITUDE,self.lonM,self.latm,wac_11.MAXIMUM_LATITUDE)
-        X_11,Y_11,Z_11  = wac_11.Extract_Grid(wac_11.WESTERNMOST_LONGITUDE,
+        img_name_00 = self._format_name_map(lonc_left,latc_top)
+        img_00 = BinaryTable(img_name_00)
+        X_00,Y_00,Z_00  = img_00.Extract_Grid(self.lonm,
+                                              img_00.EASTERNMOST_LONGITUDE,
+                                              img_00.MINIMUM_LATITUDE,
+                                              self.latM)
+
+        img_name_01 = self._format_name_map(lonc_right,latc_top)
+        img_01 = BinaryTable(img_name_01)
+        X_01,Y_01,Z_01  = img_01.Extract_Grid(img_01.WESTERNMOST_LONGITUDE,
+                                              self.lonM,
+                                              img_01.MINIMUM_LATITUDE,
+                                              self.latM)
+
+        img_name_10 = self._format_name_map(lonc_left,latc_bot)
+        img_10 = BinaryTable(img_name_10)
+        X_10,Y_10,Z_10  = img_10.Extract_Grid(self.lonm,
+                                              img_10.EASTERNMOST_LONGITUDE,
+                                              self.latm,
+                                              img_10.MAXIMUM_LATITUDE)
+
+        img_name_11 = self._format_name_map(lonc_right,latc_bot)
+        img_11 = BinaryTable(img_name_11)
+        X_11,Y_11,Z_11  = img_11.Extract_Grid(img_11.WESTERNMOST_LONGITUDE,
                                               self.lonM,
                                               self.latm,
-                                              wac_11.MAXIMUM_LATITUDE)
+                                              img_11.MAXIMUM_LATITUDE)
 
-        # return Z_00,Z_01,Z_10,Z_11
         X_new_top = np.hstack((X_00,X_01))
         X_new_bot = np.hstack((X_10,X_11))
         X_new = np.vstack((X_new_top,X_new_bot))
@@ -672,6 +669,14 @@ class LolaMap(WacMap):
 
         return latm,latM
 
+    def _format_name_map(self,lonm,lonM,latm,latM):
+        '''
+        Return the name of the map in the good format
+        '''
+
+        return '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
+
+        
     def _Cas_1(self):
         ''' Ni long ni lat ne croise en bord de la carte
         colle le bon wac sur self.wac '''
