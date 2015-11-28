@@ -217,6 +217,14 @@ class BinaryTable(object):
                   / float(self.MAP_RESOLUTION)
             return lon
 
+    def _control_sample(self, sample):
+        if sample > float(self.SAMPLE_LAST_PIXEL):
+            return int(self.SAMPLE_LAST_PIXEL)
+        elif sample < float(self.SAMPLE_FIRST_PIXEL):
+            return int(self.SAMPLE_FIRST_PIXEL)
+        else:
+            return sample
+            
     def Sample_id(self,lon):
         ''' Return the corresponding longitude sample'''
         if self.Grid == 'WAC':
@@ -224,24 +232,27 @@ class BinaryTable(object):
                              (lon*np.pi/180.0-float(self.CENTER_LONGITUDE))*\
                              self.A_AXIS_RADIUS*np.cos(self.CENTER_LATITUDE*np.pi/180.0)\
                               /(self.MAP_SCALE*1e-3))
-            if sample == 0:
-                return 1
-            else:
-                return sample
         else:
-            return np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + float(self.MAP_RESOLUTION)\
-                           * (lon - float(self.CENTER_LONGITUDE))) + 1
+            sample =  np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + float(self.MAP_RESOLUTION)\
+                              * (lon - float(self.CENTER_LONGITUDE))) + 1
+        return self._control_sample(sample)
+
+    def _control_line(self, line):
+        if line>float(self.LINE_LAST_PIXEL):
+            return int(self.LINE_LAST_PIXEL)
+        elif line< float(self.LINE_FIRST_PIXEL):
+            return int(self.LINE_FIRST_PIXEL)
+        else:
+            return line
+                
     def Line_id(self,lat):
         ''' Return the corresponding latitude line'''
         if self.Grid == 'WAC':
-            li = np.rint(1.0 + self.LINE_PROJECTION_OFFSET-self.A_AXIS_RADIUS*np.pi*lat/(self.MAP_SCALE*1e-3*180))
-            if li == 0:
-                return 1
-            else:
-                return li
+            line = np.rint(1.0 + self.LINE_PROJECTION_OFFSET-self.A_AXIS_RADIUS*np.pi*lat/(self.MAP_SCALE*1e-3*180))
         else:
-            return np.rint(float(self.LINE_PROJECTION_OFFSET) - float(self.MAP_RESOLUTION)\
-                           * (lat - float(self.CENTER_LATITUDE))) + 1
+            line =  np.rint(float(self.LINE_PROJECTION_OFFSET) - float(self.MAP_RESOLUTION)\
+                          * (lat - float(self.CENTER_LATITUDE))) + 1
+        return self._control_line(line)
 
     def Array(self,size_chunk,start,bytesize):
         ''' Read part of the binary file
@@ -286,7 +297,6 @@ class BinaryTable(object):
 
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
-        print(sample_min,sample_max,line_min,line_max)
         X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
 
@@ -421,12 +431,6 @@ class WacMap(object):
             res = {'lat' : 90, 'long' : 90}
             return (val//res[coord]+1)*res[coord]-res[coord]/2.0
 
-    def _format_name_map(self,lonc,latc):
-        '''
-        Return the name of the map in the good format
-        '''
-        return '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
-                
     def _Define_Case(self):
         ''' Identify case:
         1 - The desired structure is entirely contained into one image.
@@ -438,20 +442,21 @@ class WacMap(object):
 
         lonBool = self._map_center('long',self.lonM) != self._map_center('long',self.lonm)
         latBool = self._map_center('lat',self.latM) != self._map_center('lat',self.latm)
-        print(self._map_center('lat',self.latM),self._map_center('lat',self.latm))
 
         if not lonBool and not latBool:
             print('No overlap - Processing should be quick')
             return self._Cas_1()
         elif lonBool and not latBool:
-            print('Longitude overlap - Processing could take a few seconds')
+            print('Longitude overlap - 2 images have to be proceded \n \
+                  Processing could take a few seconds')
             return self._Cas_2()
         elif not lonBool and latBool:
-            print('Latitude overlap - Processing could take a few seconds')
+            print('Latitude overlap - 2 images have to be proceded \n\
+                  Processing could take a few seconds')
             return self._Cas_3()
         else:
-            print('Latitude/Longidude overlaps - Processing could take a few\
-                  10s of seconds')
+            print('Latitude/Longidude overlaps - 4 images have to be proceded \n\
+                  Processing could take a few seconds')
             return self._Cas_4()
 
     def _format_lon(self,lon):
@@ -471,6 +476,12 @@ class WacMap(object):
 
         return latcenter
 
+    def _format_name_map(self,lonc,latc):
+        '''
+        Return the name of the map in the good format
+        '''
+        return '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
+        
     def _Cas_1(self):
         '''1 - The desired structure is entirely contained into one image.'''
 
@@ -491,15 +502,16 @@ class WacMap(object):
         latc = self._format_lat(self.latm)
 
         img_name_left = self._format_name_map(lonc_left,latc)
+        print(img_name_left)
         img_left = BinaryTable(img_name_left)
         X_left,Y_left,Z_left  = img_left.Extract_Grid(self.lonm,
-                                                      img_left.EASTERNMOST_LONGITUDE,
+                                                      float(img_left.EASTERNMOST_LONGITUDE),
                                                       self.latm,
                                                       self.latM)
 
         img_name_right = self._format_name_map(lonc_right,latc)
         img_right = BinaryTable(img_name_right)
-        X_right,Y_right,Z_right  = img_right.Extract_Grid(img_right.WESTERNMOST_LONGITUDE,
+        X_right,Y_right,Z_right  = img_right.Extract_Grid(float(img_right.WESTERNMOST_LONGITUDE),
                                                           self.lonM,
                                                           self.latm,
                                                           self.latM)
@@ -520,18 +532,21 @@ class WacMap(object):
         latc_bot = self._format_lat(self.latm)
 
         img_name_top = self._format_name_map(lonc,latc_top)
+        print(img_name_top)
         img_top = BinaryTable(img_name_top)
+        print(self.lonm,self.lonM,float(img_top.MINIMUM_LATITUDE),self.latM)
         X_top,Y_top,Z_top  = img_top.Extract_Grid(self.lonm,
                                                   self.lonM,
-                                                  img_top.MINIMUM_LATITUDE,
+                                                  float(img_top.MINIMUM_LATITUDE),
                                                   self.latM)
 
         img_name_bottom = self._format_name_map(lonc,latc_bot)
+        print(img_name_bottom)
         img_bottom = BinaryTable(img_name_bottom)
         X_bottom,Y_bottom,Z_bottom  = img_bottom.Extract_Grid(self.lonm,
                                                               self.lonM,
                                                               self.latm,
-                                                              img_bottom.MAXIMUM_LATITUDE)
+                                                              float(img_bottom.MAXIMUM_LATITUDE))
 
         X_new = np.vstack((X_top,X_bottom))
         Y_new = np.vstack((Y_top,Y_bottom))
@@ -551,30 +566,30 @@ class WacMap(object):
         img_name_00 = self._format_name_map(lonc_left,latc_top)
         img_00 = BinaryTable(img_name_00)
         X_00,Y_00,Z_00  = img_00.Extract_Grid(self.lonm,
-                                              img_00.EASTERNMOST_LONGITUDE,
-                                              img_00.MINIMUM_LATITUDE,
+                                              float(img_00.EASTERNMOST_LONGITUDE),
+                                              float(img_00.MINIMUM_LATITUDE),
                                               self.latM)
 
         img_name_01 = self._format_name_map(lonc_right,latc_top)
         img_01 = BinaryTable(img_name_01)
-        X_01,Y_01,Z_01  = img_01.Extract_Grid(img_01.WESTERNMOST_LONGITUDE,
+        X_01,Y_01,Z_01  = img_01.Extract_Grid(float(img_01.WESTERNMOST_LONGITUDE),
                                               self.lonM,
-                                              img_01.MINIMUM_LATITUDE,
+                                              float(img_01.MINIMUM_LATITUDE),
                                               self.latM)
 
         img_name_10 = self._format_name_map(lonc_left,latc_bot)
         img_10 = BinaryTable(img_name_10)
         X_10,Y_10,Z_10  = img_10.Extract_Grid(self.lonm,
-                                              img_10.EASTERNMOST_LONGITUDE,
+                                              float(img_10.EASTERNMOST_LONGITUDE),
                                               self.latm,
-                                              img_10.MAXIMUM_LATITUDE)
+                                              float(img_10.MAXIMUM_LATITUDE))
 
         img_name_11 = self._format_name_map(lonc_right,latc_bot)
         img_11 = BinaryTable(img_name_11)
-        X_11,Y_11,Z_11  = img_11.Extract_Grid(img_11.WESTERNMOST_LONGITUDE,
+        X_11,Y_11,Z_11  = img_11.Extract_Grid(float(img_11.WESTERNMOST_LONGITUDE),
                                               self.lonM,
                                               self.latm,
-                                              img_11.MAXIMUM_LATITUDE)
+                                              float(img_11.MAXIMUM_LATITUDE))
 
         X_new_top = np.hstack((X_00,X_01))
         X_new_bot = np.hstack((X_10,X_11))
@@ -632,7 +647,6 @@ class LolaMap(WacMap):
         self.latM = latM
         self._Confirm_Resolution(LolaMap.implemented_res)
         
-        
     def _map_center(self,coord,val):
 
         ''' Identitify the center of the Image correspond to one coordinate.
@@ -650,45 +664,33 @@ class LolaMap(WacMap):
             return res[coord]/2.0
         elif self.ppd in [512]:
             res = {'lat' : 45, 'long' : 90}
-            return (val//res[coord]+1)*res[coord]-res[coord]/2.0
-
-    def _map_border(self,coord,val):
-        res = {512 : {'lat' : 45,'long' : 90}}
-        c = (val//res[self.ppd][coord]+1)*res[self.ppd][coord]
-        return c-res[self.ppd][coord],c
-
+            c = (val//res[coord]+1)*res[coord]            
+            return c-res[coord], c
+        
     def _format_lon(self,lon):
-        lonm,lonM = map(lambda x:"{0:0>3}".format(int(x)),self._map_border('long',lon))
-        return lonm,lonM
+        if self.ppd in [4,16,64,128]:
+            return None
+        else:
+            return  map(lambda x:"{0:0>3}".format(int(x)),self._map_center('long',lon))
 
     def _format_lat(self,lat):
-        if lat<0:
-            latm,latM = map(lambda x:"{0:0>2}".format(int(np.abs(x)))+'S',self._map_border('lat',lat))
+        if self.ppd in [4,16,64,128]:
+            return None
         else:
-            latm,latM = map(lambda x:"{0:0>2}".format(int(x))+'N',self._map_border('lat',lat))
+            if lat<0:
+                return map(lambda x:"{0:0>2}"\
+                           .format(int(np.abs(x)))+'S',self._map_center('lat',lat))
+            else:
+                return map(lambda x:"{0:0>2}"\
+                           .format(int(x))+'N',self._map_center('lat',lat))
 
-        return latm,latM
-
-    def _format_name_map(self,lonm,lonM,latm,latM):
+    def _format_name_map(self,lon,lat):
         '''
         Return the name of the map in the good format
         '''
 
-        return '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
-
-        
-    def _Cas_1(self):
-        ''' Ni long ni lat ne croise en bord de la carte
-        colle le bon wac sur self.wac '''
-
         if self.ppd in [4,16,64,128]:
-            lola = '_'.join(['LDEM',str(self.ppd)])
-
+            lolaname = '_'.join(['LDEM',str(self.ppd)])
         elif self.ppd in [512]:
-            lonm,lonM = self._format_lon(self.lonm)
-            latm,latM = self._format_lat(self.latm)
-            lola = '_'.join(['LDEM',str(self.ppd),latm,latM,lonm,lonM])
-
-        lolamap = BinaryTable(lola)
-
-        return lolamap.Extract_Grid(self.lonm,self.lonM,self.latm,self.latM)
+            lolaname = '_'.join(['LDEM',str(self.ppd),lat[0],lat[1],lon[0],lon[1]])
+        return lolaname
