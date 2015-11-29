@@ -297,7 +297,7 @@ class BinaryTable(object):
 
         sample_min,sample_max = map(int,map(self.Sample_id,[longmin,longmax]))
         line_min,line_max = map(int,map(self.Line_id,[latmax,latmin]))
-        X = np.array(map(self.Long_id,(range(sample_min,sample_max+1,1))))
+        X = np.array(map(self.Long_id,(range(sample_min,sample_max,1))))
         Y = np.array(map(self.Lat_id,(range(line_min,line_max+1,1))))
 
         for i,line in enumerate(range(int(line_min),int(line_max)+1)):

@@ -332,7 +332,6 @@ class Area(object):
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
         self._Add_Scale(m,ax1)
-        ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
         path = os.path.join(self.racine,'Image',name)
         if save == True:
@@ -367,7 +366,6 @@ class Area(object):
         ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
 
         self._Add_Scale(m,ax1)
-        ax1.set_title('Crater %s, %d km in diameter'%(self.Name,self.Diameter),size = 42)
 
         path = os.path.join(self.racine,'Image',name)
         if save == True:
@@ -377,7 +375,8 @@ class Area(object):
         return radius*360/(2*np.pi*1734.4)
 
         
-class Structure(object):
+
+class Crater(Area):
     ''' A class able to gather information on Topography and Image about
     a specified area around a geological unit (Crater or dome).
 
@@ -426,7 +425,7 @@ class Structure(object):
     
     '''
     
-    def __init__(self,ide,idx,structure):
+    def __init__(self,ide,idx):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
@@ -434,30 +433,22 @@ class Structure(object):
         - idx : Corresponding name or index
         '''
 
-        self.structure = structure
         self.racine = BinaryTable.racine
         self.ppdlola = 512
         self.ppdwac = 128
 
-        if structure == 'Dome':
-            self.structures = pd.read_csv(os.path.join(self.racine,'Data',
-            'Data_Dome.csv'))
-        elif structure == 'Crater':
-            self.structures = pd.read_csv(os.path.join(self.racine,'Data',
-            'Data_Crater.csv'))
-        else:
-            raise ValueError("Structure %s is not recognized. Possible\n\
-                             values are: %s"% (structure, ', '.join(['Dome','Crater'])))
+        self.craters = pd.read_csv(os.path.join(self.racine,'Data',
+                                                   'Data_Crater.csv'))
 
         inde = {'n':'Name','i':'Index'}
-        df = self.structures[self.structures[inde[ide]] == idx]
+        df = self.craters[self.craters[inde[ide]] == idx]
         if len(df) == 0:
             raise ValueError("The tuple (%s,%s) does not correspond\n \
                              to any structure in the dataset. "%(ide,idx))
             
         [setattr(self,f,float(df[f])) for f in df.columns if f not in ['Name']]
 
-        assert self.Long>0.0, 'Longitude has to span 0-360 !!!'
+        assert (self.Long>0.0)&(self.Long<360.0) , 'Longitude has to span 0-360 !!!'
         self.Name = df.Name.iloc[0]
         self.Change_window(0.8*self.Diameter)
         
@@ -753,3 +744,80 @@ class Structure(object):
 
     def _Deg(self,radius):
         return radius*360/(2*np.pi*1734.4)
+        
+
+class Dome(Area):
+    ''' A class able to gather information on Topography and Image about
+    a specified area around a geological unit (Crater or dome).
+
+    parameters:
+
+    - structure : Name of the structure. Either "Crater" or "Dome".
+    - ide : This class allow to defined the unit by its name "n" or its
+    index "i".
+    - idx : Corresponding name or index
+
+    attributes:
+
+    - structure : Type of the geological unit (Crater/Dome)
+    - racine : path for project
+    - ppdlola : resolution of the Lola image
+    - ppdwac : resolution of the Wac image
+    - Name/Diameter/Radius/Lat/Long : property of the geological unit
+    - Taille_Window : Size of the window to consider around the unit
+
+    methods:
+    
+    - Lambert_Window :  This method is used to determine the bottom-left
+    and upper-right coordinates for a square Lambert Azimuthal
+    equal area projection centered at (lat0,long0 with a size radius).
+
+    - Cylindrical_Window : This method is used to determine the bottom-left
+    and upper-right coordinates for a cylindrical projection
+    centered at (lat0,long0 with a size radius). See
+    Wikipedia
+
+    - Get_Arrays : Return X,Y,Z of the region for the img asked.
+    img is either 'Lola' for the topography or
+    'wac' for WAC image.
+
+    - Lola_Image, Wac_Image, Overlay : Return the corresponding
+    plot. A blue triangle is added as well as a scale for completnesss
+    of the plot.
+    
+    Example:
+    
+    For instance, say we want to image the crater Copernicus. We can the
+    define an instance of the class
+    
+    C = Structure('n','Copernicus','Crater')
+    C.Overlay(True)
+    
+    '''
+    
+    def __init__(self,ide,idx):
+        '''
+        - structure : Name of the structure. Either "Crater" or "Dome".
+        - ide : This class allow to defined the unit by its name "n" or its
+        index "i".
+        - idx : Corresponding name or index
+        '''
+
+        self.racine = BinaryTable.racine
+        self.ppdlola = 512
+        self.ppdwac = 128
+
+        
+        self.domes = pd.read_csv(os.path.join(self.racine,'Data',
+        inde = {'n':'Name','i':'Index'}
+        df = self.domes[self.domes[inde[ide]] == idx]
+        if len(df) == 0:
+            raise ValueError("The tuple (%s,%s) does not correspond\n \
+                             to any structure in the dataset. "%(ide,idx))
+            
+        [setattr(self,f,float(df[f])) for f in df.columns if f not in ['Name']]
+
+        assert (self.Long>0.0)&(self.Long<360.0), 'Longitude has to span 0-360 !!!'
+        self.Name = df.Name.iloc[0]
+        self.Change_window(0.8*self.Diameter)
+        
