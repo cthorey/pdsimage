@@ -489,6 +489,7 @@ class WacMap(object):
         '''
         Return the name of the map in the good format
         '''
+        print(lonc,latc)
         return '_'.join(['WAC','GLOBAL','E'+latc+lonc,"{0:0>3}".format(self.ppd)+'P'])
         
     def _Cas_1(self):
@@ -510,6 +511,7 @@ class WacMap(object):
         lonc_right = self._format_lon(self.lonM)
         latc = self._format_lat(self.latm)
 
+        print(lonc_left,lonc_right,self.lonm,self.lonM)
         img_name_left = self._format_name_map(lonc_left,latc)
         print(img_name_left)
         img_left = BinaryTable(img_name_left)
