@@ -404,7 +404,18 @@ class WacMap(object):
         self.lonM = lonM
         self.latm = latm
         self.latM = latM
+        self._control_longitude()
         self._Confirm_Resolution(WacMap.implemented_res)
+
+    def _control_longitude(self):
+        if self.lonm < 0.0:
+            self.lonm = 360.0 + self.lonm
+        if self.lonM < 0.0:
+            self.lonM = 360.0 + self.lonM
+        if self.lonm > 360.0:
+            self.lonm = self.lonm - 360.0
+        if self.lonM > 360.0:
+            self.lonM = self.lonM-360.0
         
     def _Confirm_Resolution(self,implemented_res):
         # All resolution are not implemented
@@ -656,8 +667,10 @@ class LolaMap(WacMap):
         self.lonM = lonM
         self.latm = latm
         self.latM = latM
+        self._control_longitude()
         self._Confirm_Resolution(LolaMap.implemented_res)
-        
+
+    
     def _map_center(self,coord,val):
 
         ''' Identitify the center of the Image correspond to one coordinate.
