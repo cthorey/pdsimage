@@ -64,20 +64,25 @@ class BinaryTable(object):
     '''
     racine = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector'
 
-    def __init__(self, fname):
+    def __init__(self, fname, path_pdsfile):
         ''' Parameter
         self.fname : name of the file
+        self.PDS_FILE : Path where the binary images are download. It should
+        consit of two folder, LOLA and LROC_WAC.
         self._Category : Identify weither its WAC/LOLA image
         self._Load_Info_LBL : Load corresponding information
         '''
 
         self.fname = fname.upper()
-        self.PDS_FILE = os.path.join(
-            '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
-        print('PDS_FILE located on %s' % (self.PDS_FILE))
+        self.PDS_FILE = path_pdsfile
         self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
-
+        if not os.path.isdir(self.LOLApath):
+            print('Creating a directory LOLA under %s' % (self.LOLApath))
+            os.mkdir(self.LOLApath)
+        if not os.path.isdir(self.WACpath):
+            print('Creating a directory WAC_LROC under %s' % (self.WACpath))
+            os.mkdir(self.WACpath)
         self._Category()
         self._maybe_download()
         self._Load_Info_LBL()
@@ -412,6 +417,10 @@ class WacMap(object):
 
     parameters:
     ppd : Resolution required
+    path_pdsfile : path where are stored the PDS_FILE. WAC File should
+    be contained within a folder LROC_WAC. By default, the path is set
+    to the folder where the library is install. See defaut_pdsfile
+
     lonm,lonM,latm,latM : Parameterize the window around the structure
 
     methods:
@@ -420,8 +429,14 @@ class WacMap(object):
     '''
 
     implemented_res = [4, 8, 16, 32, 64, 128, 256]
+    defaut_pdsfile = os.path.join(
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, ppd, lonm, lonM, latm, latM):
+    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile='base'):
+        if path_pdsfile == 'base':
+            self.pdsfile = WacMap.defaut_pdsfile
+        else:
+            self.pdsfile = path_pdsfile
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
@@ -532,7 +547,7 @@ class WacMap(object):
         lonc = self._format_lon(self.lonm)
         latc = self._format_lat(self.latm)
         img = self._format_name_map(lonc, latc)
-        img_map = BinaryTable(img)
+        img_map = BinaryTable(img, self.pdsfile)
 
         return img_map.Extract_Grid(self.lonm, self.lonM, self.latm, self.latM)
 
@@ -548,7 +563,7 @@ class WacMap(object):
         print(lonc_left, lonc_right, self.lonm, self.lonM)
         img_name_left = self._format_name_map(lonc_left, latc)
         print(img_name_left)
-        img_left = BinaryTable(img_name_left)
+        img_left = BinaryTable(img_name_left, self.pdsfile)
         X_left, Y_left, Z_left = img_left.Extract_Grid(self.lonm,
                                                        float(
                                                            img_left.EASTERNMOST_LONGITUDE),
@@ -556,7 +571,7 @@ class WacMap(object):
                                                        self.latM)
 
         img_name_right = self._format_name_map(lonc_right, latc)
-        img_right = BinaryTable(img_name_right)
+        img_right = BinaryTable(img_name_right, self.pdsfile)
         X_right, Y_right, Z_right = img_right.Extract_Grid(float(img_right.WESTERNMOST_LONGITUDE),
                                                            self.lonM,
                                                            self.latm,
@@ -579,7 +594,7 @@ class WacMap(object):
 
         img_name_top = self._format_name_map(lonc, latc_top)
         print(img_name_top)
-        img_top = BinaryTable(img_name_top)
+        img_top = BinaryTable(img_name_top, self.pdsfile)
         print(self.lonm, self.lonM, float(img_top.MINIMUM_LATITUDE), self.latM)
         X_top, Y_top, Z_top = img_top.Extract_Grid(self.lonm,
                                                    self.lonM,
@@ -589,7 +604,7 @@ class WacMap(object):
 
         img_name_bottom = self._format_name_map(lonc, latc_bot)
         print(img_name_bottom)
-        img_bottom = BinaryTable(img_name_bottom)
+        img_bottom = BinaryTable(img_name_bottom, self.pdsfile)
         X_bottom, Y_bottom, Z_bottom = img_bottom.Extract_Grid(self.lonm,
                                                                self.lonM,
                                                                self.latm,
@@ -611,7 +626,7 @@ class WacMap(object):
         latc_bot = self._format_lat(self.latm)
 
         img_name_00 = self._format_name_map(lonc_left, latc_top)
-        img_00 = BinaryTable(img_name_00)
+        img_00 = BinaryTable(img_name_00, self.pdsfile)
         X_00, Y_00, Z_00 = img_00.Extract_Grid(self.lonm,
                                                float(
                                                    img_00.EASTERNMOST_LONGITUDE),
@@ -619,14 +634,14 @@ class WacMap(object):
                                                self.latM)
 
         img_name_01 = self._format_name_map(lonc_right, latc_top)
-        img_01 = BinaryTable(img_name_01)
+        img_01 = BinaryTable(img_name_01, self.pdsfile)
         X_01, Y_01, Z_01 = img_01.Extract_Grid(float(img_01.WESTERNMOST_LONGITUDE),
                                                self.lonM,
                                                float(img_01.MINIMUM_LATITUDE),
                                                self.latM)
 
         img_name_10 = self._format_name_map(lonc_left, latc_bot)
-        img_10 = BinaryTable(img_name_10)
+        img_10 = BinaryTable(img_name_10, self.pdsfile)
         X_10, Y_10, Z_10 = img_10.Extract_Grid(self.lonm,
                                                float(
                                                    img_10.EASTERNMOST_LONGITUDE),
@@ -634,7 +649,7 @@ class WacMap(object):
                                                float(img_10.MAXIMUM_LATITUDE))
 
         img_name_11 = self._format_name_map(lonc_right, latc_bot)
-        img_11 = BinaryTable(img_name_11)
+        img_11 = BinaryTable(img_name_11, self.pdsfile)
         X_11, Y_11, Z_11 = img_11.Extract_Grid(float(img_11.WESTERNMOST_LONGITUDE),
                                                self.lonM,
                                                self.latm,
@@ -678,6 +693,9 @@ class LolaMap(WacMap):
 
     parameters:
     ppd : Resolution required
+    path_pdsfile : path where are stored the PDS_FILE. LOLA File should
+    be contained within a folder LOLA. By default, the path is set
+    to the folder where the library is install. See defaut_pdsfile
     lonm,lonM,latm,latM : Parameterize the window around the structure
 
     methods:
@@ -686,8 +704,14 @@ class LolaMap(WacMap):
     '''
 
     implemented_res = [4, 16, 64, 128, 256, 512, 1024]
+    defaut_pdsfile = os.path.join(
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, ppd, lonm, lonM, latm, latM):
+    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile='base'):
+        if path_pdsfile == 'base':
+            self.pdsfile = LolaMap.defaut_pdsfile
+        else:
+            self.pdsfile = path_pdsfile
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
