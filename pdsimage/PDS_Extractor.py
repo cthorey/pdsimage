@@ -72,9 +72,10 @@ class BinaryTable(object):
         '''
 
         self.fname = fname.upper()
-        self.PDS_FILE = os.path.join(BinaryTable.racine, 'PDS_FILE')
+        self.PDS_FILE = os.path.join(__file__, 'PDS_FILE')
         self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
+
         self._Category()
         self._maybe_download()
         self._Load_Info_LBL()
