@@ -41,7 +41,7 @@ class BinaryTable(object):
 
     parameter:
     - fname : name of the binary file without the extension
-    - self.PDS_FILE : Path where the binary images are download. It should
+    - self.pdsfiles : Path where the binary images are download. It should
     consit of two folder, LOLA and LROC_WAC.
     - self.LOLApath : path for LOLA images
     - self.WACpath : path for WAC images
@@ -68,25 +68,28 @@ class BinaryTable(object):
     def __init__(self, fname, path_pdsfile=defaut_pdsfile):
         ''' Parameter
         self.fname : name of the file
-        self.PDS_FILE : Path where the binary images are download. It should
+        self.pdsfiles : Path where the binary images are download. It should
         consit of two folder, LOLA and LROC_WAC.
         self._Category : Identify weither its WAC/LOLA image
         self._Load_Info_LBL : Load corresponding information
         '''
 
         self.fname = fname.upper()
-        self.PDS_FILE = path_pdsfile
-        if not os.access(self.PDS_FILE, os.W_OK):
-            print()
-            RuntimeError("%s : The path where PDS are is read only.\
-                         It might be the defaut path if you install\
-                         in a directory without any rights. \
-                         Please feed a path with more permission to store PDS_FILES" % (self.PDS_FILE))
+        self.pdsfiles = path_pdsfile
+        if not os.access(self.pdsfiles, os.W_OK):
+            print(self.pdsfiles, os.access(self.pdsfiles, os.W_OK))
+            raise BaseException("% s: The path where PDS are is read
+                                only. It might be the defaut path
+                                if you install in a directory
+                                without any rights. Please feed a
+                                path with more permission to store
+                                PDS_FILES" % (self.pdsfiles))
         else:
-            print('PDS FILES used are in: %s' % (self.PDS_FILE))
+            print('PDS FILES used are in: %s' % (self.pdsfiles))
 
-        self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
-        self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
+        print(self.pdsfiles, os.access(self.pdsfiles, os.W_OK))
+        self.LOLApath = os.path.join(self.pdsfiles, 'LOLA')
+        self.WACpath = os.path.join(self.pdsfiles, 'LROC_WAC')
         if not os.path.isdir(self.LOLApath):
             print('Creating a directory LOLA under %s' % (self.LOLApath))
             os.mkdir(self.LOLApath)
