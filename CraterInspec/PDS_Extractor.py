@@ -66,12 +66,12 @@ class BinaryTable(object):
 
     def __init__(self, fname):
         ''' Parameter
-        self.name : name of the file
+        self.fname : name of the file
         self._Category : Identify weither its WAC/LOLA image
         self._Load_Info_LBL : Load corresponding information
         '''
 
-        self.fname = fname
+        self.fname = fname.upper()
         self.PDS_FILE = os.path.join(BinaryTable.racine, 'PDS_FILE')
         self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
@@ -273,7 +273,10 @@ class BinaryTable(object):
             f1.seek(self.start_byte + start * self.bytesize)
             data = f1.read(size_chunk * self.bytesize)
             Z = np.fromstring(data, dtype=self.dtype, count=size_chunk)
-            return Z
+            if self.Grid == 'LOLA':
+                return Z * float(self.SCALING_FACTOR)
+            else:
+                return Z
 
     def Extract_All(self):
         ''' Extract all the image and return three tables X (longitude),
