@@ -1,3 +1,5 @@
+MANIFEST.in
+README.md
 setup.py
 pdsimage/PDS_Extractor.py
 pdsimage/Structure.py
@@ -8,3 +10,11 @@ pdsimage.egg-info/dependency_links.txt
 pdsimage.egg-info/not-zip-safe
 pdsimage.egg-info/requires.txt
 pdsimage.egg-info/top_level.txt
+pdsimage/PDS_FILE/LOLA/LDEM_16.IMG
+pdsimage/PDS_FILE/LOLA/LDEM_16.LBL
+pdsimage/PDS_FILE/LOLA/LDEM_4.IMG
+pdsimage/PDS_FILE/LOLA/LDEM_4.LBL
+pdsimage/PDS_FILE/LOLA/LDEM_8.IMG
+pdsimage/PDS_FILE/LOLA/LDEM_8.LBL
+pdsimage/PDS_FILE/LROC_WAC/WAC_GLOBAL_E000N1800_004P.IMG
+pdsimage/PDS_FILE/LROC_WAC/WAC_GLOBAL_E000N1800_016P.IMG

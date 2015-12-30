@@ -1,10 +1,15 @@
-Metadata-Version: 1.0
+Metadata-Version: 1.1
 Name: pdsimage
 Version: 0.1
-Summary: Create images from NASA PDS files
+Summary: Package for creating images from NASA PDS files
 Home-page: http://github.com/storborg/funniest
 Author: Thorey Clement
 Author-email: clement.thorey@gmail.com
 License: MIT
 Description: UNKNOWN
+Keywords: PDS LOLA WAC crater dome FFC floor-fractured craters
 Platform: UNKNOWN
+Classifier: Development Status :: 1 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Topic :: PDS Image :: Planetary Science
