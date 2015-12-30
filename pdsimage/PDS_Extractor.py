@@ -62,17 +62,29 @@ class BinaryTable(object):
     both configuration.
 
     '''
-    racine = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector'
+    defaut_pdsfile = os.path.join(
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, fname, path_pdsfile):
+    def __init__(self, fname, path_pdsfile=defaut_pdsfile):
         ''' Parameter
         self.fname : name of the file
+        self.PDS_FILE : Path where the binary images are download. It should
+        consit of two folder, LOLA and LROC_WAC.
         self._Category : Identify weither its WAC/LOLA image
         self._Load_Info_LBL : Load corresponding information
         '''
 
         self.fname = fname.upper()
         self.PDS_FILE = path_pdsfile
+        if not os.access(self.PDS_FILE, os.W_OK):
+            print()
+            RuntimeError("%s : The path where PDS are is read only.\
+                         It might be the defaut path if you install\
+                         in a directory without any rights. \
+                         Please feed a path with more permission to store PDS_FILES" % (self.PDS_FILE))
+        else:
+            print('PDS FILES used are in: %s' % (self.PDS_FILE))
+
         self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
         if not os.path.isdir(self.LOLApath):
@@ -415,6 +427,10 @@ class WacMap(object):
 
     parameters:
     ppd : Resolution required
+    path_pdsfile : path where are stored the PDS_FILE. WAC File should
+    be contained within a folder LROC_WAC. By default, the path is set
+    to the folder where the library is install. See defaut_pdsfile
+
     lonm,lonM,latm,latM : Parameterize the window around the structure
 
     methods:
@@ -426,11 +442,9 @@ class WacMap(object):
     defaut_pdsfile = os.path.join(
         '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile='base'):
-        if path_pdsfile == 'base':
-            self.pdsfile = WacMap.defaut_pdsfile
-        else:
-            self.pdsfile = path_pdsfile
+    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile=defaut_pdsfile):
+
+        self.pdsfile = path_pdsfile
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
@@ -687,7 +701,9 @@ class LolaMap(WacMap):
 
     parameters:
     ppd : Resolution required
-    path_pdsfile : path where pds_file are !
+    path_pdsfile : path where are stored the PDS_FILE. LOLA File should
+    be contained within a folder LOLA. By default, the path is set
+    to the folder where the library is install. See defaut_pdsfile
     lonm,lonM,latm,latM : Parameterize the window around the structure
 
     methods:
@@ -696,10 +712,8 @@ class LolaMap(WacMap):
     '''
 
     implemented_res = [4, 16, 64, 128, 256, 512, 1024]
-    defaut_pdsfile = os.path.join(
-        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile='base'):
+    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile=WacMap.defaut_pdsfile):
         if path_pdsfile == 'base':
             self.pdsfile = LolaMap.defaut_pdsfile
         else:
