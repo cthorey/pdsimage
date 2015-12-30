@@ -1,8 +1,8 @@
 # To be able to pass *(tuple) to function
 from __future__ import print_function
 # Library import
-import os,sys
-
+import os
+import sys
 
 # Load specific library
 from PDS_Extractor import *
@@ -19,7 +19,7 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 
 class Area(object):
-    
+
     ''' A class able to gather information on Topography and Image about
     a specified area at the lunar surface.
 
@@ -40,7 +40,7 @@ class Area(object):
     - Taille_Window : Size of the window to consider around the unit
 
     methods:
-    
+
     - Lambert_Window :  This method is used to determine the bottom-left
     and upper-right coordinates for a square Lambert Azimuthal
     equal area projection centered at (lat0,long0 with a size radius).
@@ -57,18 +57,18 @@ class Area(object):
     - Lola_Image, Wac_Image, Overlay : Return the corresponding
     plot. A blue triangle is added as well as a scale for completnesss
     of the plot.
-    
+
     Example:
-    
+
     For instance, say we want to image the crater Copernicus. We can the
     define an instance of the class
-    
+
     C = Structure('n','Copernicus','Crater')
     C.Overlay(True)
-    
+
     '''
-    
-    def __init__(self,lon0,lat0,Size):
+
+    def __init__(self, lon0, lat0, Size):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
@@ -81,53 +81,59 @@ class Area(object):
         self.racine = BinaryTable.racine
         self.ppdlola = 512
         self.ppdwac = 128
-        assert (self.Long>0.0) and (self.Long<360.0),'Longitude has to span 0-360 !!!'
+        assert (self.Long > 0.0) and (
+            self.Long < 360.0), 'Longitude has to span 0-360 !!!'
         self.Change_window(Size)
-        
 
-    def Change_window(self,Taille_Window):
+    def Change_window(self, Taille_Window):
         self.Taille_Window = Taille_Window
-        self.window = self.Cylindrical_Window(self.Taille_Window,self.Lat,self.Long)
-        
+        self.window = self.Cylindrical_Window(
+            self.Taille_Window, self.Lat, self.Long)
 
-    def _kp_func(self,lat,lon,lat0,long0):
-        kp = float(1.0) + np.sin(lat0)*np.sin(lat) + np.cos(lat0)*np.cos(lat)*np.cos(lon-long0)
-        kp = np.sqrt(float(2)/kp)
+    def _kp_func(self, lat, lon, lat0, long0):
+        kp = float(1.0) + np.sin(lat0) * np.sin(lat) + \
+            np.cos(lat0) * np.cos(lat) * np.cos(lon - long0)
+        kp = np.sqrt(float(2) / kp)
         return kp
 
-    def Lambert_Window(self,radius,lat0,long0):
+    def Lambert_Window(self, radius, lat0, long0):
         '''
         This method is used to determine the bottom-left
         and upper-right coordinates for a square Lambert Azimuthal
         equal area projection centered at (lat0,long0 with a size radius).
         '''
-        
-        radius = radius*360.0/(np.pi*2*1734.4)
-        radius = radius*np.pi / 180.0
-        lat0 = lat0*np.pi/180.0
-        long0 = long0*np.pi/180.0
 
-        bot = self._kp_func(lat0-radius,long0,lat0,long0)
-        bot = bot * ( np.cos(lat0)*np.sin(lat0-radius) - np.sin(lat0)*np.cos(lat0-radius) )
+        radius = radius * 360.0 / (np.pi * 2 * 1734.4)
+        radius = radius * np.pi / 180.0
+        lat0 = lat0 * np.pi / 180.0
+        long0 = long0 * np.pi / 180.0
+
+        bot = self._kp_func(lat0 - radius, long0, lat0, long0)
+        bot = bot * (np.cos(lat0) * np.sin(lat0 - radius) -
+                     np.sin(lat0) * np.cos(lat0 - radius))
         x = bot
         y = bot
         rho = np.sqrt(x**2 + y**2)
-        c = 2.0 * np.arcsin(rho/float(2.0))
-        latll = np.arcsin(np.cos(c)*np.sin(lat0)  + y*np.sin(c)*np.cos(lat0)/rho ) * float(180.0) / np.pi
-        lon = long0  + np.arctan2(x*np.sin(c), rho*np.cos(lat0)*np.cos(c) - y*np.sin(lat0)*np.sin(c))
+        c = 2.0 * np.arcsin(rho / float(2.0))
+        latll = np.arcsin(np.cos(c) * np.sin(lat0) + y * np.sin(c)
+                          * np.cos(lat0) / rho) * float(180.0) / np.pi
+        lon = long0 + np.arctan2(x * np.sin(c), rho * np.cos(lat0)
+                                 * np.cos(c) - y * np.sin(lat0) * np.sin(c))
         longll = lon * 180.0 / np.pi
 
         x = -bot
         y = -bot
         rho = np.sqrt(x**2 + y**2)
-        c = 2.0 * np.arcsin(rho/2.0)
-        lattr =np.arcsin(np.cos(c)*np.sin(lat0)  + y*np.sin(c)*np.cos(lat0)/rho ) * float(180.0) / np.pi
-        lon = long0  + np.arctan2(x*np.sin(c), rho*np.cos(lat0)*np.cos(c) - y*np.sin(lat0)*np.sin(c))
+        c = 2.0 * np.arcsin(rho / 2.0)
+        lattr = np.arcsin(np.cos(c) * np.sin(lat0) + y * np.sin(c)
+                          * np.cos(lat0) / rho) * float(180.0) / np.pi
+        lon = long0 + np.arctan2(x * np.sin(c), rho * np.cos(lat0)
+                                 * np.cos(c) - y * np.sin(lat0) * np.sin(c))
         longtr = lon * 180.0 / np.pi
 
-        return longll,longtr,latll,lattr
+        return longll, longtr, latll, lattr
 
-    def Cylindrical_Window(self,radius,lat0,long0):
+    def Cylindrical_Window(self, radius, lat0, long0):
         '''
         This method is used to determine the bottom-left
         and upper-right coordinates for a cylindrical projection
@@ -135,27 +141,28 @@ class Area(object):
         Wikipedia
         '''
         # Radian conversion
-        radi = radius*2*np.pi/(2*1734.4*np.pi)
-        lamb0 = long0*np.pi/180.0
-        phi0 = lat0*np.pi/180.0
+        radi = radius * 2 * np.pi / (2 * 1734.4 * np.pi)
+        lamb0 = long0 * np.pi / 180.0
+        phi0 = lat0 * np.pi / 180.0
 
-        #Long/lat min (see wikipedia)
-        longll = -radi/np.cos(phi0)+lamb0
-        latll = np.arcsin((-radi+np.sin(phi0)/np.cos(phi0))*np.cos(phi0))
+        # Long/lat min (see wikipedia)
+        longll = -radi / np.cos(phi0) + lamb0
+        latll = np.arcsin((-radi + np.sin(phi0) / np.cos(phi0)) * np.cos(phi0))
         if np.isnan(latll):
-            latll = -90*np.pi/180.0
+            latll = -90 * np.pi / 180.0
 
-        #Long/lat max (see wikipedia)
-        longtr = radi/np.cos(phi0)+lamb0
-        lattr = np.arcsin((radi+np.tan(phi0))*np.cos(phi0))
+        # Long/lat max (see wikipedia)
+        longtr = radi / np.cos(phi0) + lamb0
+        lattr = np.arcsin((radi + np.tan(phi0)) * np.cos(phi0))
 
-        return longll*180/np.pi,longtr*180/np.pi,latll*180/np.pi,lattr*180/np.pi
+        return longll * 180 / np.pi, longtr * 180 / np.pi, latll * 180 / np.pi, lattr * 180 / np.pi
 
-    def _Add_Scale(self,m,ax1):
+    def _Add_Scale(self, m, ax1):
         ''' Add scale to the map instance '''
-        
-        lol,loM,lam,laM = self.Lambert_Window(0.6*self.Taille_Window,self.Lat,self.Long)
-        m.drawmapscale(loM,lam, self.Long,self.Lat,10,
+
+        lol, loM, lam, laM = self.Lambert_Window(
+            0.6 * self.Taille_Window, self.Lat, self.Long)
+        m.drawmapscale(loM, lam, self.Long, self.Lat, 10,
                        barstyle='fancy', units='km',
                        fontsize=24, yoffset=None,
                        labelstyle='simple',
@@ -165,28 +172,28 @@ class Area(object):
                        format='%d',
                        zorder=2)
 
-    def Get_Arrays(self,type_img):
+    def Get_Arrays(self, type_img):
         '''
         Return X,Y,Z of the region for the img asked.
         img is either 'Lola' for the topography or
         'wac' for WAC image.
         '''
-            
+
         if type_img == 'Lola':
-            return LolaMap(self.ppdlola,*self.window).Image()
+            return LolaMap(self.ppdlola, *self.window).Image()
         elif type_img == 'Wac':
-            return WacMap(self.ppdwac,*self.window).Image()
+            return WacMap(self.ppdwac, *self.window).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
-    def _format_coordinate_cartopy(self,ax):
+    def _format_coordinate_cartopy(self, ax):
         '''
         Format the cartopy plot to show lat/long properly
         '''
-        lonm,lonM,latm,latM = self.window
-        xlocs = np.linspace(lonm,lonM,5)
-        ylocs = np.linspace(latm,latM,5)
-        ax.gridlines(xlocs = xlocs , ylocs = ylocs, crs = ccrs.PlateCarree())
+        lonm, lonM, latm, latM = self.window
+        xlocs = np.linspace(lonm, lonM, 5)
+        ylocs = np.linspace(latm, latM, 5)
+        ax.gridlines(xlocs=xlocs, ylocs=ylocs, crs=ccrs.PlateCarree())
         ax.set_xticks(xlocs, crs=ccrs.PlateCarree())
         ax.set_yticks(ylocs, crs=ccrs.PlateCarree())
         lon_formatter = LongitudeFormatter(number_format='.1f',
@@ -195,7 +202,7 @@ class Area(object):
                                           degree_symbol='')
         ax.xaxis.set_major_formatter(lon_formatter)
         ax.yaxis.set_major_formatter(lat_formatter)
-        ax.tick_params(labelsize = 18)
+        ax.tick_params(labelsize=18)
 
     def Get_Profile(self, img_type, coordinate, num_points):
         '''
@@ -211,17 +218,17 @@ class Area(object):
 
         lon0, lon1, lat0, lat1 = coordinate
         X, Y, Z = self.Get_Arrays(img_type)
-        x0, y0 = np.argmin(np.abs(X[0,:]-lon0)),np.argmin(np.abs(Y[:,0]-lat0))
-        x1, y1 = np.argmin(np.abs(X[0,:]-lon1)),np.argmin(np.abs(Y[:,0]-lat1))
-        x, y = np.linspace(x0,x1, num_points), np.linspace(y0, y1, num_points)
-        zi = scipy.ndimage.map_coordinates(Z, np.vstack((x,y)))
-        
-        return  zi
+        x0, y0 = np.argmin(np.abs(X[0, :] - lon0)
+                           ), np.argmin(np.abs(Y[:, 0] - lat0))
+        x1, y1 = np.argmin(np.abs(X[0, :] - lon1)
+                           ), np.argmin(np.abs(Y[:, 0] - lat1))
+        x, y = np.linspace(x0, x1, num_points), np.linspace(y0, y1, num_points)
+        zi = scipy.ndimage.map_coordinates(Z, np.vstack((x, y)))
 
+        return zi
 
-    def Draw_Profile(self, coordinates, img_type = 'Lola', num_points = 100,
-                     save = False, name = 'BaseProfile.png'):
-
+    def Draw_Profile(self, coordinates, img_type='Lola', num_points=100,
+                     save=False, name='BaseProfile.png'):
         '''
         Draw profile between a point (lon0,lat0) and (lon1,lat1).
 
@@ -241,44 +248,45 @@ class Area(object):
         profile1 = (midlon,midlon,C2.window[2],C2.window[3]) #Vertical profile
         profile2 = (C2.window[0],C2.window[1],midlat,midlat) #Horizontal profile
         C2.Draw_Profile((profile1,profile2,C2.window))
-        
+
         '''
-        
-        fig = plt.figure(figsize=(24,len(coordinates)*5))
+
+        fig = plt.figure(figsize=(24, len(coordinates) * 5))
         gs = gridspec.GridSpec(len(coordinates), 3)
-        
+
         if len(coordinates) == 4:
-            assert type(coordinates[0])==tuple,\
+            assert type(coordinates[0]) == tuple,\
                 "If only one tupple is given,\n\
                 the correct syntax is (tuple,) !! Not (tuple) ;)"
-            
-        for i,coordinate in enumerate(coordinates):
+
+        for i, coordinate in enumerate(coordinates):
 
             ax1 = plt.subplot(gs[i, 0], projection=ccrs.LambertCylindrical())
-            ax2 = plt.subplot(gs[i,1:])
+            ax2 = plt.subplot(gs[i, 1:])
 
             # Image unit
-            X, Y , Z = self.Get_Arrays(img_type)
+            X, Y, Z = self.Get_Arrays(img_type)
             ax1.pcolormesh(X, Y, Z,
                            transform=ccrs.PlateCarree(),
-                           cmap='spectral')            
-            lon1,lon0,lat1,lat0 = coordinate
-            ax1.plot([lon1,lon0],[lat1,lat0], 'ro-',transform = ccrs.PlateCarree())
+                           cmap='spectral')
+            lon1, lon0, lat1, lat0 = coordinate
+            ax1.plot([lon1, lon0], [lat1, lat0], 'ro-',
+                     transform=ccrs.PlateCarree())
             self._format_coordinate_cartopy(ax1)
 
             # Profile
             print(coordinate)
-            z_interpolated = self.Get_Profile(img_type,coordinate,num_points)
+            z_interpolated = self.Get_Profile(img_type, coordinate, num_points)
             ax2.plot(z_interpolated[::-1])
-            ax2.set_ylabel('Topographic profile (m)',fontsize = 24)
-            ax2.tick_params(labelsize = 18)
-            
-            path = os.path.join(self.racine,'Image',name)
-            if save == True:
-                fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
+            ax2.set_ylabel('Topographic profile (m)', fontsize=24)
+            ax2.tick_params(labelsize=18)
 
-            
-    def Lola_Image(self, save = False ,name = 'BaseLola.png'):
+            path = os.path.join(self.racine, 'Image', name)
+            if save == True:
+                fig.savefig(path, rasterized=True, dpi=200,
+                            bbox_inches='tight', pad_inches=0.1)
+
+    def Lola_Image(self, save=False, name='BaseLola.png'):
         '''
         Return the lola image corresponding to the window.
         A blue triangle is added as well as a scale for completnesss
@@ -286,29 +294,31 @@ class Area(object):
 
         This method is encouraged to be modified according to specific need.
         '''
-        fig = plt.figure(figsize=(10,8))
+        fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
-        lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
-        m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
-                    resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
+        lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
+            self.Taille_Window, self.Lat, self.Long)
+        m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
+                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.Lat, lon_0=self.Long)
 
-        Xl,Yl,Zl = self.Get_Arrays('Lola')
-        Xl,Yl = m(Xl,Yl)
+        Xl, Yl, Zl = self.Get_Arrays('Lola')
+        Xl, Yl = m(Xl, Yl)
 
-        m.pcolormesh(Xl,Yl,Zl,cmap = 'gist_earth' , alpha = .5, ax  = ax1,zorder = 1)
+        m.pcolormesh(Xl, Yl, Zl, cmap='gist_earth', alpha=.5, ax=ax1, zorder=1)
         #m.contour(Xl,Yl,Zl,20, colors = 'black', alpha = 1.0 , zorder=2)
 
-        xc,yc = m(self.Long,self.Lat)
-        ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
+        xc, yc = m(self.Long, self.Lat)
+        ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
-        self._Add_Scale(m,ax1)
+        self._Add_Scale(m, ax1)
 
-        path = os.path.join(self.racine,'Image',name)
+        path = os.path.join(self.racine, 'Image', name)
         if save == True:
-            fig.savefig(path,rasterized=True, dpi=200,bbox_inches='tight',pad_inches=0.1)
+            fig.savefig(path, rasterized=True, dpi=200,
+                        bbox_inches='tight', pad_inches=0.1)
 
-    def Wac_Image(self, save = False, name = 'BaseWac.png'):
+    def Wac_Image(self, save=False, name='BaseWac.png'):
         '''
         Return the Wac image corresponding to the window.
         A blue triangle is added as well as a scale for completnesss
@@ -316,29 +326,29 @@ class Area(object):
 
         This method is encouraged to be modified according to specific need.
         '''
-        
-        fig = plt.figure(figsize=(10,8))
+
+        fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
-        lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
-        m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
-                    resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
+        lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
+            self.Taille_Window, self.Lat, self.Long)
+        m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
+                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.Lat, lon_0=self.Long)
 
-        Xw,Yw,Zw = self.Get_Arrays('Wac')
-        Xw,Yw = m(Xw,Yw)
-        m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
+        Xw, Yw, Zw = self.Get_Arrays('Wac')
+        Xw, Yw = m(Xw, Yw)
+        m.pcolormesh(Xw, Yw, Zw, cmap=cm.gray, ax=ax1, zorder=1)
 
-        xc,yc = m(self.Long,self.Lat)
-        ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
+        xc, yc = m(self.Long, self.Lat)
+        ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
-        self._Add_Scale(m,ax1)
+        self._Add_Scale(m, ax1)
 
-        path = os.path.join(self.racine,'Image',name)
+        path = os.path.join(self.racine, 'Image', name)
         if save == True:
-            fig.savefig(path, dpi=200 , bbox_inches='tight', pad_inches=0.1)
+            fig.savefig(path, dpi=200, bbox_inches='tight', pad_inches=0.1)
 
-    def Overlay(self, save = False,name = 'BaseOverlay.png'):
-
+    def Overlay(self, save=False, name='BaseOverlay.png'):
         '''
         Return an ovelay of Lola image over the Wac image
         corresponding to the window.
@@ -347,34 +357,35 @@ class Area(object):
 
         This method is encouraged to be modified according to specific need.
         '''
-        fig = plt.figure(figsize=(10,8))
+        fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
-        lon_m,lon_M,lat_m,lat_M = self.Lambert_Window(self.Taille_Window,self.Lat,self.Long)
-        m = Basemap(llcrnrlon =lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
-                    resolution='i',projection='laea',rsphere = 1734400, lat_0 = self.Lat,lon_0 = self.Long)
+        lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
+            self.Taille_Window, self.Lat, self.Long)
+        m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
+                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.Lat, lon_0=self.Long)
 
-        Xw,Yw,Zw = self.Get_Arrays('Wac')
-        Xw,Yw = m(Xw,Yw)
-        m.pcolormesh(Xw,Yw,Zw,cmap = cm.gray ,ax  = ax1,zorder = 1)
+        Xw, Yw, Zw = self.Get_Arrays('Wac')
+        Xw, Yw = m(Xw, Yw)
+        m.pcolormesh(Xw, Yw, Zw, cmap=cm.gray, ax=ax1, zorder=1)
 
-        Xl,Yl,Zl = self.Get_Arrays('Lola')
-        Xl,Yl = m(Xl,Yl)
-        m.contourf(Xl,Yl,Zl,100,cmap='gist_earth', alpha = 0.4 , zorder=2 , antialiased=True)
+        Xl, Yl, Zl = self.Get_Arrays('Lola')
+        Xl, Yl = m(Xl, Yl)
+        m.contourf(Xl, Yl, Zl, 100, cmap='gist_earth',
+                   alpha=0.4, zorder=2, antialiased=True)
 
-        xc,yc = m(self.Long,self.Lat)
-        ax1.scatter(xc,yc,s=200,marker ='v',zorder =2)
+        xc, yc = m(self.Long, self.Lat)
+        ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
-        self._Add_Scale(m,ax1)
+        self._Add_Scale(m, ax1)
 
-        path = os.path.join(self.racine,'Image',name)
+        path = os.path.join(self.racine, 'Image', name)
         if save == True:
             fig.savefig(path, dpi=500, bbox_inches='tight', pad_inches=0.1)
 
-    def _Deg(self,radius):
-        return radius*360/(2*np.pi*1734.4)
+    def _Deg(self, radius):
+        return radius * 360 / (2 * np.pi * 1734.4)
 
-        
 
 class Crater(Area):
     ''' A class able to gather information on Topography and Image about
@@ -397,7 +408,7 @@ class Crater(Area):
     - Taille_Window : Size of the window to consider around the unit
 
     methods:
-    
+
     - Lambert_Window :  This method is used to determine the bottom-left
     and upper-right coordinates for a square Lambert Azimuthal
     equal area projection centered at (lat0,long0 with a size radius).
@@ -414,18 +425,18 @@ class Crater(Area):
     - Lola_Image, Wac_Image, Overlay : Return the corresponding
     plot. A blue triangle is added as well as a scale for completnesss
     of the plot.
-    
+
     Example:
-    
+
     For instance, say we want to image the crater Copernicus. We can the
     define an instance of the class
-    
+
     C = Structure('n','Copernicus','Crater')
     C.Overlay(True)
-    
+
     '''
-    
-    def __init__(self,ide,idx):
+
+    def __init__(self, ide, idx):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
@@ -437,24 +448,26 @@ class Crater(Area):
         self.ppdlola = 512
         self.ppdwac = 128
 
-        self.craters = pd.read_csv(os.path.join(self.racine,'Data',
-                                                   'Data_Crater.csv'))
+        self.craters = pd.read_csv(os.path.join(self.racine, 'Data',
+                                                'Data_Crater.csv'))
 
-        inde = {'n':'Name','i':'Index'}
+        inde = {'n': 'Name', 'i': 'Index'}
         df = self.craters[self.craters[inde[ide]] == idx]
         if len(df) == 0:
             raise ValueError("The tuple (%s,%s) does not correspond\n \
-                             to any structure in the dataset. "%(ide,idx))
-            
-        [setattr(self,f,float(df[f])) for f in df.columns if f not in ['Name']]
+                             to any structure in the dataset. " % (ide, idx))
 
-        assert (self.Long>0.0)&(self.Long<360.0) , 'Longitude has to span 0-360 !!!'
+        [setattr(self, f, float(df[f]))
+         for f in df.columns if f not in ['Name']]
+
+        assert (self.Long > 0.0) & (
+            self.Long < 360.0), 'Longitude has to span 0-360 !!!'
         self.Name = df.Name.iloc[0]
-        self.Change_window(0.8*self.Diameter)
-        
+        self.Change_window(0.8 * self.Diameter)
+
 
 class Dome(Area):
-            
+
     ''' A class able to gather information on Topography and Image about
     a specified area around a geological unit (Crater or dome).
 
@@ -475,7 +488,7 @@ class Dome(Area):
     - Taille_Window : Size of the window to consider around the unit
 
     methods:
-    
+
     - Lambert_Window :  This method is used to determine the bottom-left
     and upper-right coordinates for a square Lambert Azimuthal
     equal area projection centered at (lat0,long0 with a size radius).
@@ -492,18 +505,18 @@ class Dome(Area):
     - Lola_Image, Wac_Image, Overlay : Return the corresponding
     plot. A blue triangle is added as well as a scale for completnesss
     of the plot.
-    
+
     Example:
-    
+
     For instance, say we want to image the crater Copernicus. We can the
     define an instance of the class
-    
+
     C = Structure('n','Copernicus','Crater')
     C.Overlay(True)
-    
+
     '''
-    
-    def __init__(self,ide,idx):
+
+    def __init__(self, ide, idx):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
@@ -515,17 +528,18 @@ class Dome(Area):
         self.ppdlola = 512
         self.ppdwac = 128
 
-        self.domes = pd.read_csv(os.path.join(self.racine,'Data',
+        self.domes = pd.read_csv(os.path.join(self.racine, 'Data',
                                               'Data_Dome.csv'))
-        inde = {'n':'Name','i':'Index'}
+        inde = {'n': 'Name', 'i': 'Index'}
         df = self.domes[self.domes[inde[ide]] == idx]
         if len(df) == 0:
             raise ValueError("The tuple (%s,%s) does not correspond\n \
-                             to any structure in the dataset. "%(ide,idx))
-            
-        [setattr(self,f,float(df[f])) for f in df.columns if f not in ['Name']]
+                             to any structure in the dataset. " % (ide, idx))
 
-        assert (self.Long>0.0)&(self.Long<360.0), 'Longitude has to span 0-360 !!!'
+        [setattr(self, f, float(df[f]))
+         for f in df.columns if f not in ['Name']]
+
+        assert (self.Long > 0.0) & (
+            self.Long < 360.0), 'Longitude has to span 0-360 !!!'
         self.Name = df.Name.iloc[0]
-        self.Change_window(0.8*self.Diameter)
-        
+        self.Change_window(0.8 * self.Diameter)
