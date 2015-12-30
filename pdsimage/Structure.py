@@ -33,7 +33,6 @@ class Area(object):
     attributes:
 
     - structure : Type of the geological unit (Crater/Dome)
-    - racine : path for project
     - ppdlola : resolution of the Lola image
     - ppdwac : resolution of the Wac image
     - Name/Diameter/Radius/Lat/Long : property of the geological unit
@@ -68,17 +67,19 @@ class Area(object):
 
     '''
 
-    def __init__(self, lon0, lat0, Size):
+    defaut_pdsfile = os.path.join(
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
+
+    def __init__(self, lon0, lat0, Size, path_pdsfile=defaut_pdsfile):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
         '''
-
+        self.pdsfile = path_pdsfile
         self.Lat = lat0
         self.Long = lon0
-        self.racine = BinaryTable.racine
         self.ppdlola = 512
         self.ppdwac = 128
         assert (self.Long > 0.0) and (
@@ -180,9 +181,9 @@ class Area(object):
         '''
 
         if type_img == 'Lola':
-            return LolaMap(self.ppdlola, *self.window).Image()
+            return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.pdsfile).Image()
         elif type_img == 'Wac':
-            return WacMap(self.ppdwac, *self.window).Image()
+            return WacMap(self.ppdwac, *self.window, path_pdsfile=self.pdsfile).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
@@ -281,9 +282,8 @@ class Area(object):
             ax2.set_ylabel('Topographic profile (m)', fontsize=24)
             ax2.tick_params(labelsize=18)
 
-            path = os.path.join(self.racine, 'Image', name)
             if save == True:
-                fig.savefig(path, rasterized=True, dpi=200,
+                fig.savefig(name, rasterized=True, dpi=200,
                             bbox_inches='tight', pad_inches=0.1)
 
     def Lola_Image(self, save=False, name='BaseLola.png'):
@@ -313,9 +313,8 @@ class Area(object):
 
         self._Add_Scale(m, ax1)
 
-        path = os.path.join(self.racine, 'Image', name)
         if save == True:
-            fig.savefig(path, rasterized=True, dpi=200,
+            fig.savefig(name, rasterized=True, dpi=200,
                         bbox_inches='tight', pad_inches=0.1)
 
     def Wac_Image(self, save=False, name='BaseWac.png'):
@@ -344,9 +343,8 @@ class Area(object):
 
         self._Add_Scale(m, ax1)
 
-        path = os.path.join(self.racine, 'Image', name)
         if save == True:
-            fig.savefig(path, dpi=200, bbox_inches='tight', pad_inches=0.1)
+            fig.savefig(name, dpi=200, bbox_inches='tight', pad_inches=0.1)
 
     def Overlay(self, save=False, name='BaseOverlay.png'):
         '''
@@ -379,9 +377,8 @@ class Area(object):
 
         self._Add_Scale(m, ax1)
 
-        path = os.path.join(self.racine, 'Image', name)
         if save == True:
-            fig.savefig(path, dpi=500, bbox_inches='tight', pad_inches=0.1)
+            fig.savefig(name, dpi=500, bbox_inches='tight', pad_inches=0.1)
 
     def _Deg(self, radius):
         return radius * 360 / (2 * np.pi * 1734.4)
@@ -401,7 +398,6 @@ class Crater(Area):
     attributes:
 
     - structure : Type of the geological unit (Crater/Dome)
-    - racine : path for project
     - ppdlola : resolution of the Lola image
     - ppdwac : resolution of the Wac image
     - Name/Diameter/Radius/Lat/Long : property of the geological unit
@@ -431,25 +427,25 @@ class Crater(Area):
     For instance, say we want to image the crater Copernicus. We can the
     define an instance of the class
 
-    C = Structure('n','Copernicus','Crater')
+    C = Crater('n','Copernicus')
     C.Overlay(True)
 
     '''
 
-    def __init__(self, ide, idx):
+    def __init__(self, ide, idx, path_pdsfile=Area.defaut_pdsfile):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
         '''
-
-        self.racine = BinaryTable.racine
+        self.pdsfile = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
-
-        self.craters = pd.read_csv(os.path.join(self.racine, 'Data',
-                                                'Data_Crater.csv'))
+        self.racine = os.path.join(
+            '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'Table')
+        self.craters = pd.read_csv(
+            os.path.join(self.racine, 'Data_Crater.csv'))
 
         inde = {'n': 'Name', 'i': 'Index'}
         df = self.craters[self.craters[inde[ide]] == idx]
@@ -516,19 +512,19 @@ class Dome(Area):
 
     '''
 
-    def __init__(self, ide, idx):
+    def __init__(self, ide, idx, path_pdsfile=Area.defaut_pdsfile):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
         '''
-
-        self.racine = BinaryTable.racine
+        self.pdsfile = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
-
-        self.domes = pd.read_csv(os.path.join(self.racine, 'Data',
+        self.racine = os.path.join(
+            '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'Table')
+        self.domes = pd.read_csv(os.path.join(self.racine,
                                               'Data_Dome.csv'))
         inde = {'n': 'Name', 'i': 'Index'}
         df = self.domes[self.domes[inde[ide]] == idx]
