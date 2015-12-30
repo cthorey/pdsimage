@@ -78,7 +78,7 @@ class BinaryTable(object):
         self.pdsfiles = path_pdsfile
         if not os.access(self.pdsfiles, os.W_OK):
             raise BaseException("% s: The path where PDS are is read\
-                                only\n. It might be the defaut path\
+                                only. It might be the defaut path\
                                 if you install in a directory\
                                 without any rights\n. Please feed a\
                                 path with more permission to store\

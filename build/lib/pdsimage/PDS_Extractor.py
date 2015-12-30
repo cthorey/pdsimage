@@ -41,7 +41,7 @@ class BinaryTable(object):
 
     parameter:
     - fname : name of the binary file without the extension
-    - self.PDS_FILE : Path where the binary images are download. It should
+    - self.pdsfiles : Path where the binary images are download. It should
     consit of two folder, LOLA and LROC_WAC.
     - self.LOLApath : path for LOLA images
     - self.WACpath : path for WAC images
@@ -62,21 +62,32 @@ class BinaryTable(object):
     both configuration.
 
     '''
-    racine = '/Users/thorey/Documents/These/Projet/FFC/CraterInspector'
+    defaut_pdsfile = os.path.join(
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, fname, path_pdsfile):
+    def __init__(self, fname, path_pdsfile=defaut_pdsfile):
         ''' Parameter
         self.fname : name of the file
-        self.PDS_FILE : Path where the binary images are download. It should
+        self.pdsfiles : Path where the binary images are download. It should
         consit of two folder, LOLA and LROC_WAC.
         self._Category : Identify weither its WAC/LOLA image
         self._Load_Info_LBL : Load corresponding information
         '''
 
         self.fname = fname.upper()
-        self.PDS_FILE = path_pdsfile
-        self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
-        self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
+        self.pdsfiles = path_pdsfile
+        if not os.access(self.pdsfiles, os.W_OK):
+            raise BaseException("% s: The path where PDS are is read\
+                                only\n. It might be the defaut path\
+                                if you install in a directory\
+                                without any rights\n. Please feed a\
+                                path with more permission to store\
+                                PDS_FILES" % (self.pdsfiles))
+        else:
+            print('PDS FILES used are in: %s' % (self.pdsfiles))
+
+        self.LOLApath = os.path.join(self.pdsfiles, 'LOLA')
+        self.WACpath = os.path.join(self.pdsfiles, 'LROC_WAC')
         if not os.path.isdir(self.LOLApath):
             print('Creating a directory LOLA under %s' % (self.LOLApath))
             os.mkdir(self.LOLApath)
@@ -432,11 +443,9 @@ class WacMap(object):
     defaut_pdsfile = os.path.join(
         '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile='base'):
-        if path_pdsfile == 'base':
-            self.pdsfile = WacMap.defaut_pdsfile
-        else:
-            self.pdsfile = path_pdsfile
+    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile=defaut_pdsfile):
+
+        self.pdsfile = path_pdsfile
         self.ppd = ppd
         self.lonm = lonm
         self.lonM = lonM
@@ -704,10 +713,8 @@ class LolaMap(WacMap):
     '''
 
     implemented_res = [4, 16, 64, 128, 256, 512, 1024]
-    defaut_pdsfile = os.path.join(
-        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
-    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile='base'):
+    def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile=WacMap.defaut_pdsfile):
         if path_pdsfile == 'base':
             self.pdsfile = LolaMap.defaut_pdsfile
         else:
