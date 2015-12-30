@@ -8,4 +8,6 @@ setup(name='pdsimage',
       author_email='clement.thorey@gmail.com',
       license='MIT',
       packages=['pdsimage'],
+      install_requires=[
+          'markdown',
       zip_safe=False)

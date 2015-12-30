@@ -72,7 +72,8 @@ class BinaryTable(object):
         '''
 
         self.fname = fname.upper()
-        self.PDS_FILE = os.path.join(__file__, 'PDS_FILE')
+        self.PDS_FILE = os.path.join(
+            '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
         self.LOLApath = os.path.join(self.PDS_FILE, 'LOLA')
         self.WACpath = os.path.join(self.PDS_FILE, 'LROC_WAC')
 
@@ -80,9 +81,8 @@ class BinaryTable(object):
         self._maybe_download()
         self._Load_Info_LBL()
 
-        assert self.MAP_PROJECTION_TYPE in ['"SIMPLE', 'EQUIRECTANGULAR'],\
-            "Only cylindrical projection is possible - %s NOT IMPLEMENTED" % (
-                self.MAP_PROJECTION_TYPE)
+        assert self.MAP_PROJECTION_TYPE in [
+            '"SIMPLE', 'EQUIRECTANGULAR'], "Only cylindrical projection is possible - %s NOT IMPLEMENTED" % (self.MAP_PROJECTION_TYPE)
 
     def _Category(self):
 
@@ -123,7 +123,7 @@ class BinaryTable(object):
 
     def _detect_size(self, url):
         '''
-        Detect the size of the target and return it 
+        Detect the size of the target and return it
         '''
         site = urllib.urlopen(url)
         meta = site.info()
@@ -188,7 +188,7 @@ class BinaryTable(object):
             self.start_byte = self.RECORD_BYTES
             self.bytesize = 4
             self.projection = str(label['IMAGE_MAP_PROJECTION'][
-                                  'MAP_PROJECTION_TYPE'])
+                'MAP_PROJECTION_TYPE'])
             self.dtype = np.float32
         else:
             with open(self.lbl, 'r') as f:
@@ -208,7 +208,7 @@ class BinaryTable(object):
                    self.MAP_SCALE * 1e-3 / self.A_AXIS_RADIUS)
             return lat * 180 / np.pi
         else:
-            lat =  float(self.CENTER_LATITUDE) - \
+            lat = float(self.CENTER_LATITUDE) - \
                 (line - float(self.LINE_PROJECTION_OFFSET) - 1)\
                 / float(self.MAP_RESOLUTION)
             return lat
