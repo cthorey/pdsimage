@@ -1,0 +1,5 @@
+include README.md
+incude Notebook/Test_library.ipynb       
+include pdsimage/PDS_FILE/LOLA/*
+include pdsimage/PDS_FILE/LROC_WAC/*
+include pdsimage/Table/*     
