@@ -3,3 +3,5 @@
 *.pyc
 *testing*
 *Image/test/*
+build/*
+dist/*
