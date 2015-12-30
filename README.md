@@ -33,6 +33,9 @@ This library has been designed to facilitate the extraction of subpart of a PDS 
 
 # Example 
 
+The details as well as the image  in the following are reported in the
+notebook **Test_library**.
+
 ## Loading part of an image
 
 Lola PDS Images can be found [here](http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/) and WAC images can be found [here](http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/).
@@ -51,7 +54,7 @@ which returns an array of longitudes (X), an array of latitudes (Y) and the grid
 Let's say, we want to get some detail about the crater Copernicus.
 		
 	from Structure import *
-	Copernicus = Structure('n','Copernicus','Crater')
+	Copernicus = Crater('n','Copernicus')
 	Copernicus.ppdlola = 512
 	Copernicus.ppdwac = 128
     Copernicus.Overlay(True)
@@ -84,7 +87,7 @@ The **Structure** class also contained a method which let your draw topographic 
 				
 		from Structure import *
 		
-		M13 = Structure('n','M13','Dome')
+		M13 = Dome('n','M13')
 		M13.Change_window(.9*M13.Diameter)
 		M13.ppdlola = 512
 		midlon = (M13.window[0]+M13.window[1])/2.0
