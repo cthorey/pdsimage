@@ -67,14 +67,17 @@ class Area(object):
 
     '''
 
-    def __init__(self, lon0, lat0, Size):
+    defaut_pdsfile = os.path.join(
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
+
+    def __init__(self, lon0, lat0, Size, path_pdsfile=defaut_pdsfile):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
         '''
-
+        self.pdsfile = path_pdsfile
         self.Lat = lat0
         self.Long = lon0
         self.ppdlola = 512
@@ -178,9 +181,9 @@ class Area(object):
         '''
 
         if type_img == 'Lola':
-            return LolaMap(self.ppdlola, *self.window).Image()
+            return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.pdsfile).Image()
         elif type_img == 'Wac':
-            return WacMap(self.ppdwac, *self.window).Image()
+            return WacMap(self.ppdwac, *self.window, path_pdsfile=self.pdsfile).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
@@ -429,14 +432,14 @@ class Crater(Area):
 
     '''
 
-    def __init__(self, ide, idx):
+    def __init__(self, ide, idx, path_pdsfile=Area.defaut_pdsfile):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
         '''
-
+        self.pdsfile = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
         self.racine = os.path.join(
@@ -509,14 +512,14 @@ class Dome(Area):
 
     '''
 
-    def __init__(self, ide, idx):
+    def __init__(self, ide, idx, path_pdsfile=Area.defaut_pdsfile):
         '''
         - structure : Name of the structure. Either "Crater" or "Dome".
         - ide : This class allow to defined the unit by its name "n" or its
         index "i".
         - idx : Corresponding name or index
         '''
-
+        self.pdsfile = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
         self.racine = os.path.join(

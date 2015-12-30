@@ -28,4 +28,5 @@ setup(name='pdsimage',
           'scipy',
           'matplotlib',
           'cartopy'],
+      include_package_data=True,
       zip_safe=False)
