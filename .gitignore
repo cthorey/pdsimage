@@ -2,3 +2,4 @@
 *.LBL
 *.pyc
 *testing*
+*Image/test/*
