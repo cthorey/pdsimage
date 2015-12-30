@@ -77,17 +77,15 @@ class BinaryTable(object):
         self.fname = fname.upper()
         self.pdsfiles = path_pdsfile
         if not os.access(self.pdsfiles, os.W_OK):
-            print(self.pdsfiles, os.access(self.pdsfiles, os.W_OK))
-            raise BaseException("% s: The path where PDS are is read
-                                only. It might be the defaut path
-                                if you install in a directory
-                                without any rights. Please feed a
-                                path with more permission to store
+            raise BaseException("% s: The path where PDS are is read\
+                                only\n. It might be the defaut path\
+                                if you install in a directory\
+                                without any rights\n. Please feed a\
+                                path with more permission to store\
                                 PDS_FILES" % (self.pdsfiles))
         else:
             print('PDS FILES used are in: %s' % (self.pdsfiles))
 
-        print(self.pdsfiles, os.access(self.pdsfiles, os.W_OK))
         self.LOLApath = os.path.join(self.pdsfiles, 'LOLA')
         self.WACpath = os.path.join(self.pdsfiles, 'LROC_WAC')
         if not os.path.isdir(self.LOLApath):
