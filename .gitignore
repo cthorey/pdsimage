@@ -5,3 +5,7 @@
 *Image/test/*
 build/*
 dist/*
+pdsimage.egg-info/*
+*build*
+*dist*
+*pdsimage.egg-info*
