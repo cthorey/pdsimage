@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cookbook &mdash; pdsimage 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pdsimage 1.0 documentation" href="index.html" />
+    <link rel="next" title="Support" href="support.html" />
+    <link rel="prev" title="Installation" href="install.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cookbook">
+<h1>Cookbook<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="import-the-modules">
+<h2>Import the modules<a class="headerlink" href="#import-the-modules" title="Permalink to this headline">¶</a></h2>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pdsimage.Structure</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pdsimage.PDS_Extractor</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="loading-part-of-an-image">
+<h2>Loading part of an image<a class="headerlink" href="#loading-part-of-an-image" title="Permalink to this headline">¶</a></h2>
+<p>Lola PDS Images can be found
+<a class="reference external" href="http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/">here</a> and WAC
+images can be found
+<a class="reference external" href="http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/">here</a>.</p>
+<p>Let&#8217;s say we want to load a window defined at the bottom left by
+(lon0,lat0) and at the upper right by (lon1,lat1) on the 128 ppd
+(pixel/degree) LOLA image.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span>
+<span class="n">path</span> <span class="o">=</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/&#39;</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s">&#39;LDEM_16&#39;</span><span class="p">,</span><span class="n">path</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">Extract_Grid</span><span class="p">(</span><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+</pre></div>
+</div>
+<p>which returns an array of longitudes (X), an array of latitudes (Y) and
+the grid of altitude are contained in Z. No more. For a window 10° by
+10°, it runs in less than 2s on my mac book pro.</p>
+</div>
+<div class="section" id="looking-at-impact-crater">
+<h2>Looking at impact crater ?<a class="headerlink" href="#looking-at-impact-crater" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s say, we want to get some detail about the crater Copernicus.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">path</span> <span class="o">=</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/&#39;</span>
+<span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">,</span><span class="n">path</span><span class="p">)</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">ppdwac</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">Overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Corpernicus.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+The size is ?: 1061.8 Mo
+
+
+Do you really want to download WAC_GLOBAL_E000N1800_064P ?
+
+ [y/n]
+y
+The file WAC_GLOBAL_E000N1800_064P.IMG need to be download - Wait
+
+100.00%
+ The download of the file WAC_GLOBAL_E000N1800_064P.IMG has succeded
+
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+</pre></div>
+</div>
+<img alt="_images/output_8_1.png" class="align-center" src="_images/output_8_1.png" />
+<p>let you with this nice beautiful plot which overlay a WAC image and a
+LOLA image. Pixel/degree are pretty high by default.</p>
+<p>For a specific location, the program is able to automatically detect the
+corresponding patch images at the lunar surface and proposed to download
+it for you. Be careful with large resolution though, downloads can be
+very long.</p>
+<p>The default window in centred on the crater with a radius equal to the
+80% of the crater diameter. However this can easily be changed and for
+instance, zooming in resume to</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span><span class="o">.</span><span class="n">Change_window</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">Copernicus</span><span class="o">.</span><span class="n">Diameter</span><span class="p">)</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">Overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;CopernicusZoom.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+</pre></div>
+</div>
+<img alt="_images/output_10_1.png" class="align-center" src="_images/output_10_1.png" />
+<p>If you prefer working with the array directly, use the method
+Get_Arrays...</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Xl</span> <span class="p">,</span> <span class="n">Yl</span> <span class="p">,</span> <span class="n">Zl</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">Get_Arrays</span><span class="p">(</span><span class="s">&#39;Lola&#39;</span><span class="p">)</span>
+<span class="n">Xw</span> <span class="p">,</span> <span class="n">Yw</span> <span class="p">,</span> <span class="n">Zw</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">Get_Arrays</span><span class="p">(</span><span class="s">&#39;Wac&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+</pre></div>
+</div>
+<p>They can then be used for further analysis, histograms of the
+topography...</p>
+</div>
+<div class="section" id="topographic-profiles">
+<h2>Topographic profiles<a class="headerlink" href="#topographic-profiles" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>Structure</strong> class also contained a method which let your draw
+topographic profiles (or WAC profile if you want) without effort. For
+instance, if we look at an intrusive dome called &#8216;M13&#8217; within the lunar
+maria and we want to plot three topographic profile - one vertical
+passing through the centre - one horizontal passing through the centre -
+one oblique</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">path_pdsfiles</span> <span class="o">=</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/&#39;</span>
+<span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">,</span><span class="n">path_pdsfiles</span><span class="p">)</span>
+<span class="n">M13</span><span class="o">.</span><span class="n">Change_window</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="o">*</span><span class="n">M13</span><span class="o">.</span><span class="n">Diameter</span><span class="p">)</span>
+<span class="n">M13</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">midlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
+<span class="n">midlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
+<span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="mf">11.1</span><span class="p">,</span><span class="mf">12.5</span><span class="p">)</span>
+<span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mf">0.2</span><span class="p">,</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span>
+<span class="n">profile3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span><span class="o">-</span><span class="mf">32.1</span><span class="p">,</span><span class="mi">360</span><span class="o">-</span><span class="mf">31.3</span><span class="p">,</span><span class="mf">11.1</span><span class="p">,</span><span class="mf">12.5</span><span class="p">)</span>
+<span class="n">save_figure</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/pdsimage/Image&#39;</span><span class="p">,</span><span class="s">&#39;BaseProfile.png&#39;</span><span class="p">)</span>
+<span class="n">M13</span><span class="o">.</span><span class="n">Draw_Profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">profile3</span><span class="p">),</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="n">save_figure</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+(328.47000000000003, 328.47000000000003, 11.1, 12.5)
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+(327.55882087492716, 329.38117912507289, 11.68213679250616, 11.68213679250616)
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+(327.9, 328.7, 11.1, 12.5)
+No overlap - Processing should be quick
+PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+</pre></div>
+</div>
+<img alt="_images/output_16_1.png" class="align-center" src="_images/output_16_1.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cookbook</a><ul>
+<li><a class="reference internal" href="#import-the-modules">Import the modules</a></li>
+<li><a class="reference internal" href="#loading-part-of-an-image">Loading part of an image</a></li>
+<li><a class="reference internal" href="#looking-at-impact-crater">Looking at impact crater ?</a></li>
+<li><a class="reference internal" href="#topographic-profiles">Topographic profiles</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="install.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="support.html" title="next chapter">Support</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cookbook.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Clement Thorey.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/cookbook.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
