@@ -77,7 +77,7 @@ class Area(object):
         index "i".
         - idx : Corresponding name or index
         '''
-        self.pdsfile = path_pdsfile
+        self.path_pdsfiles = path_pdsfile
         self.Lat = lat0
         self.Long = lon0
         self.ppdlola = 512
@@ -173,6 +173,11 @@ class Area(object):
                        format='%d',
                        zorder=2)
 
+    def _add_colorbar(self, m, CS, ax, name):
+        cb = m.colorbar(CS, "right", size="5%", pad="2%")
+        cb.set_label(name, size=34)
+        cb.ax.tick_params(labelsize=18)
+
     def Get_Arrays(self, type_img):
         '''
         Return X,Y,Z of the region for the img asked.
@@ -181,9 +186,9 @@ class Area(object):
         '''
 
         if type_img == 'Lola':
-            return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.pdsfile).Image()
+            return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.path_pdsfiles).Image()
         elif type_img == 'Wac':
-            return WacMap(self.ppdwac, *self.window, path_pdsfile=self.pdsfile).Image()
+            return WacMap(self.ppdwac, *self.window, path_pdsfile=self.path_pdsfiles).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
@@ -305,13 +310,15 @@ class Area(object):
         Xl, Yl, Zl = self.Get_Arrays('Lola')
         Xl, Yl = m(Xl, Yl)
 
-        m.pcolormesh(Xl, Yl, Zl, cmap='gist_earth', alpha=.5, ax=ax1, zorder=1)
+        CS = m.pcolormesh(Xl, Yl, Zl, cmap='gist_earth',
+                          alpha=.5, ax=ax1, zorder=1)
         #m.contour(Xl,Yl,Zl,20, colors = 'black', alpha = 1.0 , zorder=2)
 
         xc, yc = m(self.Long, self.Lat)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
         self._Add_Scale(m, ax1)
+        self._add_colorbar(m, CS, ax1, 'Topography')
 
         if save == True:
             fig.savefig(name, rasterized=True, dpi=200,
@@ -336,7 +343,7 @@ class Area(object):
 
         Xw, Yw, Zw = self.Get_Arrays('Wac')
         Xw, Yw = m(Xw, Yw)
-        m.pcolormesh(Xw, Yw, Zw, cmap=cm.gray, ax=ax1, zorder=1)
+        grid = m.pcolormesh(Xw, Yw, Zw, cmap=cm.gray, ax=ax1, zorder=1)
 
         xc, yc = m(self.Long, self.Lat)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
@@ -369,13 +376,14 @@ class Area(object):
 
         Xl, Yl, Zl = self.Get_Arrays('Lola')
         Xl, Yl = m(Xl, Yl)
-        m.contourf(Xl, Yl, Zl, 100, cmap='gist_earth',
-                   alpha=0.4, zorder=2, antialiased=True)
+        CS = m.contourf(Xl, Yl, Zl, 100, cmap='gist_earth',
+                        alpha=0.4, zorder=2, antialiased=True)
 
         xc, yc = m(self.Long, self.Lat)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
         self._Add_Scale(m, ax1)
+        self._add_colorbar(m, CS, ax1, 'Topography')
 
         if save == True:
             fig.savefig(name, dpi=500, bbox_inches='tight', pad_inches=0.1)
@@ -439,7 +447,7 @@ class Crater(Area):
         index "i".
         - idx : Corresponding name or index
         '''
-        self.pdsfile = path_pdsfile
+        self.path_pdsfiles = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
         self.racine = os.path.join(
@@ -519,7 +527,7 @@ class Dome(Area):
         index "i".
         - idx : Corresponding name or index
         '''
-        self.pdsfile = path_pdsfile
+        self.path_pdsfiles = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
         self.racine = os.path.join(
