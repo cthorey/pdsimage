@@ -1,40 +1,110 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>pdsimage package &mdash; pdsimage 1.0 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pdsimage 1.0 documentation" href="../index.html" />
-   
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <title>pdsimage package &mdash; pdsimage 1.0 documentation</title>
+  
 
-  </head>
-  <body role="document">  
+  
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pdsimage 1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> pdsimage</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cookbook.html">Cookbook</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cookbook.html#import-the-modules">Import the modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cookbook.html#topographic-profiles">Topographic profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">pdsimage</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>pdsimage package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/apidoc/pdsimage.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
             
   <div class="section" id="pdsimage-package">
 <h1>pdsimage package<a class="headerlink" href="#pdsimage-package" title="Permalink to this headline">¶</a></h1>
@@ -45,7 +115,7 @@
 <span id="pdsimage-pds-extractor-module"></span><h2>pdsimage.PDS_Extractor module<a class="headerlink" href="#module-pdsimage.PDS_Extractor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.BinaryTable">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class which is able to read PDS image file for LOLA/WAC images.</p>
 <p>LOLA - All information can be found at
@@ -154,14 +224,14 @@ at (lat0,long0)  with a given radius of radius.</p>
 
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.LolaMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
 <p>Class used to identified the image (or the groupe of images) necessary
 to extract an array around a particular structure.
@@ -188,7 +258,7 @@ Image : Return X,Y,Z values for the window.</p>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.WacMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class used to identified the image (or the groupe of images) necessary
 to extract an array around a particular structure.
@@ -217,7 +287,7 @@ Z : values</p>
 
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.WacMap.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -232,7 +302,7 @@ Z : values</p>
 <span id="pdsimage-structure-module"></span><h2>pdsimage.Structure module<a class="headerlink" href="#module-pdsimage.Structure" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.Structure.Area">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A class able to gather information on Topography and Image about
 a specified area at the lunar surface.</p>
@@ -370,14 +440,14 @@ of the plot.</p>
 
 <dl class="attribute">
 <dt id="pdsimage.Structure.Area.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pdsimage.Structure.Crater">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
 <p>A class able to gather information on Topography and Image about
 a specified area around a geological unit (Crater or dome).</p>
@@ -427,7 +497,7 @@ C.Overlay(True)</p>
 
 <dl class="class">
 <dt id="pdsimage.Structure.Dome">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/pdsimage-0.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
 <p>A class able to gather information on Topography and Image about
 a specified area around a geological unit (Crater or dome).</p>
@@ -484,65 +554,59 @@ C.Overlay(True)</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">pdsimage package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-pdsimage.PDS_Extractor">pdsimage.PDS_Extractor module</a></li>
-<li><a class="reference internal" href="#module-pdsimage.Structure">pdsimage.Structure module</a></li>
-<li><a class="reference internal" href="#module-pdsimage">Module contents</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/apidoc/pdsimage.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Clement Thorey.
     </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2016, Clement Thorey.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
-      
-      |
-      <a href="../_sources/apidoc/pdsimage.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

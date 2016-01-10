@@ -24,7 +24,6 @@ Contents:
 
    install
    cookbook
-   apidoc/module
    support
 
 
