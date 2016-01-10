@@ -15,63 +15,66 @@ import requests
 
 
 class BinaryTable(object):
+    """ Class which is able to read PDS image file for LOLA/WAC images.
 
-    ''' Class which is able to read PDS image file for LOLA/WAC images.
+    LROC LOLA - Informations can be found at `LROC/LOLA website`_.
+    In particular, the header, located in  a separate file .LBL file,
+    contains all the informations. Read manually
 
-    LOLA - All information can be found at
-    http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/aareadme.txt
-    In particular, HEADER in a separate file .LBL that contains all the informations.
-    Read manually
-
-    WAC - All information can be found at
-    http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/AAREADME.TXT
+    LROC WAC - Informations can be found at `LROC/WAC website`_.
     In particular, HEADER in the binary file that contain all the information -
-    Read with the module pvl
+    Read with the module `pvl module`_ for informations about how the header is
+    extracted directly from the file.
 
-    This class has a method able to download the images, though it might be better to download
-    them before as it takes a lot of time, especially for larger resolution.
+    This class has a method able to download the images,
+    though it might be better to download them before
+    as it takes a lot of time, especially for larger resolution.
 
     Both are NASA PDS FILE - Meaning, they are binary table whose format depends on
-    the file. All the information can be found in the Header whose reference are above.
-    Line usualy index latitude while sample on the line refers to longitude.
+    the file. All the information can be found in the Header whose
+    reference are above. Line usualy index latitude while sample on the line
+    refers to longitude.
 
-    THIS CLASS SUPPORT ONLY CYLINDRICAL PROJECTION.
+    THIS CLASS SUPPORT ONLY CYLINDRICAL PROJECTION FOR THE MOMENT.
     PROJECTION : [WAC : 'EQUIRECTANGULAR', LOLA : '"SIMPLE"']
     FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.
 
-    parameter:
-    - fname : name of the binary file without the extension
-    - self.pdsfiles : Path where the binary images are download. It should
-    consit of two folder, LOLA and LROC_WAC.
-    - self.LOLApath : path for LOLA images
-    - self.WACpath : path for WAC images
+    Attributes:
+        fname (str): name of pds file.
+        path_pdsfiles (str): path where pds files are stored.
+        LOLApath (str): path for LOLA images
+        WACpath (str): path for WAC images
+        grid (str): WAC or LOLA
+        img (str): name of the image
+        lbl (str): name of the lbl file, where information are stored. Empty for WAC.
 
-    method:
-    - self._Category() : Identify WAC or LOLA Image according to name formating
-    - self._Load_Info_LBL : Load the Header of the file (using pvl for WAC and the .LBL
-    file for LOLA) and return all the specification as attribute of the class.
-    - self.Lat_id : From line return lat
-    - self.Long_id : From sample, return long
-    - self.Sample_id : From long, return sample
-    - self.Line_id : From lat, return line
-    - self.Array : Read the binary file where it should and return the values in an
-    array
-    - self.Extract_All() : Extract the whole image in the file
-    - self.Extract_Grid() : Extract only part of the image centered around the structure
-    -self.Lamber_Window, self.cylindrical_Window : Return longmin,longmax,latmin,latmax in
-    both configuration.
+    .. _LROC/LOLA website:
+        http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/aareadme.txt
 
-    '''
+    .. _LROC/WAC website:
+        http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/AAREADME.TXT
+
+    .. _pvl module:
+        http://pvl.readthedocs.org/en/latest/
+
+    """
+
     defaut_pdsfile = os.path.join(
         '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
     def __init__(self, fname, path_pdsfile=defaut_pdsfile):
-        ''' Parameter
-        self.fname : name of the file
-        self.path_pdsfiles : Path where the binary images are download. It should
-        consit of two folder, LOLA and LROC_WAC.
-        self._Category : Identify weither its WAC/LOLA image
-        self._Load_Info_LBL : Load corresponding information
+        '''
+        Args:
+            fname (str): name of the pds file
+            path_pdsfile: path where pds files are stored.
+
+        Note:
+            A defaut path for pds_files is within the pdsimage installation
+            folder. Though, assuming the defaut path may work only if you
+            have the rights on the installation folder.
+
+            In addition, the folder PDS_FILES should contained two subfolder
+            called LOLA and LROC_WAC where each corresponding image are stored
         '''
 
         self.fname = fname.upper()
@@ -105,6 +108,10 @@ class BinaryTable(object):
             '"SIMPLE', 'EQUIRECTANGULAR'], "Only cylindrical projection is possible - %s NOT IMPLEMENTED" % (self.MAP_PROJECTION_TYPE)
 
     def _Category(self):
+        """ Type of the image: LOLA or WAC
+
+        Note: Specify the attribute ``Grid``, ``img`` and ``lbl`
+        """
 
         if self.fname.split('_')[0] == 'WAC':
             self.Grid = 'WAC'
@@ -125,7 +132,7 @@ class BinaryTable(object):
         sys.stdout.write("\r{0:.2f}%".format(100.0 * current / size))
 
     def _downloadFile(self, url, fname):
-        ''' Download the file '''
+        ''' Download the image '''
 
         print("The file %s need to be download - Wait\n " %
               (fname.split('/')[-1]))
@@ -134,6 +141,12 @@ class BinaryTable(object):
               (fname.split('/')[-1]))
 
     def _user_yes_no_query(self, question):
+        """ Helper asking if the user want to download the file
+
+        Note:
+            Dowloading huge file can take a while
+
+        """
         sys.stdout.write('%s [y/n]\n' % question)
         while True:
             try:
@@ -142,15 +155,14 @@ class BinaryTable(object):
                 sys.stdout.write('Please respond with \'y\' or \'n\'.\n')
 
     def _detect_size(self, url):
-        '''
-        Detect the size of the target and return it
-        '''
+        """ Helper that detect the size of the image to be download"""
+
         site = urllib.urlopen(url)
         meta = site.info()
         return float(meta.getheaders("Content-Length")[0]) / 1e6
 
     def _maybe_download(self):
-
+        """ Helper to downlaod the image if not in path """
         if self.Grid == 'WAC':
             urlpath = 'http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/'
             r = requests.get(urlpath)  # List file in the cloud
@@ -194,6 +206,18 @@ class BinaryTable(object):
                 self._downloadFile(urlname, self.lbl)
 
     def _Load_Info_LBL(self):
+        """ Load info on the image
+
+        Note:
+            If the image is from LOLA, the .LBL is parsed and the
+            information is returned.
+            If the image is from WAC, the .IMG file is parsed using
+            the library `pvl`_ which provide nice method to extract
+            the information in the header of the image.
+
+        .. _pvl: http://pvl.readthedocs.org/en/latest/
+
+        """
         if self.Grid == 'WAC':
             label = load_label(self.img)
             for key, val in label.iteritems():
@@ -222,7 +246,14 @@ class BinaryTable(object):
             self.dtype = np.int16
 
     def Lat_id(self, line):
-        ''' Return the corresponding line latitude'''
+        ''' Return the corresponding latitude
+
+        Args:
+            line (int): Line number
+
+        Returns:
+            Correponding latitude in degree
+        '''
         if self.Grid == 'WAC':
             lat = ((1 + self.LINE_PROJECTION_OFFSET - line) *
                    self.MAP_SCALE * 1e-3 / self.A_AXIS_RADIUS)
@@ -234,7 +265,14 @@ class BinaryTable(object):
             return lat
 
     def Long_id(self, sample):
-        ''' Return the corresponding sample longitude'''
+        ''' Return the corresponding longitude
+
+        Args:
+            sample (int): sample number on a line
+
+        Returns:
+            Correponding longidude in degree
+        '''
         if self.Grid == 'WAC':
             lon = self.CENTER_LONGITUDE + (sample - self.SAMPLE_PROJECTION_OFFSET - 1)\
                 * self.MAP_SCALE * 1e-3 / (self.A_AXIS_RADIUS * np.cos(self.CENTER_LATITUDE * np.pi / 180.0))
@@ -246,6 +284,7 @@ class BinaryTable(object):
             return lon
 
     def _control_sample(self, sample):
+        ''' Control the asked sample is ok '''
         if sample > float(self.SAMPLE_LAST_PIXEL):
             return int(self.SAMPLE_LAST_PIXEL)
         elif sample < float(self.SAMPLE_FIRST_PIXEL):
@@ -254,7 +293,15 @@ class BinaryTable(object):
             return sample
 
     def Sample_id(self, lon):
-        ''' Return the corresponding longitude sample'''
+        ''' Return the corresponding sample
+
+        Args:
+            lon (int): longidute in degree
+
+        Returns:
+            Correponding sample
+
+        '''
         if self.Grid == 'WAC':
             sample = np.rint(float(self.SAMPLE_PROJECTION_OFFSET) + 1.0 +
                              (lon * np.pi / 180.0 - float(self.CENTER_LONGITUDE)) *
@@ -267,6 +314,7 @@ class BinaryTable(object):
         return self._control_sample(sample)
 
     def _control_line(self, line):
+        ''' Control the asked line is ok '''
         if line > float(self.LINE_LAST_PIXEL):
             return int(self.LINE_LAST_PIXEL)
         elif line < float(self.LINE_FIRST_PIXEL):
@@ -275,7 +323,15 @@ class BinaryTable(object):
             return line
 
     def Line_id(self, lat):
-        ''' Return the corresponding latitude line'''
+        ''' Return the corresponding line
+
+        Args:
+            lat (int): latitude in degree
+
+        Returns:
+            Correponding line
+
+        '''
         if self.Grid == 'WAC':
             line = np.rint(1.0 + self.LINE_PROJECTION_OFFSET -
                            self.A_AXIS_RADIUS * np.pi * lat / (self.MAP_SCALE * 1e-3 * 180))
@@ -286,9 +342,15 @@ class BinaryTable(object):
 
     def Array(self, size_chunk, start, bytesize):
         ''' Read part of the binary file
-        size_chunk : taille du truc a lire
-        start : debut
-        bytesize : taille en byte '''
+
+        Args:
+            size_chunk (int) : Size of the chunk to read
+            start (int): Starting byte
+            bytesize (int): Ending byte
+
+        Returns:
+            (np.array): Array of the corresponding values
+        '''
 
         with open(self.img, 'rb') as f1:
             f1.seek(self.start_byte + start * self.bytesize)
@@ -300,8 +362,19 @@ class BinaryTable(object):
                 return Z
 
     def Extract_All(self):
-        ''' Extract all the image and return three tables X (longitude),
-        Y(latitude) and Z(values) '''
+        ''' Extract all the image
+
+        Returns:
+            A tupple of three arrays ``(X,Y,Z)`` with ``X`` contains the
+            longitudes, ``Y`` contains the latitude and ``Z`` the values
+            extracted from the image.
+
+        Note:
+            All return arrays have the same size.
+
+            All coordinate are in degree.
+
+        '''
 
         longmin, longmax, latmin, latmax = self.Boundary()
         sample_min, sample_max = map(
@@ -325,10 +398,25 @@ class BinaryTable(object):
         return X, Y, Z
 
     def Extract_Grid(self, longmin, longmax, latmin, latmax):
-        ''' Extract part of the image centered defined by a rectangle (longmin,
-        longmax,latmin,latmax) - all in degree.
+        ''' Extract part of the image ``img``
 
-        Return three tables X (longitude),Y(latitude) and Z(values) '''
+        Args:
+            longmin (float): Minimum longitude of the window
+            longmax (float): Maximum longitude of the window
+            latmin (float): Minimum latitude of the window
+            latmax (float): Maximum latitude of the window
+
+        Returns:
+            A tupple of three arrays ``(X,Y,Z)`` with ``X`` contains the
+            longitudes, ``Y`` contains the latitude and ``Z`` the values
+            extracted from the window.
+
+        Note:
+            All return arrays have the same size.
+
+            All coordinate are in degree.
+
+        '''
 
         sample_min, sample_max = map(
             int, map(self.Sample_id, [longmin, longmax]))
@@ -350,7 +438,15 @@ class BinaryTable(object):
         return X, Y, Z
 
     def Boundary(self):
-        ''' Return the boundary of the image considered '''
+        """ Get the image boundary
+
+        Returns:
+            A tupple composed by the westernmost_longitude,
+            the westernmost_longitude, the minimum_latitude and
+            the maximum_latitude
+
+        """
+
         return (int(self.WESTERNMOST_LONGITUDE),
                 int(self.EASTERNMOST_LONGITUDE),
                 int(self.MINIMUM_LATITUDE),
@@ -364,8 +460,25 @@ class BinaryTable(object):
         return kp
 
     def Lambert_Window(self, radius, lat0, long0):
-        ''' Return the equal area squared azimutahl projection of a window centered
-        at (lat0,long0)  with a given radius of radius.'''
+        ''' Squared azimutahl projection of a window centered
+        at(lat0, long0) with a given radius of radius.
+
+        Args:
+            radius(float): Radius of the window in km
+            lat0(float): Latitude at the center(degree)
+            long0(float): Longitude at the center(degree)
+
+        Returns:
+            A tuple ``(longll, longtr, latll, lattr)` with ``longll``
+            the longitude of the lower left corner, ``longtr`` the
+            longitude of the top right corner, ``latll`` the latitude
+            of the lower left corner and ``lattr`` the latitude of the
+            top right corner
+
+        Note:
+            All return coordinates are in degree
+
+        '''
 
         radius = radius * 360.0 / (np.pi * 2 * 1734.4)
         radius = radius * np.pi / 180.0
@@ -398,8 +511,22 @@ class BinaryTable(object):
         return longll, longtr, latll, lattr
 
     def Cylindrical_Window(self, radius, lat0, long0):
-        ''' Return the cylindrical projection of a window centered
-        at (lat0,long0)  with a given radius of radius.'''
+        ''' Cylindrical projection of a window centered
+        at(lat0, long0) with a given radius of radius.
+
+        Args:
+            radius(float): Radius of the window in km
+            lat0(float): Latitude at the center(degree)
+            long0(float): Longitude at the center(degree)
+
+        Returns:
+            A tuple ``(longll, longtr, latll, lattr)`` with ``longll``
+            the longitude of the lower left corner, ``longtr`` the
+            longitude of the top right corner, ``latll`` the latitude
+            of the lower left corner and ``lattr`` the latitude of the
+            top right corner
+
+        '''
 
         # Passage en radian
         radi = radius * 2 * np.pi / (2 * 1734.4 * np.pi)
@@ -423,22 +550,22 @@ class WacMap(object):
     to extract an array around a particular structure.
     4 Cases are possible:
     1 - The desired structure is entirely contained into one image.
-    2 - The span in latitude of the image is ok but not longitudes (2 images).
-    3 - The span in longitude of the image is ok but not latitudes (2 images).
-    4 - Both latitude and longitude are not contained in one image (4 images).
+    2 - The span in latitude of the image is ok but not longitudes(2 images).
+    3 - The span in longitude of the image is ok but not latitudes(2 images).
+    4 - Both latitude and longitude are not contained in one image(4 images).
 
     ONLY THE FIRST CASE IS IMPLEMENTED FOR THE MOMENT
 
     parameters:
-    ppd : Resolution required
-    path_pdsfile : path where are stored the PDS_FILE. WAC File should
+    ppd: Resolution required
+    path_pdsfile: path where are stored the PDS_FILE. WAC File should
     be contained within a folder LROC_WAC. By default, the path is set
     to the folder where the library is install. See defaut_pdsfile
 
-    lonm,lonM,latm,latM : Parameterize the window around the structure
+    lonm, lonM, latm, latM: Parameterize the window around the structure
 
     methods:
-    Image : Return a BinaryTable Class containing the image.
+    Image: Return a BinaryTable Class containing the image.
 
     '''
 
@@ -483,11 +610,11 @@ class WacMap(object):
         ''' Identitify the center of the Image correspond to one coordinate.
 
         parameters:
-        coord : "lat" or "long"
-        val : value of the coordinate
+        coord: "lat" or "long"
+        val: value of the coordinate
 
         variable:
-        res : {Correspond lat span for the image +
+        res: {Correspond lat span for the image +
         longitude span of the image}'''
 
         if self.ppd in [4, 8, 16, 32, 64]:
@@ -503,9 +630,9 @@ class WacMap(object):
     def _Define_Case(self):
         ''' Identify case:
         1 - The desired structure is entirely contained into one image.
-        2 - The span in latitude of the image is ok but not longitudes (2 images).
-        3 - The span in longitude of the image is ok but not latitudes (2 images).
-        4 - Both latitude and longitude are not contained in one image (4 images).
+        2 - The span in latitude of the image is ok but not longitudes(2 images).
+        3 - The span in longitude of the image is ok but not latitudes(2 images).
+        4 - Both latitude and longitude are not contained in one image(4 images).
 
         '''
 
@@ -565,7 +692,7 @@ class WacMap(object):
 
     def _Cas_2(self):
         '''1 - The span in latitude of the image is ok but
-        not longitudes (2 images). The desired structure longitude
+        not longitudes(2 images). The desired structure longitude
         are overlap on two different map .'''
 
         lonc_left = self._format_lon(self.lonm)
@@ -597,7 +724,7 @@ class WacMap(object):
 
     def _Cas_3(self):
         '''1 - The span in longitude of the image is ok but
-        not latitudes (2 images). The desired structure latitude
+        not latitudes(2 images). The desired structure latitude
         are overlaped on two different maps .'''
 
         lonc = self._format_lon(self.lonm)
@@ -682,10 +809,10 @@ class WacMap(object):
         return X_new, Y_new, Z_new
 
     def Image(self):
-        ''' Return three array X,Y,Z corresponding tp
-        X : longitudes
-        Y : latitudes
-        Z : values
+        ''' Return three array X, Y, Z corresponding tp
+        X: longitudes
+        Y: latitudes
+        Z: values
 
         '''
         return self._Define_Case()
@@ -697,21 +824,21 @@ class LolaMap(WacMap):
     to extract an array around a particular structure.
     4 Cases are possible:
     1 - The desired structure is entirely contained into one image.
-    2 - The span in latitude of the image is ok but not longitudes (2 images).
-    3 - The span in longitude of the image is ok but not latitudes (2 images).
-    4 - Both latitude and longitude are not contained in one image (4 images).
+    2 - The span in latitude of the image is ok but not longitudes(2 images).
+    3 - The span in longitude of the image is ok but not latitudes(2 images).
+    4 - Both latitude and longitude are not contained in one image(4 images).
 
     ONLY THE FIRST CASE IS IMPLEMENTED FOR THE MOMENT
 
     parameters:
-    ppd : Resolution required
-    path_pdsfile : path where are stored the PDS_FILE. LOLA File should
+    ppd: Resolution required
+    path_pdsfile: path where are stored the PDS_FILE. LOLA File should
     be contained within a folder LOLA. By default, the path is set
     to the folder where the library is install. See defaut_pdsfile
-    lonm,lonM,latm,latM : Parameterize the window around the structure
+    lonm, lonM, latm, latM: Parameterize the window around the structure
 
     methods:
-    Image : Return X,Y,Z values for the window.
+    Image: Return X, Y, Z values for the window.
 
     '''
 
@@ -734,11 +861,11 @@ class LolaMap(WacMap):
         ''' Identitify the center of the Image correspond to one coordinate.
 
         parameters:
-        coord : "lat" or "long"
-        val : value of the coordinate
+        coord: "lat" or "long"
+        val: value of the coordinate
 
         variable:
-        res : {Correspond lat center for the image +
+        res: {Correspond lat center for the image +
         longitude span of the image}'''
 
         if self.ppd in [4, 16, 64, 128]:
@@ -758,6 +885,13 @@ class LolaMap(WacMap):
             return c - res[coord], c
 
     def _format_lon(self, lon):
+        """FIXME! briefly describe function
+
+        :param lon: 
+        :returns: 
+        :rtype: 
+
+        """
         if self.ppd in [4, 16, 64, 128]:
             return None
         else:
