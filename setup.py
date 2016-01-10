@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 setup(name='pdsimage',
-      version='0.1',
+      version='1.0',
       description='Package for creating images from NASA PDS files',
       classifiers=[
           'Development Status :: 1 - Alpha',
@@ -23,6 +23,7 @@ setup(name='pdsimage',
       install_requires=[
           'numpy',
           'pandas',
+          'basemap',
           'pvl',
           'requests',
           'scipy',
