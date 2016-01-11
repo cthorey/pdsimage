@@ -20,50 +20,60 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 class Area(object):
 
-    ''' A class able to gather information on Topography and Image about
-    a specified area at the lunar surface.
+    ''' A class which gather information on a specific location
 
-    parameters:
+    It is particularly useful to study a particular location at the
+    surface of the Moon. For the moment, it can gather information
+    about the topography (from LRO LOLA experiment) and texture (from
+    the LRO WAC experiment). More information about the Lunar Reconnaissance
+    Orbiter mission (LRO) can be found `here`_
 
-    - structure : Name of the structure. Either "Crater" or "Dome".
-    - ide : This class allow to defined the unit by its name "n" or its
-    index "i".
-    - idx : Corresponding name or index
+    Args:
+        lon0 (float): Longitude of the region of interest.
+        lat0 (float): Latitude of the region of interest.
+        size (float): Radius of the region of interest.
+        path_pdsfiles (Optional[str]): Path where the pds files are stored.
+            Defaults, the path is set to the folder ``PDS_FILES`` next to
+            the module files where the library is install.
 
-    attributes:
+            See ``defaut_pdsfile`` variable of the class.
 
-    - structure : Type of the geological unit (Crater/Dome)
-    - ppdlola : resolution of the Lola image
-    - ppdwac : resolution of the Wac image
-    - Name/Diameter/Radius/Lat/Long : property of the geological unit
-    - Taille_Window : Size of the window to consider around the unit
+    Attributes:
+        path_pdsfiles: Path where the pds_files are stored.
+        lon0 (float): Longitude of the region of interest.
+        lat0 (float): Latitude of the region of interest.
+        ppdlola (int): Resolution for the topography
+        ppdwac (int): Resolution for the WAC image
+        size_window (float): Radius of the region of interest (km)
+        window (float,float,float,float): ``(longll, longtr, latll, lattr)``
+            with:
 
-    methods:
+            - ``longll`` the longitude of the lower left corner
+            - ``longtr`` the longitude of the top right corner
+            - ``latll`` the latitude of the lower left corner
+            - ``lattr`` the latitude of the top right corner
 
-    - Lambert_Window :  This method is used to determine the bottom-left
-    and upper-right coordinates for a square Lambert Azimuthal
-    equal area projection centered at (lat0,long0 with a size radius).
+    Note:
+        It is important to respect the structure of the PDS_FILES folder. It
+        should contain 2 subfolder called ``LOLA`` and ``LROC_WAC`` where the
+        corresponding images should be download.
 
-    - Cylindrical_Window : This method is used to determine the bottom-left
-    and upper-right coordinates for a cylindrical projection
-    centered at (lat0,long0 with a size radius). See
-    Wikipedia
+        The abreviations correspond to:
 
-    - Get_Arrays : Return X,Y,Z of the region for the img asked.
-    img is either 'Lola' for the topography or
-    'wac' for WAC image.
-
-    - Lola_Image, Wac_Image, Overlay : Return the corresponding
-    plot. A blue triangle is added as well as a scale for completnesss
-    of the plot.
+        - **LRO** Lunar Reconnaissance Orbiter
+        - **LOLA** Lunar Orbiter Laser Altimeter
+        - **LROC** Lunar Reconnaissance Orbiter Camera
+        - **WAC** Wide Angle Camera
 
     Example:
+        For instance, say we want to get an overlay, topography and texture,
+        of a region centred around 10 East and 10 North of about 20 km
 
-    For instance, say we want to image the crater Copernicus. We can the
-    define an instance of the class
+        >>> C = Area(10,10,20)
+        >>> C.Overlay()
 
-    C = Structure('n','Copernicus','Crater')
-    C.Overlay(True)
+    .. _here:
+        http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
 
     '''
 
@@ -71,25 +81,30 @@ class Area(object):
         '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
     def __init__(self, lon0, lat0, Size, path_pdsfile=defaut_pdsfile):
-        '''
-        - structure : Name of the structure. Either "Crater" or "Dome".
-        - ide : This class allow to defined the unit by its name "n" or its
-        index "i".
-        - idx : Corresponding name or index
-        '''
+
         self.path_pdsfiles = path_pdsfile
-        self.Lat = lat0
-        self.Long = lon0
+        self.lat0 = lat0
+        self.lon0 = lon0
         self.ppdlola = 512
         self.ppdwac = 128
-        assert (self.Long > 0.0) and (
-            self.Long < 360.0), 'Longitude has to span 0-360 !!!'
+        assert (self.lon0 > 0.0) and (
+            self.lon0 < 360.0), 'Longitude has to span 0-360 !!!'
         self.Change_window(Size)
 
-    def Change_window(self, Taille_Window):
-        self.Taille_Window = Taille_Window
+    def Change_window(self, size_window):
+        ''' Change the region of interest
+
+        Args:
+            size_window (float): Radius of the region of interest (km)
+
+        Notes:
+            Change the attributes ``size_window`` and ``window`` to
+            correspond to the new region of interest. 
+
+        '''
+        self.size_window = size_window
         self.window = self.Cylindrical_Window(
-            self.Taille_Window, self.Lat, self.Long)
+            self.size_window, self.lat0, self.lon0)
 
     def _kp_func(self, lat, lon, lat0, long0):
         kp = float(1.0) + np.sin(lat0) * np.sin(lat) + \
@@ -97,11 +112,25 @@ class Area(object):
         kp = np.sqrt(float(2) / kp)
         return kp
 
-    def Lambert_Window(self, radius, lat0, long0):
-        '''
-        This method is used to determine the bottom-left
-        and upper-right coordinates for a square Lambert Azimuthal
-        equal area projection centered at (lat0,long0 with a size radius).
+    def lambert_window(self, radius, lat0, long0):
+        ''' Squared azimutahl projection of a window centered
+        at(lat0, long0) with a given radius of radius.
+
+        Args:
+            radius(float): Radius of the window in km
+            lat0(float): Latitude at the center(degree)
+            long0(float): Longitude at the center(degree)
+
+        Returns:
+            A tuple ``(longll, longtr, latll, lattr)` with ``longll``
+            the longitude of the lower left corner, ``longtr`` the
+            longitude of the top right corner, ``latll`` the latitude
+            of the lower left corner and ``lattr`` the latitude of the
+            top right corner
+
+        Note:
+            All return coordinates are in degree
+
         '''
 
         radius = radius * 360.0 / (np.pi * 2 * 1734.4)
@@ -134,36 +163,48 @@ class Area(object):
 
         return longll, longtr, latll, lattr
 
-    def Cylindrical_Window(self, radius, lat0, long0):
+    def cylindrical_window(self, radius, lat0, long0):
+        ''' Cylindrical projection of a window centered
+        at(lat0, long0) with a given radius of radius.
+
+        Args:
+            radius(float): Radius of the window in km
+            lat0(float): Latitude at the center(degree)
+            long0(float): Longitude at the center(degree)
+
+        Returns:
+            A tuple ``(longll, longtr, latll, lattr)`` with ``longll``
+            the longitude of the lower left corner, ``longtr`` the
+            longitude of the top right corner, ``latll`` the latitude
+            of the lower left corner and ``lattr`` the latitude of the
+            top right corner
+
+        Note:
+            All return coordinates are in degree        
         '''
-        This method is used to determine the bottom-left
-        and upper-right coordinates for a cylindrical projection
-        centered at (lat0,long0 with a size radius). See
-        Wikipedia
-        '''
-        # Radian conversion
+
+        # Passage en radian
         radi = radius * 2 * np.pi / (2 * 1734.4 * np.pi)
         lamb0 = long0 * np.pi / 180.0
         phi0 = lat0 * np.pi / 180.0
 
-        # Long/lat min (see wikipedia)
+        # Long/lat min (voir wikipedia)
         longll = -radi / np.cos(phi0) + lamb0
         latll = np.arcsin((-radi + np.sin(phi0) / np.cos(phi0)) * np.cos(phi0))
         if np.isnan(latll):
             latll = -90 * np.pi / 180.0
-
-        # Long/lat max (see wikipedia)
+        # Long/lat max (voir wikipedia)
         longtr = radi / np.cos(phi0) + lamb0
         lattr = np.arcsin((radi + np.tan(phi0)) * np.cos(phi0))
 
         return longll * 180 / np.pi, longtr * 180 / np.pi, latll * 180 / np.pi, lattr * 180 / np.pi
 
-    def _Add_Scale(self, m, ax1):
+    def _add_scale(self, m, ax1):
         ''' Add scale to the map instance '''
 
         lol, loM, lam, laM = self.Lambert_Window(
-            0.6 * self.Taille_Window, self.Lat, self.Long)
-        m.drawmapscale(loM, lam, self.Long, self.Lat, 10,
+            0.6 * self.size_window, self.lat0, self.lon0)
+        m.drawmapscale(loM, lam, self.lon0, self.lat0, 10,
                        barstyle='fancy', units='km',
                        fontsize=24, yoffset=None,
                        labelstyle='simple',
@@ -174,28 +215,40 @@ class Area(object):
                        zorder=2)
 
     def _add_colorbar(self, m, CS, ax, name):
+        ''' Add colorbar to the map instance '''
+
         cb = m.colorbar(CS, "right", size="5%", pad="2%")
         cb.set_label(name, size=34)
         cb.ax.tick_params(labelsize=18)
 
-    def Get_Arrays(self, type_img):
-        '''
-        Return X,Y,Z of the region for the img asked.
-        img is either 'Lola' for the topography or
-        'wac' for WAC image.
+    def get_arrays(self, type_img):
+        ''' Return the region of interest
+
+        Args:
+            type_img (str): Either lola or wac.
+
+        Returns:
+            A tupple of three arrays ``(X,Y,Z)`` with ``X`` contains the
+            longitudes, ``Y`` contains the latitude and ``Z`` the values
+            extracted for the region of interest.
+
+        Note:
+            The argument has to be either lola or wac. Note case sensitive.
+            All return arrays have the same size.
+
+            All coordinate are in degree.
         '''
 
-        if type_img == 'Lola':
+        if type_img.lower() == 'lola':
             return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.path_pdsfiles).Image()
-        elif type_img == 'Wac':
+        elif type_img.upper() == 'wac':
             return WacMap(self.ppdwac, *self.window, path_pdsfile=self.path_pdsfiles).Image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
     def _format_coordinate_cartopy(self, ax):
-        '''
-        Format the cartopy plot to show lat/long properly
-        '''
+        ''' Format the cartopy plot to show lat/long properly '''
+
         lonm, lonM, latm, latM = self.window
         xlocs = np.linspace(lonm, lonM, 5)
         ylocs = np.linspace(latm, latM, 5)
@@ -210,20 +263,28 @@ class Area(object):
         ax.yaxis.set_major_formatter(lat_formatter)
         ax.tick_params(labelsize=18)
 
-    def Get_Profile(self, img_type, coordinate, num_points):
-        '''
-        Extract the profiles from (lat1,lon1) to (lat2,lon2)
+    def get_profile(self, img_type, coordinate, num_points):
+        ''' Extract a profile from (lat1,lon1) to (lat2,lon2)
 
-        parameter:
+        Args:
+            img_type (str): Either lola or wac.
+            coordinate (float,float,float,flaot): A tupple
+            ``(lon0,lon1,lat0,lat1)`` with:
 
-        img_type : Type of the image
-        coordinate : (lon0,lon1,lat0,lat1) Be carefull, longitude has to be in between
-        0-360 ! 
-        num_points : Number of points in the interpolation
+            - lon0: First point longitude
+            - lat0: First point latitude
+            - lon1: First point longitude
+            - lat1: First point latitude
+
+            num_points (int): Number of points to use in the
+            interpolation process. 
+
+        Note:
+            Be carefull, longitude has to be in between 0-360 ! 
         '''
 
         lon0, lon1, lat0, lat1 = coordinate
-        X, Y, Z = self.Get_Arrays(img_type)
+        X, Y, Z = self.get_arrays(img_type)
         x0, y0 = np.argmin(np.abs(X[0, :] - lon0)
                            ), np.argmin(np.abs(Y[:, 0] - lat0))
         x1, y1 = np.argmin(np.abs(X[0, :] - lon1)
@@ -233,28 +294,38 @@ class Area(object):
 
         return zi
 
-    def Draw_Profile(self, coordinates, img_type='Lola', num_points=100,
+    def draw_profile(self, coordinates, num_points=100,
                      save=False, name='BaseProfile.png'):
-        '''
-        Draw profile between a point (lon0,lat0) and (lon1,lat1).
+        ''' Draw a profile between a point (lon0,lat0) and (lon1,lat1).
 
-        parameters:
-        coordinates : a tuple which itself contain tupple of coordinates.
-        The format is (lon0,lon1,lat0,lat1). For instance, self.window is
-        an example.
-        img_type : Type of the image to do the profile
-        num_points : Number of points for the interpolation
-        save : Save or not the figure
-        name : Name of the figure.
+        Args:
+            coordinates: Tupples which list the different profile.
+            Each profil has to be defined as a tupple which follow
+            (lon0,lon1,lat0,lat1) with (lon0,lat0) the first point
+            coordintes and (lon1,lat1) the second point
+            coordinates. Both in degree.
+            num_points (Optional[int]): Number of points to use
+            in the interpolation process. Defaults to 100.
+            save (Optional[bool]): Weither or not to save the image.
+            Defaults to False.
+            name (Optional[str]): Absolut path to save the resulting
+            image. Default to 'BaseProfile.png' in the working
+            directory.
 
-        Example
-        C2 = Structure('n','M13','Dome')
-        midlon = (C2.window[0]+C2.window[1])/2.0
-        midlat = (C2.window[2]+C2.window[3])/2.0
-        profile1 = (midlon,midlon,C2.window[2],C2.window[3]) #Vertical profile
-        profile2 = (C2.window[0],C2.window[1],midlat,midlat) #Horizontal profile
-        C2.Draw_Profile((profile1,profile2,C2.window))
+        Example:
+            Here is an example for a region located (10E,10N) 10 km
+            in diameter with three different profile. 
 
+            >>> Region = Area(10,10,20)
+            >>> midlon = (Region.window[0]+Region.window[1])/2.0
+            >>> midlat = (Region.window[2]+Region.window[3])/2.0
+            >>> profile1 = (midlon,midlon,Region.window[2],Region.window[3]) #Vertical profile
+            >>> profile2 = (Region.window[0],Region.window[1],midlat,midlat) #Horizontal profile
+            >>> Region.draw_profile((profile1,profile2,Region.window))
+
+        Warning:
+            If only one profile is given, ``coordinates = (profile1,)``.
+            If more than one is give, use ``coordinates = (profile1,profile2,profile3,)``
         '''
 
         fig = plt.figure(figsize=(24, len(coordinates) * 5))
@@ -271,7 +342,7 @@ class Area(object):
             ax2 = plt.subplot(gs[i, 1:])
 
             # Image unit
-            X, Y, Z = self.Get_Arrays(img_type)
+            X, Y, Z = self.get_arrays('lola')
             ax1.pcolormesh(X, Y, Z,
                            transform=ccrs.PlateCarree(),
                            cmap='spectral')
@@ -282,7 +353,7 @@ class Area(object):
 
             # Profile
             print(coordinate)
-            z_interpolated = self.Get_Profile(img_type, coordinate, num_points)
+            z_interpolated = self.get_profile('lola', coordinate, num_points)
             ax2.plot(z_interpolated[::-1])
             ax2.set_ylabel('Topographic profile (m)', fontsize=24)
             ax2.tick_params(labelsize=18)
@@ -291,98 +362,139 @@ class Area(object):
                 fig.savefig(name, rasterized=True, dpi=200,
                             bbox_inches='tight', pad_inches=0.1)
 
-    def Lola_Image(self, save=False, name='BaseLola.png'):
-        '''
-        Return the lola image corresponding to the window.
-        A blue triangle is added as well as a scale for completnesss
-        of the plot.
+    def lola_image(self, save=False, name='BaseLola.png'):
+        ''' Draw the topography of the region of interest
 
-        This method is encouraged to be modified according to specific need.
+        Args:
+            save (Optional[bool]): Weither or not to save the image.
+            Defaults to False.
+            name (Optional[str]): Absolut path to save the resulting
+            image. Default to 'BaseLola.png' in the working
+            directory.
+
+        Returns:
+            An image correponding to the region tography. Realized
+            from the data taken by the LOLA instrument on board of LRO.
+
+        Note:
+            Nice to use in a jupyter notebook with ``%matplotib inline``
+            activated.
+
+            Feel free to modify this method to plot exactly what you need.
+
         '''
+
         fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
         lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
-            self.Taille_Window, self.Lat, self.Long)
+            self.size_window, self.lat0, self.lon0)
         m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
-                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.Lat, lon_0=self.Long)
+                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
 
-        Xl, Yl, Zl = self.Get_Arrays('Lola')
+        Xl, Yl, Zl = self.get_arrays('Lola')
         Xl, Yl = m(Xl, Yl)
 
         CS = m.pcolormesh(Xl, Yl, Zl, cmap='gist_earth',
                           alpha=.5, ax=ax1, zorder=1)
         #m.contour(Xl,Yl,Zl,20, colors = 'black', alpha = 1.0 , zorder=2)
 
-        xc, yc = m(self.Long, self.Lat)
+        xc, yc = m(self.lon0, self.lat0)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
-        self._Add_Scale(m, ax1)
+        self._add_scale(m, ax1)
         self._add_colorbar(m, CS, ax1, 'Topography')
 
         if save == True:
             fig.savefig(name, rasterized=True, dpi=200,
                         bbox_inches='tight', pad_inches=0.1)
 
-    def Wac_Image(self, save=False, name='BaseWac.png'):
-        '''
-        Return the Wac image corresponding to the window.
-        A blue triangle is added as well as a scale for completnesss
-        of the plot.
+    def wac_image(self, save=False, name='BaseWac.png'):
+        ''' Draw the texture of the region of interest
 
-        This method is encouraged to be modified according to specific need.
+        Args:
+            save (Optional[bool]): Weither or not to save the image.
+            Defaults to False.
+            name (Optional[str]): Absolut path to save the resulting
+            image. Default to 'BaseWac.png' in the working
+            directory.
+
+        Returns:
+            An image corresponding to the region wide angle image. Realized
+            from the data taken by the LROC instrument on board of LRO.
+
+        Note:
+            Nice to use in a jupyter notebook with ``%matplotib inline``
+            activated.
+
+            Feel free to modify this method to plot exactly what you need.
+
         '''
 
         fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
         lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
-            self.Taille_Window, self.Lat, self.Long)
+            self.size_window, self.lat0, self.lon0)
         m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
-                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.Lat, lon_0=self.Long)
+                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
 
-        Xw, Yw, Zw = self.Get_Arrays('Wac')
+        Xw, Yw, Zw = self.get_arrays('Wac')
         Xw, Yw = m(Xw, Yw)
         grid = m.pcolormesh(Xw, Yw, Zw, cmap=cm.gray, ax=ax1, zorder=1)
 
-        xc, yc = m(self.Long, self.Lat)
+        xc, yc = m(self.lon0, self.lat0)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
-        self._Add_Scale(m, ax1)
+        self._add_scale(m, ax1)
 
         if save == True:
             fig.savefig(name, dpi=200, bbox_inches='tight', pad_inches=0.1)
 
     def Overlay(self, save=False, name='BaseOverlay.png'):
-        '''
-        Return an ovelay of Lola image over the Wac image
-        corresponding to the window.
-        A blue triangle is added as well as a scale for completnesss
-        of the plot.
+        ''' Draw the topography over the texture of the region of interest
 
-        This method is encouraged to be modified according to specific need.
+        Args:
+            save (Optional[bool]): Weither or not to save the image.
+            Defaults to False.
+            name (Optional[str]): Absolut path to save the resulting
+            image. Default to 'BaseOverlay.png' in the working
+            directory.
+
+        Returns:
+            An image corresponding to an overaly of the topography
+            and a wide angle image. Realized from the data taken
+            by the LOLA and LROC instrument on board of LRO.
+
+        Note:
+            Nice to use in a jupyter notebook with ``%matplotib inline``
+            activated.
+
+            Feel free to modify this method to plot exactly what you need.
+
         '''
+
         fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
         lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
-            self.Taille_Window, self.Lat, self.Long)
+            self.size_window, self.lat0, self.lon0)
         m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
-                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.Lat, lon_0=self.Long)
+                    resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
 
-        Xw, Yw, Zw = self.Get_Arrays('Wac')
+        Xw, Yw, Zw = self.get_arrays('Wac')
         Xw, Yw = m(Xw, Yw)
         m.pcolormesh(Xw, Yw, Zw, cmap=cm.gray, ax=ax1, zorder=1)
 
-        Xl, Yl, Zl = self.Get_Arrays('Lola')
+        Xl, Yl, Zl = self.get_arrays('Lola')
         Xl, Yl = m(Xl, Yl)
         CS = m.contourf(Xl, Yl, Zl, 100, cmap='gist_earth',
                         alpha=0.4, zorder=2, antialiased=True)
 
-        xc, yc = m(self.Long, self.Lat)
+        xc, yc = m(self.lon0, self.lat0)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
 
-        self._Add_Scale(m, ax1)
+        self._add_scale(m, ax1)
         self._add_colorbar(m, CS, ax1, 'Topography')
 
         if save == True:
@@ -393,60 +505,77 @@ class Area(object):
 
 
 class Crater(Area):
-    ''' A class able to gather information on Topography and Image about
-    a specified area around a geological unit (Crater or dome).
+    '''A class which gather information on impact crater.
 
-    parameters:
+    It is particularly useful to study a particular impact crater at
+    the lunar surface. For the moment, it can gather information about
+    its topography (from LRO LOLA experiment) and texture (from the
+    LRO WAC experiment). More information about the Lunar
+    Reconnaissance Orbiter mission (LRO) can be found `here`_
 
-    - structure : Name of the structure. Either "Crater" or "Dome".
-    - ide : This class allow to defined the unit by its name "n" or its
-    index "i".
-    - idx : Corresponding name or index
+    Args:
+        ide (str): 'name' if you use the crater name or 'index' if you use
+        its index in the table.
+        idx: Name of the crater if you fill 'name' as a first parameter or
+        its index in the table if you fill 'index' as a first parameter.
+        path_pdsfiles (Optional[str]): Path where the pds files are stored.
+            Defaults, the path is set to the folder ``PDS_FILES`` next to
+            the module files where the library is install.
 
-    attributes:
+            See ``defaut_pdsfile`` variable of the class.
 
-    - structure : Type of the geological unit (Crater/Dome)
-    - ppdlola : resolution of the Lola image
-    - ppdwac : resolution of the Wac image
-    - Name/Diameter/Radius/Lat/Long : property of the geological unit
-    - Taille_Window : Size of the window to consider around the unit
+    Attributes:
+        path_pdsfiles: Path where the pds_files are stored.
+        ppdlola (int): Resolution for the topography
+        ppdwac (int): Resolution for the WAC image
+        racine (str): Path where information about the impact crater
+        dataset is stored as a table. Defaults to the folder Tables
+        in the installation folder of the library.
+        craters: Pandas dataframes containing the information of
+        all impact craters.
+        name (str): Name of the crater considered.
+        lat0 (float): Latitude of the crater center (degree)
+        lon0 (float): Longitude of the crater center (degree)
+        diameter (float): Crater diameter (km)
+        type (int): 1 if the crater is a Floor-fractured crater, 0 otherwise
+        radius (float): Radius of the crater (km)
+        index (str): Index of the crater in the table
+        size_window (float): Radius of the region of interest (km).
+        Defaults to 80 % of the crater diameter.
+        window (float,float,float,float): ``(longll, longtr, latll, lattr)``
+            with:
 
-    methods:
+            - ``longll`` the longitude of the lower left corner
+            - ``longtr`` the longitude of the top right corner
+            - ``latll`` the latitude of the lower left corner
+            - ``lattr`` the latitude of the top right corner
 
-    - Lambert_Window :  This method is used to determine the bottom-left
-    and upper-right coordinates for a square Lambert Azimuthal
-    equal area projection centered at (lat0,long0 with a size radius).
+    Note:
+        It is important to respect the structure of the PDS_FILES folder. It
+        should contain 2 subfolder called ``LOLA`` and ``LROC_WAC`` where the
+        corresponding images should be download.
 
-    - Cylindrical_Window : This method is used to determine the bottom-left
-    and upper-right coordinates for a cylindrical projection
-    centered at (lat0,long0 with a size radius). See
-    Wikipedia
+        The abreviations correspond to:
 
-    - Get_Arrays : Return X,Y,Z of the region for the img asked.
-    img is either 'Lola' for the topography or
-    'wac' for WAC image.
-
-    - Lola_Image, Wac_Image, Overlay : Return the corresponding
-    plot. A blue triangle is added as well as a scale for completnesss
-    of the plot.
+        - **LRO** Lunar Reconnaissance Orbiter
+        - **LOLA** Lunar Orbiter Laser Altimeter
+        - **LROC** Lunar Reconnaissance Orbiter Camera
+        - **WAC** Wide Angle Camera
 
     Example:
+        For instance, say we want to get an overlay, topography and texture,
+        of the famous crater Copernicus
 
-    For instance, say we want to image the crater Copernicus. We can the
-    define an instance of the class
+        >>> C = Crater('name','Copernicus')
+        >>> C.Overlay()
 
-    C = Crater('n','Copernicus')
-    C.Overlay(True)
+    .. _here:
+        http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
 
     '''
 
     def __init__(self, ide, idx, path_pdsfile=Area.defaut_pdsfile):
-        '''
-        - structure : Name of the structure. Either "Crater" or "Dome".
-        - ide : This class allow to defined the unit by its name "n" or its
-        index "i".
-        - idx : Corresponding name or index
-        '''
+
         self.path_pdsfiles = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128
@@ -455,68 +584,95 @@ class Crater(Area):
         self.craters = pd.read_csv(
             os.path.join(self.racine, 'Data_Crater.csv'))
 
-        inde = {'n': 'Name', 'i': 'Index'}
-        df = self.craters[self.craters[inde[ide]] == idx]
+        df = self.craters[self.craters[ide] == idx]
         if len(df) == 0:
             raise ValueError("The tuple (%s,%s) does not correspond\n \
                              to any structure in the dataset. " % (ide, idx))
 
-        [setattr(self, f, float(df[f]))
-         for f in df.columns if f not in ['Name']]
+        def switchtype(x):
+            try:
+                return float(x)
+            except:
+                return str(x)
 
-        assert (self.Long > 0.0) & (
-            self.Long < 360.0), 'Longitude has to span 0-360 !!!'
-        self.Name = df.Name.iloc[0]
-        self.Change_window(0.8 * self.Diameter)
+        [setattr(self, f, switchtype(df[f])) for f in df.columns]
+
+        assert (self.lon0 > 0.0) & (
+            self.lon0 < 360.0), 'Longitude has to span 0-360 !!!'
+        self.name = df.Name.iloc[0]
+        self.change_window(0.8 * self.diameter)
 
 
 class Dome(Area):
 
-    ''' A class able to gather information on Topography and Image about
-    a specified area around a geological unit (Crater or dome).
+    '''A class which gather information on lunar low-slope dome.
 
-    parameters:
+    It is particularly useful to study a particular low-slope dome at
+    the lunar surface. For the moment, it can gather information about
+    its topography (from LRO LOLA experiment) and texture (from the
+    LRO WAC experiment). More information about the Lunar
+    Reconnaissance Orbiter mission (LRO) can be found `here`_
 
-    - structure : Name of the structure. Either "Crater" or "Dome".
-    - ide : This class allow to defined the unit by its name "n" or its
-    index "i".
-    - idx : Corresponding name or index
+    Args:
+        ide (str): 'name' if you use the dome name or 'index' if you use
+        its index in the table.
+        idx: Name of the crater if you fill 'name' as a first parameter or
+        its index in the table if you fill 'index' as a first parameter.
+        path_pdsfiles (Optional[str]): Path where the pds files are stored.
+            Defaults, the path is set to the folder ``PDS_FILES`` next to
+            the module files where the library is install.
 
-    attributes:
+            See ``defaut_pdsfile`` variable of the class.
 
-    - structure : Type of the geological unit (Crater/Dome)
-    - racine : path for project
-    - ppdlola : resolution of the Lola image
-    - ppdwac : resolution of the Wac image
-    - Name/Diameter/Radius/Lat/Long : property of the geological unit
-    - Taille_Window : Size of the window to consider around the unit
+    Attributes:
+        path_pdsfiles: Path where the pds_files are stored.
+        ppdlola (int): Resolution for the topography
+        ppdwac (int): Resolution for the WAC image
+        racine (str): Path where information about the low-slope dome
+        dataset is stored as a table. Defaults to the folder Tables
+        in the installation folder of the library.
+        domes: Pandas dataframes containing the information about
+        the low-slope domes.
+        name (str): Name of the crater considered.
+        lat0 (float): Latitude of the dome center (degree)
+        lon0 (float): Longitude of the dome center (degree)
+        diameter (float): Dome diameter (km)
+        radius (float): Radius of the crater (km)
+        diameter_err (float): Error on the diameter (km)
+        thickness (float): Dome thickness (km)
+        thickness_err (float): Error on the dome thickness (km)
+        index (str): Index of the dome in the table
+        size_window (float): Radius of the region of interest (km).
+        Defaults to 80 % of the crater diameter.
+        window (float,float,float,float): ``(longll, longtr, latll, lattr)``
+            with:
 
-    methods:
+            - ``longll`` the longitude of the lower left corner
+            - ``longtr`` the longitude of the top right corner
+            - ``latll`` the latitude of the lower left corner
+            - ``lattr`` the latitude of the top right corner
 
-    - Lambert_Window :  This method is used to determine the bottom-left
-    and upper-right coordinates for a square Lambert Azimuthal
-    equal area projection centered at (lat0,long0 with a size radius).
+    Note:
+        It is important to respect the structure of the PDS_FILES folder. It
+        should contain 2 subfolder called ``LOLA`` and ``LROC_WAC`` where the
+        corresponding images should be download.
 
-    - Cylindrical_Window : This method is used to determine the bottom-left
-    and upper-right coordinates for a cylindrical projection
-    centered at (lat0,long0 with a size radius). See
-    Wikipedia
+        The abreviations correspond to:
 
-    - Get_Arrays : Return X,Y,Z of the region for the img asked.
-    img is either 'Lola' for the topography or
-    'wac' for WAC image.
-
-    - Lola_Image, Wac_Image, Overlay : Return the corresponding
-    plot. A blue triangle is added as well as a scale for completnesss
-    of the plot.
+        - **LRO** Lunar Reconnaissance Orbiter
+        - **LOLA** Lunar Orbiter Laser Altimeter
+        - **LROC** Lunar Reconnaissance Orbiter Camera
+        - **WAC** Wide Angle Camera
 
     Example:
+        For instance, say we want to get an overlay, topography and texture,
+        of the famous dome M13
 
-    For instance, say we want to image the crater Copernicus. We can the
-    define an instance of the class
+        >>> C = Dome('name','M13')
+        >>> C.Overlay()
 
-    C = Structure('n','Copernicus','Crater')
-    C.Overlay(True)
+    .. _here:
+        http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
 
     '''
 
@@ -534,16 +690,20 @@ class Dome(Area):
             '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'Table')
         self.domes = pd.read_csv(os.path.join(self.racine,
                                               'Data_Dome.csv'))
-        inde = {'n': 'Name', 'i': 'Index'}
-        df = self.domes[self.domes[inde[ide]] == idx]
+        df = self.domes[self.domes[ide] == idx]
         if len(df) == 0:
             raise ValueError("The tuple (%s,%s) does not correspond\n \
                              to any structure in the dataset. " % (ide, idx))
 
-        [setattr(self, f, float(df[f]))
-         for f in df.columns if f not in ['Name']]
+        def switchtype(x):
+            try:
+                return float(x)
+            except:
+                return str(x)
 
-        assert (self.Long > 0.0) & (
-            self.Long < 360.0), 'Longitude has to span 0-360 !!!'
-        self.Name = df.Name.iloc[0]
-        self.Change_window(0.8 * self.Diameter)
+        [setattr(self, f, switchtype(df[f])) for f in df.columns]
+
+        assert (self.lon0 > 0.0) & (
+            self.lon0 < 360.0), 'Longitude has to span 0-360 !!!'
+        self.name = df.name.iloc[0]
+        self.change_window(0.8 * self.diameter)

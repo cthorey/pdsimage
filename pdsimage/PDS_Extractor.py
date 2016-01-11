@@ -15,11 +15,16 @@ import requests
 
 
 class BinaryTable(object):
-    """ Class which is able to read PDS image file for LOLA/WAC images.
+    """ Class to read image binary file from the LRO experiment 
 
-    LROC LOLA - Informations can be found at `LROC/LOLA website`_.
+    For the moment, it can gather information about the topography
+    (from LRO LOLA experiment) and texture (from the LRO WAC
+    experiment). More information about the Lunar Reconnaissance
+    Orbiter mission (LRO) can be found `here`_
+
+    LRO LOLA - Informations can be found at `LRO/LOLA website`_.
     In particular, the header, located in  a separate file .LBL file,
-    contains all the informations. Read manually
+    contains all the informations.
 
     LROC WAC - Informations can be found at `LROC/WAC website`_.
     In particular, HEADER in the binary file that contain all the information -
@@ -28,7 +33,7 @@ class BinaryTable(object):
 
     This class has a method able to download the images,
     though it might be better to download them before
-    as it takes a lot of time, especially for larger resolution.
+    as it takes a lot of time, especially for large resolution.
 
     Both are NASA PDS FILE - Meaning, they are binary table whose format depends on
     the file. All the information can be found in the Header whose
@@ -39,9 +44,17 @@ class BinaryTable(object):
     PROJECTION : [WAC : 'EQUIRECTANGULAR', LOLA : '"SIMPLE"']
     FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.
 
+    Args:
+        fname (str): Name of the image.
+        path_pdsfiles (Optional[str]): Path where the pds files are stored.
+            Defaults, the path is set to the folder ``PDS_FILES`` next to
+            the module files where the library is install.
+
+            See ``defaut_pdsfile`` variable of the class
+
     Attributes:
-        fname (str): name of pds file.
-        path_pdsfiles (str): path where pds files are stored.
+        fname (str): Name of the image.
+        path_pdsfiles (str): path where the pds files are stored.
         lolapath (str): path for LOLA images
         wacpath (str): path for WAC images
         grid (str): WAC or LOLA
@@ -49,11 +62,26 @@ class BinaryTable(object):
         lbl (str): name of the lbl file, where information are stored. Empty for WAC.
 
     Note:
-        I also integrate all the specification of the image contained in the header or the
-        .LBL file as attribute of the class. However, the list is long and I do not introduce
-        them into the documentation. See the file directly for details. 
+        It is important to respect the structure of the PDS_FILES folder. It
+        should contain 2 subfolder called ``LOLA`` and ``LROC_WAC`` where the
+        corresponding images should be download.
 
-    .. _LROC/LOLA website:
+        I also integrate all the specification of the image contained in
+        the header or the .LBL file as attribute of the class. However,
+        the list is long and I do not introduce them into the
+        documentation. See the file directly for details.
+
+        The abreaviations correspond to:
+
+        - **LRO** Lunar Reconnaissance Orbiter
+        - **LOLA** Lunar Orbiter Laser Altimeter
+        - **LROC** Lunar Reconnaissance Orbiter Camera
+        - **WAC** Wide Angle Camera
+
+    .. _here:
+        http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
+
+    .. _LRO/LOLA website:
         http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/aareadme.txt
 
     .. _LROC/WAC website:
@@ -62,26 +90,12 @@ class BinaryTable(object):
     .. _pvl module:
         http://pvl.readthedocs.org/en/latest/
 
-
     """
 
     defaut_pdsfile = os.path.join(
         '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
 
     def __init__(self, fname, path_pdsfile=defaut_pdsfile):
-        '''
-        Args:
-            fname (str): name of the pds file
-            path_pdsfile: path where pds files are stored.
-
-        Note:
-            A defaut path for pds_files is within the pdsimage installation
-            folder. Though, assuming the defaut path may work only if you
-            have the rights on the installation folder.
-
-            In addition, the folder PDS_FILES should contained two subfolder
-            called LOLA and LROC_WAC where each corresponding image are stored
-        '''
 
         self.fname = fname.upper()
         self.path_pdsfiles = path_pdsfile
@@ -557,10 +571,8 @@ class WacMap(object):
     '''Class to handle the creation of LROC WAC GLOBAL images
 
     This class is specifically designed to handle the creation of image
-    from LROC WAC GLOBAL images. 
-
-    This class is able to identify the image (or the groupe of images)
-    necessary to extract an array over a given window.
+    from LROC WAC images. It is able to identify the image (or the groupe
+    of images) necessary to extract an array over a given window.
     Four cases are possible and taken care of:
 
     1. The desired structure is entirely contained into one image.
@@ -568,26 +580,43 @@ class WacMap(object):
     3. The span in longitude of the image is ok but not latitudes (2 images).
     4. Both latitude and longitude are not contained in one image(4 images).
 
+    Args:
+        ppd (int): Required resolution
+        lonm (float): Lower left window longitude (degree)
+        lonM (float): Upper right window longitude (degree)
+        latm (float): Lower left window latitude (degree)
+        latM (float): Upper right window latitude (degree)
+        path_pdsfiles (Optional[str]): Path where the pds files are stored.
+            Defaults, the path is set to the folder ``PDS_FILES`` next to
+            the module files where the library is install.
+
+            See ``defaut_pdsfile`` variable of the class
+
+
     Attributes:
         ppd (int): Required resolution
         lonm (float): Lower left window longitude (degree)
         lonM (float): Upper right window longitude (degree)
         latm (float): Lower left window latitude (degree)
         latM (float): Upper right window latitude (degree)
-        path_pdsfiles (Optional[str]): Path where the pds_files are stored.
-            WAC files should be contained within a folder LROC_WAC within
-            the PDS_FILES folder. Defaults, the path is set to the folder
-            ``PDS_FILES/LROC_WAC`` where the library is install.
-            See ``defaut_pdsfile`` variable of the class
+        path_pdsfiles (str): Path where the pds_files are stored.
 
     Note:
+        It is important to respect the structure of the PDS_FILES folder. WAC
+        images should be contained within a subfolder called ``LROC_WAC``.
+
         Possible resolution are stored in the class variable ``implemented_res``.
         Longitude in the code spans 0 to 360.
 
+        The abreaviations correspond to:
+
+        - **LROC** Lunar Reconnaissance Orbiter Camera
+        - **WAC** Wide Angle Camera
+
     Example:
-        This class allow to simple gather three arrays X, Y, Z given a specific
+        This class allows to simply gather three arrays X, Y, Z given a specific
         window. For instance, if we want to gather the data for a window which
-        span 10 to 20 degree in longitude and the same in latitude, simply ask.
+        spans 10 to 20 degree in longitude and the same in latitude, simply ask.
 
         >>> X, Y, Z = WacMap(521,10,20,10,20).image()
 
@@ -837,13 +866,11 @@ class WacMap(object):
 
 
 class LolaMap(WacMap):
-    '''Class to handle the creation of LROC LOLA LDEM images
+    '''Class to handle the creation of LRO LOLA images
 
     This class is specifically designed to handle the creation of image
-    from LOLA LDEM images. 
-
-    This class is able to identify the image (or the groupe of images)
-    necessary to extract an array over a given window.
+    from LOLA images. It is able to identify the image (or the groupe
+    of images) necessary to extract an array over a given window.
     Four cases are possible and taken care of:
 
     1. The desired structure is entirely contained into one image.
@@ -851,24 +878,41 @@ class LolaMap(WacMap):
     3. The span in longitude of the image is ok but not latitudes (2 images).
     4. Both latitude and longitude are not contained in one image(4 images).
 
+    Args:
+        ppd (int): Required resolution
+        lonm (float): Lower left window longitude (degree)
+        lonM (float): Upper right window longitude (degree)
+        latm (float): Lower left window latitude (degree)
+        latM (float): Upper right window latitude (degree)
+        path_pdsfiles (Optional[str]): Path where the pds files are stored.
+            Defaults, the path is set to the folder ``PDS_FILES`` next to
+            the module files where the library is install.
+
+            See ``defaut_pdsfile`` variable of the class
+
+
     Attributes:
         ppd (int): Required resolution
         lonm (float): Lower left window longitude (degree)
         lonM (float): Upper right window longitude (degree)
         latm (float): Lower left window latitude (degree)
         latM (float): Upper right window latitude (degree)
-        path_pdsfiles (Optional[str]): Path where the pds_files are stored.
-            WAC files should be contained within a folder LROC_WAC within
-            the PDS_FILES folder. Defaults, the path is set to the folder
-            ``PDS_FILES/LROC_WAC`` where the library is install.
-            See ``defaut_pdsfile`` variable of the class
+        path_pdsfiles (str): Path where the pds_files are stored.
 
     Note:
+        It is important to respect the structure of the PDS_FILES folder. WAC
+        images should be contained within a subfolder called ``LROC_WAC``.
+
         Possible resolution are stored in the class variable ``implemented_res``.
         Longitude in the code spans 0 to 360.
 
+        The abreaviations correspond to:
+
+        - **LRO** Lunar Reconnaissance Orbiter
+        - **LOLA** Lunar Orbiter Laser Altimeter
+
     Example:
-        This class allow to simple gather three arrays X, Y, Z given a specific
+        This class allows to simply gather three arrays X, Y, Z given a specific
         window. For instance, if we want to gather the data for a window which
         span 10 to 20 degree in longitude and the same in latitude, simply ask.
 
