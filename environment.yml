@@ -173,9 +173,11 @@ dependencies:
   - jupyter-client==4.1.1
   - jupyter-console==4.0.3
   - jupyter-core==4.0.6
+  - pockets==0.3
   - pvl==0.2.0
   - pyshp==1.2.3
   - shapely==1.5.13
   - sphinx-rtd-theme==0.1.7
+  - sphinxcontrib-napoleon==0.4.3
   - tables==3.2.2
 
