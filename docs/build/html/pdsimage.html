@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>pdsimage package &mdash; pdsimage 1.0 documentation</title>
@@ -15,6 +14,7 @@
   
 
   
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -33,7 +33,7 @@
     <link rel="top" title="pdsimage 1.0 documentation" href="index.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 </head>
 
@@ -43,27 +43,11 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="index.html" class="icon icon-home"> pdsimage
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0
-              </div>
-            
-          
-
-          
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> pdsimage</a>
+        
+        
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -71,24 +55,28 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+      </div>
 
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
           
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-            
-            
-                <ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Cookbook</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 
-            
           
-        </div>
+        
       </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -103,29 +91,20 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>pdsimage package</li>
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/pdsimage.txt" rel="nofollow"> View page source</a>
-          
+          <a href="_sources/pdsimage.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div role="main" class="document">
             
   <div class="section" id="pdsimage-package">
 <h1>pdsimage package<a class="headerlink" href="#pdsimage-package" title="Permalink to this headline">¶</a></h1>
@@ -136,7 +115,7 @@
 <span id="pdsimage-pds-extractor-module"></span><h2>pdsimage.PDS_Extractor module<a class="headerlink" href="#module-pdsimage.PDS_Extractor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.BinaryTable">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class which is able to read PDS image file for LOLA/WAC images.</p>
 <p>LROC LOLA - Informations can be found at <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/aareadme.txt">LROC/LOLA website</a>.
@@ -198,6 +177,12 @@ FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.</p>
 <dd><p><em>str</em> &#8211; name of the lbl file, where information are stored. Empty for WAC.</p>
 </dd></dl>
 
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">I also integrate all the specification of the image contained in the header or the
+.LBL file as attribute of the class. However, the list is long and I do not introduce
+them into the documentation. See the file directly for details.</p>
+</div>
 <dl class="method">
 <dt id="pdsimage.PDS_Extractor.BinaryTable.Array">
 <code class="descname">Array</code><span class="sig-paren">(</span><em>size_chunk</em>, <em>start</em>, <em>bytesize</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.Array" title="Permalink to this definition">¶</a></dt>
@@ -264,6 +249,10 @@ top right corner</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All return coordinates are in degree</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -414,14 +403,14 @@ top right corner</p>
 
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.LolaMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
 <p>Class used to identified the image (or the groupe of images) necessary
 to extract an array around a particular structure.
@@ -448,7 +437,7 @@ Image: Return X, Y, Z values for the window.</p>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.WacMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class used to identified the image (or the groupe of images) necessary
 to extract an array around a particular structure.
@@ -477,7 +466,7 @@ Z: values</p>
 
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.WacMap.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -492,7 +481,7 @@ Z: values</p>
 <span id="pdsimage-structure-module"></span><h2>pdsimage.Structure module<a class="headerlink" href="#module-pdsimage.Structure" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.Structure.Area">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A class able to gather information on Topography and Image about
 a specified area at the lunar surface.</p>
@@ -630,14 +619,14 @@ of the plot.</p>
 
 <dl class="attribute">
 <dt id="pdsimage.Structure.Area.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pdsimage.Structure.Crater">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
 <p>A class able to gather information on Topography and Image about
 a specified area around a geological unit (Crater or dome).</p>
@@ -687,7 +676,7 @@ C.Overlay(True)</p>
 
 <dl class="class">
 <dt id="pdsimage.Structure.Dome">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/cthorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
 <p>A class able to gather information on Topography and Image about
 a specified area around a geological unit (Crater or dome).</p>
@@ -744,7 +733,6 @@ C.Overlay(True)</p>
 </div>
 
 
-           </div>
           </div>
           <footer>
   
@@ -754,13 +742,12 @@ C.Overlay(True)</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Clement Thorey.
-
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
-
         </div>
       </div>
 

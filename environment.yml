@@ -97,6 +97,7 @@ dependencies:
 - pillow=3.0.0=py27_1
 - pip=7.1.2=py27_0
 - ply=3.8=py27_0
+- proj.4=4.9.1=0
 - proj4=4.9.1=0
 - psutil=3.3.0=py27_0
 - ptyprocess=0.5=py27_0
@@ -111,6 +112,7 @@ dependencies:
 - pygments=2.0.2=py27_0
 - pyopenssl=0.15.1=py27_1
 - pyparsing=2.0.3=py27_0
+- pyproj=1.9.4=py27_1
 - pyqt=4.11.4=py27_1
 - pytables=3.2.2=np110py27_0
 - pytest=2.8.1=py27_0
@@ -173,6 +175,7 @@ dependencies:
   - jupyter-client==4.1.1
   - jupyter-console==4.0.3
   - jupyter-core==4.0.6
+  - pdsimage (/Users/thorey/Documents/repos/pdsimage)==1.0
   - pockets==0.3
   - pvl==0.2.0
   - pyshp==1.2.3
