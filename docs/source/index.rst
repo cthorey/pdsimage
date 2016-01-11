@@ -25,6 +25,8 @@ Contents:
    install
    cookbook
    support
+   pdsimage
+   modules
 
 
 Indices and tables
