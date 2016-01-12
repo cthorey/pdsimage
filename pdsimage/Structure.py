@@ -71,7 +71,7 @@ class Area(object):
         around 10 East and 10 North of about 20 km
 
         >>> C = Area(10,10,20)
-        >>> C.Overlay()
+        >>> C.overlay()
 
     .. _here:
         http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
@@ -104,7 +104,7 @@ class Area(object):
 
         '''
         self.size_window = size_window
-        self.window = self.Cylindrical_Window(
+        self.window = self.cylindrical_window(
             self.size_window, self.lat0, self.lon0)
 
     def _kp_func(self, lat, lon, lat0, long0):
@@ -203,7 +203,7 @@ class Area(object):
     def _add_scale(self, m, ax1):
         ''' Add scale to the map instance '''
 
-        lol, loM, lam, laM = self.Lambert_Window(
+        lol, loM, lam, laM = self.lambert_window(
             0.6 * self.size_window, self.lat0, self.lon0)
         m.drawmapscale(loM, lam, self.lon0, self.lat0, 10,
                        barstyle='fancy', units='km',
@@ -241,9 +241,9 @@ class Area(object):
         '''
 
         if type_img.lower() == 'lola':
-            return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.path_pdsfiles).Image()
-        elif type_img.upper() == 'wac':
-            return WacMap(self.ppdwac, *self.window, path_pdsfile=self.path_pdsfiles).Image()
+            return LolaMap(self.ppdlola, *self.window, path_pdsfile=self.path_pdsfiles).image()
+        elif type_img.lower() == 'wac':
+            return WacMap(self.ppdwac, *self.window, path_pdsfile=self.path_pdsfiles).image()
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
@@ -394,7 +394,7 @@ class Area(object):
         fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
-        lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
+        lon_m, lon_M, lat_m, lat_M = self.lambert_window(
             self.size_window, self.lat0, self.lon0)
         m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
@@ -441,7 +441,7 @@ class Area(object):
         fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
-        lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
+        lon_m, lon_M, lat_m, lat_M = self.lambert_window(
             self.size_window, self.lat0, self.lon0)
         m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
@@ -458,14 +458,14 @@ class Area(object):
         if save == True:
             fig.savefig(name, dpi=200, bbox_inches='tight', pad_inches=0.1)
 
-    def Overlay(self, save=False, name='BaseOverlay.png'):
+    def overlay(self, save=False, name='Baseoverlay.png'):
         ''' Draw the topography over a wide angle image  of the region
 
         Args:
             save (Optional[bool]): Weither or not to save the image.
                 Defaults to False.
             name (Optional[str]): Absolut path to save the resulting
-                image. Default to 'BaseOverlay.png' in the working
+                image. Default to 'Baseoverlay.png' in the working
                 directory.
 
         Returns:
@@ -484,7 +484,7 @@ class Area(object):
         fig = plt.figure(figsize=(10, 8))
         ax1 = fig.add_subplot(111)
 
-        lon_m, lon_M, lat_m, lat_M = self.Lambert_Window(
+        lon_m, lon_M, lat_m, lat_M = self.lambert_window(
             self.size_window, self.lat0, self.lon0)
         m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
                     resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
@@ -575,7 +575,7 @@ class Crater(Area):
         Copernicus
 
         >>> C = Crater('name','Copernicus')
-        >>> C.Overlay()
+        >>> C.overlay()
 
     .. _here:
         http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
@@ -678,7 +678,7 @@ class Dome(Area):
         M13
 
         >>> C = Dome('name','M13')
-        >>> C.Overlay()
+        >>> C.overlay()
 
     .. _here:
         http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4
