@@ -328,7 +328,7 @@ class Area(object):
             >>> midlat = (Region.window[2]+Region.window[3])/2.0
             >>> profile1 = (midlon,midlon,Region.window[2],Region.window[3]) #Vertical profile
             >>> profile2 = (Region.window[0],Region.window[1],midlat,midlat) #Horizontal profile
-            >>> Region.draw_profile((profile1,profile2,Region.window))
+            >>> Region.draw_profile((profile1,profile2,Region.window,))
 
         Warning:
             If only one profile is given, ``coordinates = (profile1,)``.

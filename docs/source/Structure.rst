@@ -1,0 +1,90 @@
+Studying specific region and making beautiful plot
+==================================================
+
+While ``PDS_Extractor`` has been designed to facilitate the extraction
+of data, ``Structure``  is more related to the  visualization of these
+data. It contains three **Class**:
+
+    - Area: Use to study random region at the lunar surface
+    - Crater: Use to study specific impact crater at the lunar surface
+    - Dome: Use to study specific low-slope dome at the lunar surface
+
+Area
+----
+
+This class aim to study a specific location at the surface of the Moon
+through images and its topography.  Indeed, given a region of interest
+defined by  its centred  (longitude,latitude) and  a radius  (km), the
+class allows to plot different information:
+
+    - ``lola_image`` realize a plot of the region topography
+    - ``wac_image`` realize an image of the region
+    - ``overlay`` realize an overlay of the image with its topography
+    - ``draw_profile`` allows to plot different topographic profile
+      along with the map where you can visualize the trace.
+
+For  instance, if  take back  the region  of interest  and decided  to
+really plot the overlay this time, we can do::
+
+    from Structure import Area
+    %matplotlib inline
+    
+    region = Area(120,-60,5)
+    region.ppdlola = 64
+    region.ppdwac = 64
+    region.overlay(True, 'region.png')
+
+This two line of code produce the image below
+
+.. image:: _static/region.png
+   :align: center
+
+If you want to zoom in, simply change the size of the window::
+
+    region.change_window(1)
+    region.overlay(True, 'region_zoomed_in.png')
+
+Outside  of plotting  the topography  or the  image alone,  the method
+``draw_profile`` is  of particular interest  to get some  insight into
+the topography. It can be used as follows::
+
+  midlon = (region.window[0]+region.window[1])/2.0
+  midlat = (region.window[2]+region.window[3])/2.0
+  profile1 = (midlon,midlon,region.window[2],region.window[3]) #Vertical profile
+  profile2 = (region.window[0],region.window[1],midlat,midlat) #Horizontal profile
+  region.draw_profile((profile1,profile2,region.window,))
+
+which results in three nice topographic profiles along with a map with
+their corresponding trace.
+
+
+Crater
+------
+
+This class is specifically designed to work with lunar impact craters.
+Indeed, the library integrates a table containing information about all
+referenced impact craters on the Moon. It is a compilation of the data
+from `Salamuniccar et  al, 2011`_, `Jozwiak et al,  2015`_ and `Losiak
+et al, 2009`_.
+
+
+It is  based on  the Area  class such  that it  inherits all  of these
+method and  the example shown above  can be taken for  working here as
+well.
+
+
+
+
+Dome
+----
+
+
+
+.. _Salamuniccar et al, 2011:
+    http://www.sciencedirect.com/science/article/pii/S0032063310003405)
+    
+.. _Jozwiak et al,  2015:
+    http://dx.doi.org/10.1016/j.icarus.2014.10.052
+    
+.. _Losiak et al, 2009:
+    http://adsabs.harvard.edu/abs/2009LPI....40.1532L

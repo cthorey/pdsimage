@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="pdsimage 1.0 documentation" href="#"/>
-        <link rel="next" title="Installation" href="install.html"/> 
+        <link rel="next" title="Get the module up and running" href="install.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -63,26 +63,32 @@
           
           
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Cookbook</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#mac-os-x">Mac OS X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#unix">Unix</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Rapid overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="PDS_Extractor.html">Extracting data on a specific region</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#binarytable">BinaryTable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#wacmap">WacMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#lolamap">LolaMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#module-pdsimage.PDS_Extractor">Index</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pdsimage.html">pdsimage package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage.PDS_Extractor">pdsimage.PDS_Extractor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage.Structure">pdsimage.Structure module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">pdsimage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html">pdsimage package</a></li>
-</ul>
-</li>
 </ul>
 
           
@@ -120,9 +126,23 @@
             
   <div class="section" id="welcome-to-pdsimage-s-documentation">
 <h1>Welcome to pdsimage&#8217;s documentation!<a class="headerlink" href="#welcome-to-pdsimage-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>This library has been designed to facilitate the extraction of subpart
-of a PDS IMAGES from the LOLA/LROC_WAC experiment.</p>
-<p><strong>Highlighted features</strong></p>
+<p>The Lunar Reconnaissance Orbiter  (<a class="reference external" href="http://www.nasa.gov/mission_pages/LRO/main/index.html">LRO</a>) mission has gathered some
+fantastic data of the lunar surface  and, thanks to <a class="reference external" href="https://pds.nasa.gov/">NASA</a>, all are
+available for free on the internet.</p>
+<p>However, using them can be a bit criptic without a bit of experience.
+This library aims to facilitate the extraction of knowledge from two
+set of data gathered by two experiment on board of LRO:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The Lunar Orbiter Laser Altimer (<a class="reference external" href="http://lunar.gsfc.nasa.gov/lola/">LOLA</a>) experiment which
+collected high resolution topographic data of the lunar surface</li>
+<li>The  Lunar  Reconnaissance  Orbiter Camera  (<a class="reference external" href="http://lroc.sese.asu.edu/about">LROC</a>)  experiment
+which collected images of the lunar surface. In particula, we
+focus on Wide Angle Images taken from the Wide Angle Camera (<a class="reference external" href="http://lroc.sese.asu.edu/images">WAC</a>)</li>
+</ul>
+</div></blockquote>
+<div class="section" id="highlighted-features">
+<h2>Highlighted features<a class="headerlink" href="#highlighted-features" title="Permalink to this headline">¶</a></h2>
 <p>Unlike  previous python  PDS  library, this  module  allows to  easily
 extract  part of  a PDS  image without  loading the  whole thing  into
 memory  (Sizes  can  be  up  to  Gigabytes).   Great  for  looking  at
@@ -131,27 +151,34 @@ crater and lunar domes specifically.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Cookbook</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#mac-os-x">Mac OS X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#unix">Unix</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Rapid overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="PDS_Extractor.html">Extracting data on a specific region</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#binarytable">BinaryTable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#wacmap">WacMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#lolamap">LolaMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#module-pdsimage.PDS_Extractor">Index</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pdsimage.html">pdsimage package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage.PDS_Extractor">pdsimage.PDS_Extractor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage.Structure">pdsimage.Structure module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage">Module contents</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">pdsimage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html">pdsimage package</a></li>
-</ul>
-</li>
-</ul>
+</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -169,7 +196,7 @@ crater and lunar domes specifically.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="install.html" class="btn btn-neutral float-right" title="Installation">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Get the module up and running">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
