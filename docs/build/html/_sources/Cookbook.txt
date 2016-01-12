@@ -1,5 +1,5 @@
 
-Cookbook
+Rapid overview
 ========================
 
 Import the modules
