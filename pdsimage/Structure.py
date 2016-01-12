@@ -29,8 +29,8 @@ class Area(object):
     Orbiter mission (LRO) can be found `here`_
 
     Args:
-        lon0 (float): Longitude of the region of interest.
-        lat0 (float): Latitude of the region of interest.
+        lon0 (float): Center longitude of the region of interest.
+        lat0 (float): Center latitude of the region of interest.
         size (float): Radius of the region of interest.
         path_pdsfiles (Optional[str]): Path where the pds files are stored.
             Defaults, the path is set to the folder ``PDS_FILES`` next to
@@ -66,8 +66,9 @@ class Area(object):
         - **WAC** Wide Angle Camera
 
     Example:
-        For instance, say we want to get an overlay, topography and texture,
-        of a region centred around 10 East and 10 North of about 20 km
+        For instance, say we want to get an overlay, the topography
+        drawn over an wide angle camera image, of a region centred
+        around 10 East and 10 North of about 20 km
 
         >>> C = Area(10,10,20)
         >>> C.Overlay()
@@ -113,20 +114,20 @@ class Area(object):
         return kp
 
     def lambert_window(self, radius, lat0, long0):
-        ''' Squared azimutahl projection of a window centered
-        at(lat0, long0) with a given radius of radius.
+        ''' Square Lambert Azimuthal equal area projection of
+        a window centered at (lat0, long0) with a given radius (km).
 
         Args:
-            radius(float): Radius of the window in km
-            lat0(float): Latitude at the center(degree)
-            long0(float): Longitude at the center(degree)
+            radius(float): Radius of the window (km).
+            lat0(float): Latitude at the center (degree).
+            long0(float): Longitude at the center (degree).
 
         Returns:
-            A tuple ``(longll, longtr, latll, lattr)` with ``longll``
+            A tuple ``(longll, longtr, latll, lattr)`` with ``longll``
             the longitude of the lower left corner, ``longtr`` the
             longitude of the top right corner, ``latll`` the latitude
             of the lower left corner and ``lattr`` the latitude of the
-            top right corner
+            top right corner.
 
         Note:
             All return coordinates are in degree
@@ -165,19 +166,19 @@ class Area(object):
 
     def cylindrical_window(self, radius, lat0, long0):
         ''' Cylindrical projection of a window centered
-        at(lat0, long0) with a given radius of radius.
+        at (lat0, long0) with a given radius (km).
 
         Args:
-            radius(float): Radius of the window in km
-            lat0(float): Latitude at the center(degree)
-            long0(float): Longitude at the center(degree)
+            radius(float): Radius of the window (km).
+            lat0(float): Latitude at the center (degree).
+            long0(float): Longitude at the center (degree).
 
         Returns:
-            A tuple ``(longll, longtr, latll, lattr)`` with ``longll``
+            A tuple ``(longll, longtr, latll, lattr)` with ``longll``
             the longitude of the lower left corner, ``longtr`` the
             longitude of the top right corner, ``latll`` the latitude
             of the lower left corner and ``lattr`` the latitude of the
-            top right corner
+            top right corner.
 
         Note:
             All return coordinates are in degree        
@@ -222,7 +223,7 @@ class Area(object):
         cb.ax.tick_params(labelsize=18)
 
     def get_arrays(self, type_img):
-        ''' Return the region of interest
+        ''' Return arrays the region of interest
 
         Args:
             type_img (str): Either lola or wac.
@@ -236,7 +237,7 @@ class Area(object):
             The argument has to be either lola or wac. Note case sensitive.
             All return arrays have the same size.
 
-            All coordinate are in degree.
+            All coordinates are in degree.
         '''
 
         if type_img.lower() == 'lola':
@@ -269,15 +270,15 @@ class Area(object):
         Args:
             img_type (str): Either lola or wac.
             coordinate (float,float,float,flaot): A tupple
-            ``(lon0,lon1,lat0,lat1)`` with:
+                ``(lon0,lon1,lat0,lat1)`` with:
 
-            - lon0: First point longitude
-            - lat0: First point latitude
-            - lon1: First point longitude
-            - lat1: First point latitude
+                - lon0: First point longitude
+                - lat0: First point latitude
+                - lon1: Second point longitude
+                - lat1: Second point latitude
 
             num_points (int): Number of points to use in the
-            interpolation process. 
+                interpolation process. 
 
         Note:
             Be carefull, longitude has to be in between 0-360 ! 
@@ -299,22 +300,28 @@ class Area(object):
         ''' Draw a profile between a point (lon0,lat0) and (lon1,lat1).
 
         Args:
-            coordinates: Tupples which list the different profile.
-            Each profil has to be defined as a tupple which follow
-            (lon0,lon1,lat0,lat1) with (lon0,lat0) the first point
-            coordintes and (lon1,lat1) the second point
-            coordinates. Both in degree.
+            coordinates: Tupples which list the different desired
+                profiles.
+
+                Each profil has to be defined as a tupple which follows
+                (lon0,lon1,lat0,lat1) with (lon0,lat0) the first point
+                coordintes and (lon1,lat1) the second point
+                coordinates. Both in degree.
             num_points (Optional[int]): Number of points to use
-            in the interpolation process. Defaults to 100.
+                in the interpolation process. Defaults to 100.
             save (Optional[bool]): Weither or not to save the image.
-            Defaults to False.
+                Defaults to False.
             name (Optional[str]): Absolut path to save the resulting
-            image. Default to 'BaseProfile.png' in the working
-            directory.
+                image. Default to 'BaseProfile.png' in the working
+                directory.
 
         Example:
-            Here is an example for a region located (10E,10N) 10 km
-            in diameter with three different profile. 
+            Here is an example for a region located (10E,10N) 20 km
+            in diameter with three different profiles:
+
+                - One North-South
+                - One East-West
+                - One inclined 
 
             >>> Region = Area(10,10,20)
             >>> midlon = (Region.window[0]+Region.window[1])/2.0
@@ -325,7 +332,7 @@ class Area(object):
 
         Warning:
             If only one profile is given, ``coordinates = (profile1,)``.
-            If more than one is give, use ``coordinates = (profile1,profile2,profile3,)``
+            If more than one is given, use ``coordinates = (profile1,profile2,profile3,)``
         '''
 
         fig = plt.figure(figsize=(24, len(coordinates) * 5))
@@ -367,10 +374,10 @@ class Area(object):
 
         Args:
             save (Optional[bool]): Weither or not to save the image.
-            Defaults to False.
+                Defaults to False.
             name (Optional[str]): Absolut path to save the resulting
-            image. Default to 'BaseLola.png' in the working
-            directory.
+                image. Default to 'BaseLola.png' in the working
+                directory.
 
         Returns:
             An image correponding to the region tography. Realized
@@ -410,14 +417,14 @@ class Area(object):
                         bbox_inches='tight', pad_inches=0.1)
 
     def wac_image(self, save=False, name='BaseWac.png'):
-        ''' Draw the texture of the region of interest
+        ''' Draw the wide angle image of the region of interest
 
         Args:
             save (Optional[bool]): Weither or not to save the image.
-            Defaults to False.
+                Defaults to False.
             name (Optional[str]): Absolut path to save the resulting
-            image. Default to 'BaseWac.png' in the working
-            directory.
+                image. Default to 'BaseWac.png' in the working
+                directory.
 
         Returns:
             An image corresponding to the region wide angle image. Realized
@@ -452,14 +459,14 @@ class Area(object):
             fig.savefig(name, dpi=200, bbox_inches='tight', pad_inches=0.1)
 
     def Overlay(self, save=False, name='BaseOverlay.png'):
-        ''' Draw the topography over the texture of the region of interest
+        ''' Draw the topography over a wide angle image  of the region
 
         Args:
             save (Optional[bool]): Weither or not to save the image.
-            Defaults to False.
+                Defaults to False.
             name (Optional[str]): Absolut path to save the resulting
-            image. Default to 'BaseOverlay.png' in the working
-            directory.
+                image. Default to 'BaseOverlay.png' in the working
+                directory.
 
         Returns:
             An image corresponding to an overaly of the topography
@@ -505,7 +512,7 @@ class Area(object):
 
 
 class Crater(Area):
-    '''A class which gather information on impact crater.
+    '''A class which gathers information on impact crater.
 
     It is particularly useful to study a particular impact crater at
     the lunar surface. For the moment, it can gather information about
@@ -514,10 +521,10 @@ class Crater(Area):
     Reconnaissance Orbiter mission (LRO) can be found `here`_
 
     Args:
-        ide (str): 'name' if you use the crater name or 'index' if you use
-        its index in the table.
-        idx: Name of the crater if you fill 'name' as a first parameter or
-        its index in the table if you fill 'index' as a first parameter.
+        ide (str): ``"name"`` if you use the crater name or
+            ``"index"`` if you use its index in the table.
+        idx: Name of the crater if you fill ``"name"`` as a first parameter or
+            its index in the table if you fill ``"index"`` as a first parameter.
         path_pdsfiles (Optional[str]): Path where the pds files are stored.
             Defaults, the path is set to the folder ``PDS_FILES`` next to
             the module files where the library is install.
@@ -529,10 +536,10 @@ class Crater(Area):
         ppdlola (int): Resolution for the topography
         ppdwac (int): Resolution for the WAC image
         racine (str): Path where information about the impact crater
-        dataset is stored as a table. Defaults to the folder Tables
-        in the installation folder of the library.
+            dataset is stored as a table. Defaults to the folder Tables
+            in the installation folder of the library.
         craters: Pandas dataframes containing the information of
-        all impact craters.
+            all impact craters.
         name (str): Name of the crater considered.
         lat0 (float): Latitude of the crater center (degree)
         lon0 (float): Longitude of the crater center (degree)
@@ -541,7 +548,7 @@ class Crater(Area):
         radius (float): Radius of the crater (km)
         index (str): Index of the crater in the table
         size_window (float): Radius of the region of interest (km).
-        Defaults to 80 % of the crater diameter.
+            Defaults to 80 % of the crater diameter.
         window (float,float,float,float): ``(longll, longtr, latll, lattr)``
             with:
 
@@ -563,8 +570,9 @@ class Crater(Area):
         - **WAC** Wide Angle Camera
 
     Example:
-        For instance, say we want to get an overlay, topography and texture,
-        of the famous crater Copernicus
+        For instance, say we want to get an overlay, the topography
+        drawn over a wide angle camera image, of the famous crater
+        Copernicus
 
         >>> C = Crater('name','Copernicus')
         >>> C.Overlay()
@@ -605,7 +613,7 @@ class Crater(Area):
 
 class Dome(Area):
 
-    '''A class which gather information on lunar low-slope dome.
+    '''A class which gathers information on lunar low-slope dome.
 
     It is particularly useful to study a particular low-slope dome at
     the lunar surface. For the moment, it can gather information about
@@ -614,10 +622,10 @@ class Dome(Area):
     Reconnaissance Orbiter mission (LRO) can be found `here`_
 
     Args:
-        ide (str): 'name' if you use the dome name or 'index' if you use
-        its index in the table.
-        idx: Name of the crater if you fill 'name' as a first parameter or
-        its index in the table if you fill 'index' as a first parameter.
+        ide (str): ``"name"`` if you use the dome name or
+            ``"index"`` if you use its index in the table.
+        idx: Name of the dome if you fill ``"name"`` as a first parameter or
+            its index in the table if you fill ``"index"`` as a first parameter.
         path_pdsfiles (Optional[str]): Path where the pds files are stored.
             Defaults, the path is set to the folder ``PDS_FILES`` next to
             the module files where the library is install.
@@ -629,10 +637,10 @@ class Dome(Area):
         ppdlola (int): Resolution for the topography
         ppdwac (int): Resolution for the WAC image
         racine (str): Path where information about the low-slope dome
-        dataset is stored as a table. Defaults to the folder Tables
-        in the installation folder of the library.
+            dataset is stored as a table. Defaults to the folder Tables
+            in the installation folder of the library.
         domes: Pandas dataframes containing the information about
-        the low-slope domes.
+            the low-slope domes.
         name (str): Name of the crater considered.
         lat0 (float): Latitude of the dome center (degree)
         lon0 (float): Longitude of the dome center (degree)
@@ -643,7 +651,7 @@ class Dome(Area):
         thickness_err (float): Error on the dome thickness (km)
         index (str): Index of the dome in the table
         size_window (float): Radius of the region of interest (km).
-        Defaults to 80 % of the crater diameter.
+            Defaults to 80 % of the crater diameter.
         window (float,float,float,float): ``(longll, longtr, latll, lattr)``
             with:
 
@@ -665,8 +673,9 @@ class Dome(Area):
         - **WAC** Wide Angle Camera
 
     Example:
-        For instance, say we want to get an overlay, topography and texture,
-        of the famous dome M13
+        For instance, say we want to get an overlay, the topography
+        drawn over an wide angle camera image, of the famous dome
+        M13
 
         >>> C = Dome('name','M13')
         >>> C.Overlay()
@@ -677,12 +686,7 @@ class Dome(Area):
     '''
 
     def __init__(self, ide, idx, path_pdsfile=Area.defaut_pdsfile):
-        '''
-        - structure : Name of the structure. Either "Crater" or "Dome".
-        - ide : This class allow to defined the unit by its name "n" or its
-        index "i".
-        - idx : Corresponding name or index
-        '''
+
         self.path_pdsfiles = path_pdsfile
         self.ppdlola = 512
         self.ppdwac = 128

@@ -463,7 +463,7 @@ class BinaryTable(object):
         Returns:
             A tupple composed by the westernmost_longitude,
             the westernmost_longitude, the minimum_latitude and
-            the maximum_latitude
+            the maximum_latitude.
 
         """
 
@@ -480,20 +480,20 @@ class BinaryTable(object):
         return kp
 
     def lambert_window(self, radius, lat0, long0):
-        ''' Squared azimutahl projection of a window centered
-        at(lat0, long0) with a given radius of radius.
+        ''' Square Lambert Azimuthal equal area projection of
+        a window centered at (lat0, long0) with a given radius (km).
 
         Args:
-            radius(float): Radius of the window in km
-            lat0(float): Latitude at the center(degree)
-            long0(float): Longitude at the center(degree)
+            radius(float): Radius of the window (km).
+            lat0(float): Latitude at the center (degree).
+            long0(float): Longitude at the center (degree).
 
         Returns:
             A tuple ``(longll, longtr, latll, lattr)` with ``longll``
             the longitude of the lower left corner, ``longtr`` the
             longitude of the top right corner, ``latll`` the latitude
             of the lower left corner and ``lattr`` the latitude of the
-            top right corner
+            top right corner.
 
         Note:
             All return coordinates are in degree
@@ -532,19 +532,19 @@ class BinaryTable(object):
 
     def cylindrical_window(self, radius, lat0, long0):
         ''' Cylindrical projection of a window centered
-        at(lat0, long0) with a given radius of radius.
+        at (lat0, long0) with a given radius (km).
 
         Args:
-            radius(float): Radius of the window in km
-            lat0(float): Latitude at the center(degree)
-            long0(float): Longitude at the center(degree)
+            radius(float): Radius of the window (km).
+            lat0(float): Latitude at the center (degree).
+            long0(float): Longitude at the center (degree).
 
         Returns:
             A tuple ``(longll, longtr, latll, lattr)`` with ``longll``
             the longitude of the lower left corner, ``longtr`` the
             longitude of the top right corner, ``latll`` the latitude
             of the lower left corner and ``lattr`` the latitude of the
-            top right corner
+            top right corner.
 
         Note:
             All return coordinates are in degree        
@@ -618,7 +618,7 @@ class WacMap(object):
         window. For instance, if we want to gather the data for a window which
         spans 10 to 20 degree in longitude and the same in latitude, simply ask.
 
-        >>> X, Y, Z = WacMap(521,10,20,10,20).image()
+        >>> X, Y, Z = WacMap(512,10,20,10,20).image()
 
     '''
 
@@ -859,7 +859,7 @@ class WacMap(object):
         Note:
             All return arrays have the same size.
 
-            All coordinate are in degree.
+            All coordinates are in degree.
 
         '''
         return self._define_case()
@@ -906,7 +906,7 @@ class LolaMap(WacMap):
         Possible resolution are stored in the class variable ``implemented_res``.
         Longitude in the code spans 0 to 360.
 
-        The abreaviations correspond to:
+        The abreviations correspond to:
 
         - **LRO** Lunar Reconnaissance Orbiter
         - **LOLA** Lunar Orbiter Laser Altimeter
@@ -916,7 +916,7 @@ class LolaMap(WacMap):
         window. For instance, if we want to gather the data for a window which
         span 10 to 20 degree in longitude and the same in latitude, simply ask.
 
-        >>> X, Y, Z = LolaMap(521,10,20,10,20).image()
+        >>> X, Y, Z = LolaMap(512,10,20,10,20).image()
 
     '''
 
