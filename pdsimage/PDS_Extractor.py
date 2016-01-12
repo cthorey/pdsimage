@@ -684,19 +684,19 @@ class WacMap(object):
 
         if not lonBool and not latBool:
             print('No overlap - Processing should be quick')
-            return self._Cas_1()
+            return self._cas_1()
         elif lonBool and not latBool:
             print('Longitude overlap - 2 images have to be proceded \n \
                   Processing could take a few seconds')
-            return self._Cas_2()
+            return self._cas_2()
         elif not lonBool and latBool:
             print('Latitude overlap - 2 images have to be proceded \n\
                   Processing could take a few seconds')
-            return self._Cas_3()
+            return self._cas_3()
         else:
             print('Latitude/Longidude overlaps - 4 images have to be proceded \n\
                   Processing could take a few seconds')
-            return self._Cas_4()
+            return self._cas_4()
 
     def _format_lon(self, lon):
         ''' Format longitude to fit the image name '''
