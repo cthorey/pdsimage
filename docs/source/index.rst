@@ -10,9 +10,9 @@ The Lunar Reconnaissance Orbiter  (`LRO`_) mission has gathered some
 fantastic data of the lunar surface  and, thanks to `NASA`_, all are
 available for free on the internet.
 
-However, using them can be a bit criptic without a bit of experience.
-This library aims to facilitate the extraction of knowledge from two
-set of data gathered by two experiment on board of LRO:
+However, using them can be criptic  without a bit of experience.  This
+library aims to facilitate the extraction of knowledge from two set of
+data gathered by two experiments on board of LRO:
 
    - The Lunar Orbiter Laser Altimer (`LOLA`_) experiment which
      collected high resolution topographic data of the lunar surface 
@@ -31,6 +31,7 @@ geological unit  on the Moon.  Include some extension to  study impact
 crater and lunar domes specifically.
 
 Contents:
+---------
 
 .. toctree::
    :maxdepth: 2

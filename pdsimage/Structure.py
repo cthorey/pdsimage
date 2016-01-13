@@ -613,7 +613,7 @@ class Crater(Area):
 
         assert (self.lon0 > 0.0) & (
             self.lon0 < 360.0), 'Longitude has to span 0-360 !!!'
-        self.name = df.Name.iloc[0]
+        self.name = df.name.iloc[0]
         self.change_window(0.8 * self.diameter)
 
 

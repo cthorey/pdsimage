@@ -99,7 +99,7 @@ centred at (120 E, 60S) spaning a radius of 20 km, I simply use::
     from PDS_Extractor import WacMap
     boundary = ldem.lambert_window(20,-60,120)
     wac_image = WacMap(512,*boundary)
-    X,Y,Z = wac_image.Image()
+    X,Y,Z = wac_image.image()
 
 with ``X`` containing  the array of longitude where  data exist, ``Y``
 the latitudes and ``Z`` the information about the wac image itself. If
@@ -108,7 +108,9 @@ you want to take a rapid look, just try::
     import matplotlib as plt
     plt.imshow(Z)
 
-
+.. image:: _static/test.png
+   :align: center
+           
 LolaMap
 -----------
 
