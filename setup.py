@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 def readme():
-    with open('README.md') as f:
+    with open('README.rst') as f:
         return f.read()
 
 setup(name='pdsimage',
@@ -16,13 +16,15 @@ setup(name='pdsimage',
       license='MIT',
       packages=['pdsimage'],
       install_requires=[
+          'Cython',
           'numpy',
           'pandas',
-          'basemap',
           'pvl',
           'requests',
           'scipy',
           'matplotlib',
           'cartopy'],
+      dependency_links=[
+          'https://downloads.sourceforge.net/project/matplotlib/matplotlib-toolkits/basemap-1.0.7/basemap-1.0.7.tar.gz'],
       include_package_data=True,
       zip_safe=False)
