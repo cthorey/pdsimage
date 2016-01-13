@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Rapid overview &mdash; pdsimage 1.0 documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -35,7 +35,7 @@
         <link rel="prev" title="Get the module up and running" href="install.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -45,11 +45,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> pdsimage</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pdsimage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -57,18 +73,16 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
           
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#mac-os-x">Mac OS X</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#unix">Unix</a></li>
-</ul>
-</li>
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Rapid overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#import-the-modules">Import the modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#loading-part-of-an-image">Loading part of an image</a></li>
@@ -76,27 +90,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#topographic-profiles">Topographic profiles</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="PDS_Extractor.html">Extracting data on a specific region</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#binarytable">BinaryTable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#wacmap">WacMap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#lolamap">LolaMap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#module-pdsimage.PDS_Extractor">Index</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#module-pdsimage.Structure">Index</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="PDS_Extractor.html">Extracting data on a specific region</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -111,20 +113,29 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Rapid overview</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/cookbook.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/cookbook.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="rapid-overview">
 <h1>Rapid overview<a class="headerlink" href="#rapid-overview" title="Permalink to this headline">¶</a></h1>
@@ -136,8 +147,7 @@
 %autoreload 2
 </pre></div>
 </div>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">&#39;/Users/thorey/Documents/repos/pdsimage/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">pdsimage.Structure</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pdsimage.Structure</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pdsimage.PDS_Extractor</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">imagep</span> <span class="o">=</span> <span class="s">&#39;/Users/thorey/Documents/repos/pdsimage/docs/source/_static&#39;</span>
 </pre></div>
@@ -257,15 +267,16 @@ PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="PDS_Extractor.html" class="btn btn-neutral float-right" title="Extracting data on a specific region">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="PDS_Extractor.html" class="btn btn-neutral float-right" title="Extracting data on a specific region" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral" title="Get the module up and running"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral" title="Get the module up and running" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -275,12 +286,13 @@ PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Clement Thorey.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
