@@ -36,6 +36,7 @@ module use to realize the  image used `Cartopy`_ which itself depends
 on **gdal** for proper running.
 
 The easiest is to use brew::
+  
     brew install gdal
 
 Unix
