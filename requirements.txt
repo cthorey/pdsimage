@@ -1,0 +1,15 @@
+#
+####### example-requirements.txt #######
+#
+###### Requirements without Version Specifiers ######
+
+numpy
+pandas
+basemap
+pvl
+requests
+scipy
+matplotlib
+cartopy
+sphinxcontrib-napoleon
+
