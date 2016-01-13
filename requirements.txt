@@ -18,7 +18,7 @@ GDAL>=1.10.0
 scipy>=0.10
 cartopy
 pandas
--f https://github.com/matplotlib/basemap.git
+-f https://downloads.sourceforge.net/project/matplotlib/matplotlib-toolkits/basemap-1.0.7/basemap-1.0.7.tar.gz
 pvl
 requests
 sphinxcontrib-napoleon
