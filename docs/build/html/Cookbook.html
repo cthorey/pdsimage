@@ -87,6 +87,7 @@
 <li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#module-pdsimage.Structure">Index</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
@@ -129,8 +130,16 @@
 <h1>Rapid overview<a class="headerlink" href="#rapid-overview" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="import-the-modules">
 <h2>Import the modules<a class="headerlink" href="#import-the-modules" title="Permalink to this headline">¶</a></h2>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pdsimage.Structure</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="code python highlight-python"><div class="highlight"><pre>import os
+%matplotlib inline
+%load_ext autoreload
+%autoreload 2
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">&#39;/Users/thorey/Documents/repos/pdsimage/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pdsimage.Structure</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pdsimage.PDS_Extractor</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">imagep</span> <span class="o">=</span> <span class="s">&#39;/Users/thorey/Documents/repos/pdsimage/docs/source/_static&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -144,12 +153,11 @@ images can be found
 (lon0,lat0) and at the upper right by (lon1,lat1) on the 128 ppd
 (pixel/degree) LOLA image.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span>
-<span class="n">path</span> <span class="o">=</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/&#39;</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s">&#39;LDEM_16&#39;</span><span class="p">,</span><span class="n">path</span><span class="p">)</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">Extract_Grid</span><span class="p">(</span><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s">&#39;LDEM_16&#39;</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">extract_grid</span><span class="p">(</span><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre>PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+<div class="highlight-python"><div class="highlight"><pre>PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 </pre></div>
 </div>
 <p>which returns an array of longitudes (X), an array of latitudes (Y) and
@@ -159,32 +167,19 @@ the grid of altitude are contained in Z. No more. For a window 10° by
 <div class="section" id="looking-at-impact-crater">
 <h2>Looking at impact crater ?<a class="headerlink" href="#looking-at-impact-crater" title="Permalink to this headline">¶</a></h2>
 <p>Let&#8217;s say, we want to get some detail about the crater Copernicus.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">path</span> <span class="o">=</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/&#39;</span>
-<span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">,</span><span class="n">path</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">)</span>
 <span class="n">Copernicus</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
 <span class="n">Copernicus</span><span class="o">.</span><span class="n">ppdwac</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">Copernicus</span><span class="o">.</span><span class="n">Overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Corpernicus.png&#39;</span><span class="p">)</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;Corpernicus2.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
-The size is ?: 1061.8 Mo
-
-
-Do you really want to download WAC_GLOBAL_E000N1800_064P ?
-
- [y/n]
-y
-The file WAC_GLOBAL_E000N1800_064P.IMG need to be download - Wait
-
-100.00%
- The download of the file WAC_GLOBAL_E000N1800_064P.IMG has succeded
-
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 </pre></div>
 </div>
-<img alt="_images/output_8_1.png" class="align-center" src="_images/output_8_1.png" />
+<img alt="_images/Corpernicus2.png" class="align-center" src="_images/Corpernicus2.png" />
 <p>let you with this nice beautiful plot which overlay a WAC image and a
 LOLA image. Pixel/degree are pretty high by default.</p>
 <p>For a specific location, the program is able to automatically detect the
@@ -194,27 +189,27 @@ very long.</p>
 <p>The default window in centred on the crater with a radius equal to the
 80% of the crater diameter. However this can easily be changed and for
 instance, zooming in resume to</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span><span class="o">.</span><span class="n">Change_window</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">Copernicus</span><span class="o">.</span><span class="n">Diameter</span><span class="p">)</span>
-<span class="n">Copernicus</span><span class="o">.</span><span class="n">Overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;CopernicusZoom.png&#39;</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span><span class="o">.</span><span class="n">change_window</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">Copernicus</span><span class="o">.</span><span class="n">diameter</span><span class="p">)</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;CorpernicusZoom2.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 </pre></div>
 </div>
-<img alt="_images/output_10_1.png" class="align-center" src="_images/output_10_1.png" />
+<img alt="_images/CorpernicusZoom2.png" class="align-center" src="_images/CorpernicusZoom2.png" />
 <p>If you prefer working with the array directly, use the method
 Get_Arrays...</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Xl</span> <span class="p">,</span> <span class="n">Yl</span> <span class="p">,</span> <span class="n">Zl</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">Get_Arrays</span><span class="p">(</span><span class="s">&#39;Lola&#39;</span><span class="p">)</span>
-<span class="n">Xw</span> <span class="p">,</span> <span class="n">Yw</span> <span class="p">,</span> <span class="n">Zw</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">Get_Arrays</span><span class="p">(</span><span class="s">&#39;Wac&#39;</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Xl</span> <span class="p">,</span> <span class="n">Yl</span> <span class="p">,</span> <span class="n">Zl</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">(</span><span class="s">&#39;Lola&#39;</span><span class="p">)</span>
+<span class="n">Xw</span> <span class="p">,</span> <span class="n">Yw</span> <span class="p">,</span> <span class="n">Zw</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">(</span><span class="s">&#39;Wac&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 </pre></div>
 </div>
 <p>They can then be used for further analysis, histograms of the
@@ -228,37 +223,36 @@ instance, if we look at an intrusive dome called &#8216;M13&#8217; within the lu
 maria and we want to plot three topographic profile - one vertical
 passing through the centre - one horizontal passing through the centre -
 one oblique</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">path_pdsfiles</span> <span class="o">=</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/&#39;</span>
-<span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">,</span><span class="n">path_pdsfiles</span><span class="p">)</span>
-<span class="n">M13</span><span class="o">.</span><span class="n">Change_window</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="o">*</span><span class="n">M13</span><span class="o">.</span><span class="n">Diameter</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">)</span>
+<span class="n">M13</span><span class="o">.</span><span class="n">change_window</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="o">*</span><span class="n">M13</span><span class="o">.</span><span class="n">diameter</span><span class="p">)</span>
 <span class="n">M13</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
 <span class="n">midlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
 <span class="n">midlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
 <span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="mf">11.1</span><span class="p">,</span><span class="mf">12.5</span><span class="p">)</span>
 <span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mf">0.2</span><span class="p">,</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span>
 <span class="n">profile3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span><span class="o">-</span><span class="mf">32.1</span><span class="p">,</span><span class="mi">360</span><span class="o">-</span><span class="mf">31.3</span><span class="p">,</span><span class="mf">11.1</span><span class="p">,</span><span class="mf">12.5</span><span class="p">)</span>
-<span class="n">save_figure</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;/Users/thorey/Documents/These/Projet/FFC/pdsimage/Image&#39;</span><span class="p">,</span><span class="s">&#39;BaseProfile.png&#39;</span><span class="p">)</span>
-<span class="n">M13</span><span class="o">.</span><span class="n">Draw_Profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">profile3</span><span class="p">),</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="n">save_figure</span><span class="p">)</span>
+<span class="n">save_figure</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;BaseProfile.png&#39;</span><span class="p">)</span>
+<span class="n">M13</span><span class="o">.</span><span class="n">draw_profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">profile3</span><span class="p">),</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="n">save_figure</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 (328.47000000000003, 328.47000000000003, 11.1, 12.5)
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 (327.55882087492716, 329.38117912507289, 11.68213679250616, 11.68213679250616)
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 (327.9, 328.7, 11.1, 12.5)
 No overlap - Processing should be quick
-PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 </pre></div>
 </div>
-<img alt="_images/output_16_1.png" class="align-center" src="_images/output_16_1.png" />
+<img alt="_images/BaseProfile.png" class="align-center" src="_images/BaseProfile.png" />
 </div>
 </div>
 

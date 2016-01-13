@@ -32,7 +32,7 @@
   
     <link rel="top" title="pdsimage 1.0 documentation" href="index.html"/>
         <link rel="next" title="Studying specific region and making beautiful plot" href="Structure.html"/>
-        <link rel="prev" title="Get the module up and running" href="install.html"/> 
+        <link rel="prev" title="Rapid overview" href="cookbook.html"/> 
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -69,6 +69,13 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#unix">Unix</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Rapid overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Extracting data on a specific region</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#binarytable">BinaryTable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wacmap">WacMap</a></li>
@@ -80,27 +87,10 @@
 <li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Cookbook</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#module-pdsimage.Structure">Index</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pdsimage.html">pdsimage package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage.PDS_Extractor">pdsimage.PDS_Extractor module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage.Structure">pdsimage.Structure module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html#module-pdsimage">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">pdsimage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pdsimage.html">pdsimage package</a></li>
-</ul>
-</li>
 </ul>
 
           
@@ -230,7 +220,7 @@ centred at (120 E, 60S) spaning a radius of 20 km, I simply use:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PDS_Extractor</span> <span class="kn">import</span> <span class="n">WacMap</span>
 <span class="n">boundary</span> <span class="o">=</span> <span class="n">ldem</span><span class="o">.</span><span class="n">lambert_window</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">60</span><span class="p">,</span><span class="mi">120</span><span class="p">)</span>
 <span class="n">wac_image</span> <span class="o">=</span> <span class="n">WacMap</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="o">*</span><span class="n">boundary</span><span class="p">)</span>
-<span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span> <span class="o">=</span> <span class="n">wac_image</span><span class="o">.</span><span class="n">Image</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span> <span class="o">=</span> <span class="n">wac_image</span><span class="o">.</span><span class="n">image</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>with <code class="docutils literal"><span class="pre">X</span></code> containing  the array of longitude where  data exist, <code class="docutils literal"><span class="pre">Y</span></code>
@@ -240,6 +230,7 @@ you want to take a rapid look, just try:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
 </pre></div>
 </div>
+<img alt="_images/test.png" class="align-center" src="_images/test.png" />
 </div>
 <div class="section" id="lolamap">
 <h2>LolaMap<a class="headerlink" href="#lolamap" title="Permalink to this headline">¶</a></h2>
@@ -587,7 +578,7 @@ top right corner.</p>
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.LolaMap">
 <em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pdsimage.html#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
 <p>Class to handle the creation of LRO LOLA images</p>
 <p>This class is specifically designed to handle the creation of image
 from LOLA images. It is able to identify the image (or the groupe
@@ -816,7 +807,7 @@ extracted over the window.</td>
         <a href="Structure.html" class="btn btn-neutral float-right" title="Studying specific region and making beautiful plot">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral" title="Get the module up and running"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cookbook.html" class="btn btn-neutral" title="Rapid overview"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -4,13 +4,23 @@ Rapid overview
 
 Import the modules
 ------------------
+
 .. code:: python
 
+    import os
+    %matplotlib inline
+    %load_ext autoreload
+    %autoreload 2
+
+.. code:: python
+
+    os.chdir('/Users/thorey/Documents/repos/pdsimage/')
     from pdsimage.Structure import *
     from pdsimage.PDS_Extractor import *
+    imagep = '/Users/thorey/Documents/repos/pdsimage/docs/source/_static'
 
 Loading part of an image
-------------------------
+--------------------------
 
 Lola PDS Images can be found
 `here <http://imbrium.mit.edu/DATA/LOLA_GDR/CYLINDRICAL/IMG/>`__ and WAC
@@ -24,14 +34,13 @@ Let's say we want to load a window defined at the bottom left by
 .. code:: python
 
     lon0,lon1,lat0,lat1 =  0,20,-10,10
-    path ='/Users/thorey/Documents/These/Projet/FFC/'
-    img = BinaryTable('LDEM_16',path)
-    X, Y, Z = img.Extract_Grid(lon0,lon1,lat0,lat1)
+    img = BinaryTable('LDEM_16')
+    X, Y, Z = img.extract_grid(lon0,lon1,lat0,lat1)
 
 
 .. parsed-literal::
 
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 
 
 which returns an array of longitudes (X), an array of latitudes (Y) and
@@ -45,35 +54,22 @@ Let's say, we want to get some detail about the crater Copernicus.
 
 .. code:: python
 
-    path ='/Users/thorey/Documents/These/Projet/FFC/'
-    Copernicus = Crater('n','Copernicus',path)
+    Copernicus = Crater('name','Copernicus')
     Copernicus.ppdlola = 64
     Copernicus.ppdwac = 64
-    Copernicus.Overlay(True,name='Corpernicus.png')
+    Copernicus.overlay(True,name=os.path.join(imagep,'Corpernicus2.png'))
 
 
 .. parsed-literal::
 
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
-    The size is ?: 1061.8 Mo 
-    
-    
-    Do you really want to download WAC_GLOBAL_E000N1800_064P ?
-    
-     [y/n]
-    y
-    The file WAC_GLOBAL_E000N1800_064P.IMG need to be download - Wait
-     
-    100.00%
-     The download of the file WAC_GLOBAL_E000N1800_064P.IMG has succeded 
-     
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 
 
 
-.. image:: _static/output_8_1.png
+.. image:: _static/Corpernicus2.png
    :align: center
 
 let you with this nice beautiful plot which overlay a WAC image and a
@@ -90,20 +86,20 @@ instance, zooming in resume to
 
 .. code:: python
 
-    Copernicus.Change_window(0.4*Copernicus.Diameter)
-    Copernicus.Overlay(True,name = 'CopernicusZoom.png')
+    Copernicus.change_window(0.4*Copernicus.diameter)
+    Copernicus.overlay(True,os.path.join(imagep,'CorpernicusZoom2.png'))
 
 
 .. parsed-literal::
 
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 
 
 
-.. image:: _static/output_10_1.png
+.. image:: _static/CorpernicusZoom2.png
    :align: center
 
 If you prefer working with the array directly, use the method
@@ -111,23 +107,23 @@ Get\_Arrays...
 
 .. code:: python
 
-    Xl , Yl , Zl = Copernicus.Get_Arrays('Lola')
-    Xw , Yw , Zw = Copernicus.Get_Arrays('Wac')
+    Xl , Yl , Zl = Copernicus.get_arrays('Lola')
+    Xw , Yw , Zw = Copernicus.get_arrays('Wac')
 
 
 .. parsed-literal::
 
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 
 
 They can then be used for further analysis, histograms of the
 topography...
 
 Topographic profiles
---------------------
+--------------------------
 
 The **Structure** class also contained a method which let your draw
 topographic profiles (or WAC profile if you want) without effort. For
@@ -138,40 +134,37 @@ one oblique
 
 .. code:: python
 
-    path_pdsfiles ='/Users/thorey/Documents/These/Projet/FFC/'
-    M13 = Dome('n','M13',path_pdsfiles)
-    M13.Change_window(.9*M13.Diameter)
+    M13 = Dome('name','M13')
+    M13.change_window(.9*M13.diameter)
     M13.ppdlola = 64
     midlon = (M13.window[0]+M13.window[1])/2.0
     midlat = (M13.window[2]+M13.window[3])/2.0
     profile1 = (midlon,midlon,11.1,12.5)
     profile2 = (M13.window[0]+0.2,M13.window[1]-0.2,midlat,midlat)
     profile3 = (360-32.1,360-31.3,11.1,12.5)
-    save_figure = os.path.join('/Users/thorey/Documents/These/Projet/FFC/pdsimage/Image','BaseProfile.png')
-    M13.Draw_Profile((profile1,profile2,profile3), save = True ,name = save_figure)
+    save_figure = os.path.join(imagep,'BaseProfile.png')
+    M13.draw_profile((profile1,profile2,profile3), save = True ,name = save_figure)
 
 
 .. parsed-literal::
 
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     (328.47000000000003, 328.47000000000003, 11.1, 12.5)
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     (327.55882087492716, 329.38117912507289, 11.68213679250616, 11.68213679250616)
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     (327.9, 328.7, 11.1, 12.5)
     No overlap - Processing should be quick
-    PDS FILES used are in: /Users/thorey/Documents/These/Projet/FFC/
+    PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 
 
 
-.. image:: _static/output_16_1.png
+.. image:: _static/BaseProfile.png
    :align: center
-
-
