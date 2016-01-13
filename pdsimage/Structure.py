@@ -295,8 +295,8 @@ class Area(object):
 
         return zi
 
-    def draw_profile(self, coordinates, num_points=500,
-                     save=False, name='BaseProfile.png'):
+    def draw_profile(self, coordinates, num_points=500, save=False,
+                     name='BaseProfile.png'):
         ''' Draw a profile between a point (lon0,lat0) and (lon1,lat1).
 
         Args:
@@ -333,9 +333,16 @@ class Area(object):
         Warning:
             If only one profile is given, ``coordinates = (profile1,)``.
             If more than one is given, use ``coordinates = (profile1,profile2,profile3,)``
+
+            IF YOU DECIDE TO CHANGE THE PATH, YOU HAVE TO WRITE
+            region.draw_profile((profile1,profile2,region.window,), save = True, name = newpath)
+
+            FOR SOME REASON, USING ONLY
+            region.draw_profile((profile1,profile2,region.window,), True, newpath)
+            IS NOT WORKING
         '''
 
-        fig = plt.figure(figsize=(24, len(coordinates) * 5))
+        fig = plt.figure(figsize=(27, len(coordinates) * 5))
         gs = gridspec.GridSpec(len(coordinates), 3)
 
         if len(coordinates) == 4:
@@ -345,7 +352,7 @@ class Area(object):
 
         for i, coordinate in enumerate(coordinates):
 
-            ax1 = plt.subplot(gs[i, 0], projection=ccrs.LambertCylindrical())
+            ax1 = plt.subplot(gs[i, :1], projection=ccrs.LambertCylindrical())
             ax2 = plt.subplot(gs[i, 1:])
 
             # Image unit
@@ -361,13 +368,12 @@ class Area(object):
             # Profile
             print(coordinate)
             z_interpolated = self.get_profile('lola', coordinate, num_points)
-            ax2.plot(z_interpolated)
+            ax2.plot(z_interpolated, lw=2, marker='o')
             ax2.set_ylabel('Topographic profile (m)', fontsize=24)
             ax2.tick_params(labelsize=18)
 
-            if save == True:
-                fig.savefig(name, dpi=200, bbox_inches='tight',
-                            pad_inches=0.1)
+        if save == True:
+            fig.savefig(name)
 
     def lola_image(self, save=False, name='BaseLola.png'):
         ''' Draw the topography of the region of interest
