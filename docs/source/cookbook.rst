@@ -14,7 +14,6 @@ Import the modules
 
 .. code:: python
 
-    os.chdir('/Users/thorey/Documents/repos/pdsimage/')
     from pdsimage.Structure import *
     from pdsimage.PDS_Extractor import *
     imagep = '/Users/thorey/Documents/repos/pdsimage/docs/source/_static'
