@@ -90,9 +90,9 @@ class Area(object):
         self.ppdwac = 128
         assert (self.lon0 > 0.0) and (
             self.lon0 < 360.0), 'Longitude has to span 0-360 !!!'
-        self.Change_window(Size)
+        self.change_window(Size)
 
-    def Change_window(self, size_window):
+    def change_window(self, size_window):
         ''' Change the region of interest
 
         Args:
@@ -286,16 +286,16 @@ class Area(object):
 
         lon0, lon1, lat0, lat1 = coordinate
         X, Y, Z = self.get_arrays(img_type)
-        x0, y0 = np.argmin(np.abs(X[0, :] - lon0)
+        y0, x0 = np.argmin(np.abs(X[0, :] - lon0)
                            ), np.argmin(np.abs(Y[:, 0] - lat0))
-        x1, y1 = np.argmin(np.abs(X[0, :] - lon1)
+        y1, x1 = np.argmin(np.abs(X[0, :] - lon1)
                            ), np.argmin(np.abs(Y[:, 0] - lat1))
         x, y = np.linspace(x0, x1, num_points), np.linspace(y0, y1, num_points)
         zi = scipy.ndimage.map_coordinates(Z, np.vstack((x, y)))
 
         return zi
 
-    def draw_profile(self, coordinates, num_points=100,
+    def draw_profile(self, coordinates, num_points=500,
                      save=False, name='BaseProfile.png'):
         ''' Draw a profile between a point (lon0,lat0) and (lon1,lat1).
 
@@ -361,13 +361,13 @@ class Area(object):
             # Profile
             print(coordinate)
             z_interpolated = self.get_profile('lola', coordinate, num_points)
-            ax2.plot(z_interpolated[::-1])
+            ax2.plot(z_interpolated)
             ax2.set_ylabel('Topographic profile (m)', fontsize=24)
             ax2.tick_params(labelsize=18)
 
             if save == True:
-                fig.savefig(name, rasterized=True, dpi=200,
-                            bbox_inches='tight', pad_inches=0.1)
+                fig.savefig(name, dpi=200, bbox_inches='tight',
+                            pad_inches=0.1)
 
     def lola_image(self, save=False, name='BaseLola.png'):
         ''' Draw the topography of the region of interest
