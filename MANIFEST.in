@@ -1,4 +1,4 @@
-include README.md
+include README.rst
 incude Notebook/Test_library.ipynb       
 include pdsimage/PDS_FILE/LOLA/*
 include pdsimage/PDS_FILE/LROC_WAC/*
