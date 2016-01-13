@@ -16,6 +16,7 @@ within   the    pdsimage   conda    environment   provided    in   the
 For those who have conda installed on their machine, just use::
 
     conda env create -f environment.yml
+    source activate pdsimage
 
 This will create the pdsimage environment which contains all the
 dependency for the library to work properly.
