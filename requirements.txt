@@ -3,12 +3,6 @@
 #
 ###### Requirements without Version Specifiers ######
 
-numpy
-pandas
-basemap
-pvl
-requests
-scipy
 OWSLib>=0.8.7
 pillow>=1.7.8
 Cython>=0.15.1
@@ -22,5 +16,10 @@ GDAL>=1.10.0
 pillow>=1.7.8
 scipy>=0.10
 cartopy
+pandas
+basemap
+pvl
+requests
+scipy
 sphinxcontrib-napoleon
 
