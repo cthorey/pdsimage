@@ -14,7 +14,6 @@ six>=1.3.0
 setuptools>=0.7.2
 matplotlib==1.4.0
 scipy>=0.10
-cartopy
 pandas
 -f https://downloads.sourceforge.net/project/matplotlib/matplotlib-toolkits/basemap-1.0.7/basemap-1.0.7.tar.gz
 pvl
