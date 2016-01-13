@@ -6,4 +6,5 @@
 build/*
 dist/*
 pdsimage.egg-info/*
+.#*
 
