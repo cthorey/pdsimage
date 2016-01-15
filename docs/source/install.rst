@@ -7,7 +7,7 @@ Mac OS X
 You first need to pull the directory from git on your computer.
 From a terminal, tape ::
 
-    git pull https://github.com/cthorey/pdsimage
+    git clone https://github.com/cthorey/pdsimage
 
 Then, the easiest way to get everything up and running is to work
 within   the    pdsimage   conda    environment   provided    in   the

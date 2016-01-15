@@ -12,10 +12,7 @@ import scipy.ndimage
 import matplotlib.pylab as plt
 from mpl_toolkits.basemap import Basemap
 from matplotlib import cm
-import cartopy
 import matplotlib.gridspec as gridspec
-import cartopy.crs as ccrs
-from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 
 class Area(object):
@@ -100,11 +97,11 @@ class Area(object):
 
         Notes:
             Change the attributes ``size_window`` and ``window`` to
-            correspond to the new region of interest. 
+            correspond to the new region of interest.
 
         '''
         self.size_window = size_window
-        self.window = self.cylindrical_window(
+        self.window = self.lambert_window(
             self.size_window, self.lat0, self.lon0)
 
     def _kp_func(self, lat, lon, lat0, long0):
@@ -181,7 +178,7 @@ class Area(object):
             top right corner.
 
         Note:
-            All return coordinates are in degree        
+            All return coordinates are in degree
         '''
 
         # Passage en radian
@@ -247,22 +244,15 @@ class Area(object):
         else:
             raise ValueError('The img type has to be either "Lola" or "Wac"')
 
-    def _format_coordinate_cartopy(self, ax):
-        ''' Format the cartopy plot to show lat/long properly '''
-
-        lonm, lonM, latm, latM = self.window
-        xlocs = np.linspace(lonm, lonM, 5)
-        ylocs = np.linspace(latm, latM, 5)
-        ax.gridlines(xlocs=xlocs, ylocs=ylocs, crs=ccrs.PlateCarree())
-        ax.set_xticks(xlocs, crs=ccrs.PlateCarree())
-        ax.set_yticks(ylocs, crs=ccrs.PlateCarree())
-        lon_formatter = LongitudeFormatter(number_format='.1f',
-                                           degree_symbol='')
-        lat_formatter = LatitudeFormatter(number_format='.1f',
-                                          degree_symbol='')
-        ax.xaxis.set_major_formatter(lon_formatter)
-        ax.yaxis.set_major_formatter(lat_formatter)
-        ax.tick_params(labelsize=18)
+    def _format_coordinate(self, ax, m):
+        ''' Format the basemap plot to show lat/long properly '''
+        lon_m, lon_M, lat_m, lat_M = self.window
+        xlocs = np.linspace(lon_m, lon_M, 5)
+        ylocs = np.linspace(lat_m, lat_M, 5)
+        xlocs = map(lambda x: float('%1.2f' % (x)), xlocs)
+        ylocs = map(lambda x: float('%1.2f' % (x)), ylocs)
+        m.drawparallels(ylocs, labels=[1, 0, 0, 1], ax=ax, fontsize=18)
+        m.drawmeridians(xlocs, labels=[1, 0, 0, 1], ax=ax, fontsize=18)
 
     def get_profile(self, img_type, coordinate, num_points):
         ''' Extract a profile from (lat1,lon1) to (lat2,lon2)
@@ -278,10 +268,10 @@ class Area(object):
                 - lat1: Second point latitude
 
             num_points (int): Number of points to use in the
-                interpolation process. 
+                interpolation process.
 
         Note:
-            Be carefull, longitude has to be in between 0-360 ! 
+            Be carefull, longitude has to be in between 0-360 !
         '''
 
         lon0, lon1, lat0, lat1 = coordinate
@@ -321,13 +311,15 @@ class Area(object):
 
                 - One North-South
                 - One East-West
-                - One inclined 
+                - One inclined
 
             >>> Region = Area(10,10,20)
             >>> midlon = (Region.window[0]+Region.window[1])/2.0
             >>> midlat = (Region.window[2]+Region.window[3])/2.0
-            >>> profile1 = (midlon,midlon,Region.window[2],Region.window[3]) #Vertical profile
-            >>> profile2 = (Region.window[0],Region.window[1],midlat,midlat) #Horizontal profile
+            # Vertical profile
+            >>> profile1 = (midlon,midlon,Region.window[2],Region.window[3])
+            # Horizontal profile
+            >>> profile2 = (Region.window[0],Region.window[1],midlat,midlat)
             >>> Region.draw_profile((profile1,profile2,Region.window,))
 
         Warning:
@@ -335,15 +327,17 @@ class Area(object):
             If more than one is given, use ``coordinates = (profile1,profile2,profile3,)``
 
             IF YOU DECIDE TO CHANGE THE PATH, YOU HAVE TO WRITE
-            region.draw_profile((profile1,profile2,region.window,), save = True, name = newpath)
+            region.draw_profile(
+                (profile1,profile2,region.window,), save = True, name = newpath)
 
             FOR SOME REASON, USING ONLY
-            region.draw_profile((profile1,profile2,region.window,), True, newpath)
+            region.draw_profile(
+                (profile1,profile2,region.window,), True, newpath)
             IS NOT WORKING
         '''
 
-        fig = plt.figure(figsize=(27, len(coordinates) * 5))
-        gs = gridspec.GridSpec(len(coordinates), 3)
+        fig = plt.figure(figsize=(27, len(coordinates) * 8))
+        gs = gridspec.GridSpec(len(coordinates), 4)
 
         if len(coordinates) == 4:
             assert type(coordinates[0]) == tuple,\
@@ -352,18 +346,23 @@ class Area(object):
 
         for i, coordinate in enumerate(coordinates):
 
-            ax1 = plt.subplot(gs[i, :1], projection=ccrs.LambertCylindrical())
-            ax2 = plt.subplot(gs[i, 1:])
+            ax1 = plt.subplot(gs[i, :2])
+            ax2 = plt.subplot(gs[i, 2:])
 
             # Image unit
+            lon_m, lon_M, lat_m, lat_M = self.window
+            m = Basemap(llcrnrlon=lon_m, llcrnrlat=lat_m, urcrnrlon=lon_M, urcrnrlat=lat_M,
+                        resolution='i', projection='laea', rsphere=1734400, lat_0=self.lat0, lon_0=self.lon0)
             X, Y, Z = self.get_arrays('lola')
-            ax1.pcolormesh(X, Y, Z,
-                           transform=ccrs.PlateCarree(),
-                           cmap='spectral')
+            X, Y = m(X, Y)
+            CS = m.pcolormesh(X, Y, Z, cmap='gist_earth',
+                              alpha=1, ax=ax1, zorder=1)
+            self._format_coordinate(ax1, m)
+
             lon1, lon0, lat1, lat0 = coordinate
-            ax1.plot([lon1, lon0], [lat1, lat0], 'ro-',
-                     transform=ccrs.PlateCarree())
-            self._format_coordinate_cartopy(ax1)
+            lon0, lat0 = m(lon0, lat0)
+            lon1, lat1 = m(lon1, lat1)
+            ax1.plot([lon1, lon0], [lat1, lat0], 'ro-')
 
             # Profile
             print(coordinate)
@@ -410,7 +409,7 @@ class Area(object):
 
         CS = m.pcolormesh(Xl, Yl, Zl, cmap='gist_earth',
                           alpha=.5, ax=ax1, zorder=1)
-        #m.contour(Xl,Yl,Zl,20, colors = 'black', alpha = 1.0 , zorder=2)
+        # m.contour(Xl,Yl,Zl,20, colors = 'black', alpha = 1.0 , zorder=2)
 
         xc, yc = m(self.lon0, self.lat0)
         ax1.scatter(xc, yc, s=200, marker='v', zorder=2)
