@@ -16,24 +16,27 @@ within   the    pdsimage   conda    environment   provided    in   the
 For those who have conda installed on their machine, just use::
 
     conda env create -f environment.yml
+    source activate pdsimage
 
 This will create the pdsimage environment which contains all the
 dependency for the library to work properly.
 
 For those who don't use conda, you can:
 
-    1. follow the instruction available `here`_ to install it and git
-       it a try ;).
-    2. Simply use your current python  installation and try to install
-       it from the command line::
+    1. follow the instruction available `here`_ to install it and give
+       it a try. It really make everything easier ;)
+    2. Use pip on the commande line::
 
-           python setup.py install
+           pip install -r requirements.txt
+           pip install pdsimage
 
-Additionnally, you might need to install the geospatial libray `gdal`_
-as one of  the module use to realize the  image used `Cartopy`_ which
-itself depends on **gdal** for proper running.
+However, you might run into  some problem of depencies. In particular,
+you might need to install the geospatial libray `gdal`_ as one of the
+module use to realize the  image used `Cartopy`_ which itself depends
+on **gdal** for proper running.
 
 The easiest is to use brew::
+  
     brew install gdal
 
 Unix

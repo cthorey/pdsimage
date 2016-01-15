@@ -17,7 +17,7 @@ the desired information.
 
 The different possible binary files are all the **ldem** files listed
 here `LRO/LOLA ldem`_ for topography and all the images listed here
-`LRO/WAC wac`_ for WAC images.
+`LROC/WAC wac`_ for WAC images.
 
 For  instance,  if you  want  to  read  the information  contained  in
 **ldem_512_90s_45s_090_180.img**, simply load it  in a variable called
@@ -32,7 +32,7 @@ of high resolution image though, the download can take a few minutes !
 
 When creating the object, the class store information contained in the
 header,  either a  separate *.lbl*  file  for files  on the  `LRO/LOLA
-ldem`_ or  contained in the *.img*  file for files on  the `LRO/WAC
+ldem`_ or  contained in the *.img*  file for files on  the `LROC/WAC
 wac`_. All information can be access as attribute of the object.
 
 However,  the class  does not  load the  data contained  in the  image
