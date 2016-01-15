@@ -334,6 +334,7 @@ class Area(object):
             region.draw_profile(
                 (profile1,profile2,region.window,), True, newpath)
             IS NOT WORKING
+
         '''
 
         fig = plt.figure(figsize=(27, len(coordinates) * 8))
