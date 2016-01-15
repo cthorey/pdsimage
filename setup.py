@@ -18,11 +18,9 @@ setup(name='pdsimage',
       install_requires=[
           'numpy',
           'pandas',
-          'basemap',
+          'scipy',
           'pvl',
           'requests',
-          'scipy',
-          'matplotlib',
-          'cartopy'],
+          'matplotlib'],
       include_package_data=True,
       zip_safe=False)

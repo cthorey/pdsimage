@@ -12,14 +12,9 @@ pyshp>=1.1.4
 six>=1.3.0
 setuptools>=0.7.2
 matplotlib>=1.3.0
-GDAL>=1.10.0
-pillow>=1.7.8
 scipy>=0.10
-cartopy
 pandas
-basemap
 pvl
 requests
-scipy
 sphinxcontrib-napoleon
 
