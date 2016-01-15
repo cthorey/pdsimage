@@ -7,7 +7,7 @@ fantastic data of the lunar surface  and, thanks to `NASA`_, all are
 available for free on the internet.
 
 However,  using them  can  be  criptic without  a  bit of  experience.
-*Pdsimage** aims  to facilitate the  extraction of knowledge  from two
+**Pdsimage** aims  to facilitate the  extraction of knowledge  from two
 set of data gathered by two experiments on board of LRO:
 
    - The Lunar Orbiter Laser Altimer (`LOLA`_) experiment which
@@ -22,10 +22,11 @@ Highlighted features
 ------------------------
 
 Unlike  previous python  PDS  library, this  module  allows to  easily
-extract data for  arbitrarily size region at the lunar  surface. It is
-particularly suited for studying geological unit at the surface of the
-Moon.  It  also includes  some extension  to ease  the study  of lunar
-impact craters and low-slope domes.
+extract data for arbitrarily sized region at the lunar surface.
+
+It is particularly suited for  studying geological unit at the surface
+of the  Moon.  It also  includes some extension  to ease the  study of
+lunar impact craters and low-slope domes.
 
 FULL DOCUMENTATION `HERE`_
 
