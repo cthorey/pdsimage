@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Extracting data on a specific region &mdash; pdsimage 1.0 documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -35,7 +35,7 @@
         <link rel="prev" title="Rapid overview" href="cookbook.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -45,11 +45,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> pdsimage</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pdsimage
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -57,25 +73,17 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
           
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#mac-os-x">Mac OS X</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#unix">Unix</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Rapid overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Rapid overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Extracting data on a specific region</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#binarytable">BinaryTable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wacmap">WacMap</a></li>
@@ -83,20 +91,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-pdsimage.PDS_Extractor">Index</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Structure.html#module-pdsimage.Structure">Index</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -111,20 +113,29 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Extracting data on a specific region</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/PDS_Extractor.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/PDS_Extractor.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="extracting-data-on-a-specific-region">
 <h1>Extracting data on a specific region<a class="headerlink" href="#extracting-data-on-a-specific-region" title="Permalink to this headline">¶</a></h1>
@@ -140,7 +151,7 @@ detail in the following.</p>
 the desired information.</p>
 <p>The different possible binary files are all the <strong>ldem</strong> files listed
 here <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/">LRO/LOLA ldem</a> for topography and all the images listed here
-<a href="#id1"><span class="problematic" id="id2">`LRO/WAC wac`_</span></a> for WAC images.</p>
+<a class="reference external" href="http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/">LROC/WAC wac</a> for WAC images.</p>
 <p>For  instance,  if you  want  to  read  the information  contained  in
 <strong>ldem_512_90s_45s_090_180.img</strong>, simply load it  in a variable called
 <strong>ldem</strong> here for the example:</p>
@@ -153,8 +164,8 @@ ask if you want to download it  on the fly.  Be carefull with the size
 of high resolution image though, the download can take a few minutes !</p>
 <p>When creating the object, the class store information contained in the
 header,  either a  separate <em>.lbl</em>  file  for files  on the  <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/">LRO/LOLA
-ldem</a> or  contained in the <em>.img</em>  file for files on  the <a href="#id3"><span class="problematic" id="id4">`LRO/WAC
-wac`_</span></a>. All information can be access as attribute of the object.</p>
+ldem</a> or  contained in the <em>.img</em>  file for files on  the <a class="reference external" href="http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/BDR/WAC_GLOBAL/">LROC/WAC
+wac</a>. All information can be access as attribute of the object.</p>
 <p>However,  the class  does not  load the  data contained  in the  image
 during initialization.  PDS images  can be  very large  and resolution
 higher than 16  pixel per degree (ppd) usually do  not fit into memory
@@ -251,7 +262,7 @@ can also use if you want to make beautiful images <code class="docutils literal"
 <span id="index"></span><h2>Index<a class="headerlink" href="#module-pdsimage.PDS_Extractor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.BinaryTable">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/cthorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage-1.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class to read image binary file from the LRO experiment</p>
 <p>For the moment, it can gather information about the topography
@@ -424,7 +435,7 @@ top right corner.</p>
 
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage-1.1-py2.7.egg/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -577,7 +588,7 @@ top right corner.</p>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.LolaMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/cthorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage-1.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
 <p>Class to handle the creation of LRO LOLA images</p>
 <p>This class is specifically designed to handle the creation of image
@@ -674,7 +685,7 @@ span 10 to 20 degree in longitude and the same in latitude, simply ask.</p>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.WacMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/cthorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage-1.1-py2.7.egg/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class to handle the creation of LROC WAC GLOBAL images</p>
 <p>This class is specifically designed to handle the creation of image
@@ -764,7 +775,7 @@ spans 10 to 20 degree in longitude and the same in latitude, simply ask.</p>
 </div>
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.WacMap.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/cthorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage-1.1-py2.7.egg/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -799,15 +810,16 @@ extracted over the window.</td>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Structure.html" class="btn btn-neutral float-right" title="Studying specific region and making beautiful plot">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Structure.html" class="btn btn-neutral float-right" title="Studying specific region and making beautiful plot" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="cookbook.html" class="btn btn-neutral" title="Rapid overview"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cookbook.html" class="btn btn-neutral" title="Rapid overview" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -817,12 +829,13 @@ extracted over the window.</td>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Clement Thorey.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 
