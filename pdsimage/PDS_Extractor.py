@@ -93,17 +93,25 @@ class BinaryTable(object):
     """
 
     defaut_pdsfile = os.path.join(
-        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILES')
 
     def __init__(self, fname, path_pdsfile=defaut_pdsfile):
 
         self.fname = fname.upper()
         self.path_pdsfiles = path_pdsfile
         if not os.path.isdir(self.path_pdsfiles):
-            raise BaseException('The path % s, were PDS_FILES should be\
-                                do not exist. Please feed a correct path' % (self.path_pdsfiles))
+            print('% s: The directory were PDS_FILES should be do\
+                  not exist. Creation of the directory.' % (self.path_pdsfiles))
+            try:
+                os.mkdir(self.path_pdsfiles)
+            except:
+                raise BaseException('The creation of %s abort.\
+                                    Might be a permission problem if you\
+                                    do not provide any path and you install\
+                                    the library in a read - only directory. Please\
+                                    provide a valid path.')
         elif not os.access(self.path_pdsfiles, os.W_OK):
-            raise BaseException("% s: The path where the PDS file are\
+            raise BaseException("% s: The directory where the PDS file are\
                                 is read only. It might be the defaut\
                                 path if you install in a directory\
                                 without any rights. Please change it\
@@ -624,7 +632,7 @@ class WacMap(object):
 
     implemented_res = [4, 8, 16, 32, 64, 128, 256]
     defaut_pdsfile = os.path.join(
-        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILES')
 
     def __init__(self, ppd, lonm, lonM, latm, latM, path_pdsfile=defaut_pdsfile):
         self.path_pdsfiles = path_pdsfile

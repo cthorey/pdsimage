@@ -76,7 +76,7 @@ class Area(object):
     '''
 
     defaut_pdsfile = os.path.join(
-        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILE')
+        '/'.join(os.path.abspath(__file__).split('/')[:-1]), 'PDS_FILES')
 
     def __init__(self, lon0, lat0, Size, path_pdsfile=defaut_pdsfile):
 
