@@ -419,7 +419,7 @@ class Area(object):
         self._add_colorbar(m, CS, ax1, 'Topography')
 
         if save == True:
-            fig.savefig(name, rasterized=True, dpi=200,
+            fig.savefig(name, rasterized=True, dpi=50,
                         bbox_inches='tight', pad_inches=0.1)
 
     def wac_image(self, save=False, name='BaseWac.png'):
@@ -462,7 +462,7 @@ class Area(object):
         self._add_scale(m, ax1)
 
         if save == True:
-            fig.savefig(name, dpi=200, bbox_inches='tight', pad_inches=0.1)
+            fig.savefig(name, dpi=50, bbox_inches='tight', pad_inches=0.1)
 
     def overlay(self, save=False, name='Baseoverlay.png'):
         ''' Draw the topography over a wide angle image  of the region
@@ -511,7 +511,7 @@ class Area(object):
         self._add_colorbar(m, CS, ax1, 'Topography')
 
         if save == True:
-            fig.savefig(name, dpi=500, bbox_inches='tight', pad_inches=0.1)
+            fig.savefig(name, dpi=50, bbox_inches='tight', pad_inches=0.1)
 
     def _Deg(self, radius):
         return radius * 360 / (2 * np.pi * 1734.4)
