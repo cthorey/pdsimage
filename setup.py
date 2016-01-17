@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 setup(name='pdsimage',
-      version='1.1.1',
+      version='1.1.2',
       description='Package for creating images from NASA PDS files',
       keywords='PDS, LOLA, WAC, crater, dome, FFC, floor-fractured craters',
       url='https://github.com/cthorey/pdsimage',
