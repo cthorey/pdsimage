@@ -316,9 +316,7 @@ class Area(object):
             >>> Region = Area(10,10,20)
             >>> midlon = (Region.window[0]+Region.window[1])/2.0
             >>> midlat = (Region.window[2]+Region.window[3])/2.0
-            # Vertical profile
             >>> profile1 = (midlon,midlon,Region.window[2],Region.window[3])
-            # Horizontal profile
             >>> profile2 = (Region.window[0],Region.window[1],midlat,midlat)
             >>> Region.draw_profile((profile1,profile2,Region.window,))
 

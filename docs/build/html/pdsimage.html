@@ -1,0 +1,1444 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pdsimage package &mdash; pdsimage 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pdsimage 1.0 documentation" href="index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> pdsimage</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Get the module up and running</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#mac-os-x">Mac OS X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#unix">Unix</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook.html">Rapid overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#import-the-modules">Import the modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#loading-part-of-an-image">Loading part of an image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#looking-at-impact-crater">Looking at impact crater ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cookbook.html#topographic-profiles">Topographic profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PDS_Extractor.html">Extracting data on a specific region</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#binarytable">BinaryTable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#wacmap">WacMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#lolamap">LolaMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PDS_Extractor.html#module-pdsimage.PDS_Extractor">Index</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Structure.html">Studying specific region and making beautiful plot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#area">Area</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#crater">Crater</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Structure.html#dome">Dome</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pdsimage</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>pdsimage package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/pdsimage.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="pdsimage-package">
+<h1>pdsimage package<a class="headerlink" href="#pdsimage-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pdsimage.PDS_Extractor">
+<span id="pdsimage-pds-extractor-module"></span><h2>pdsimage.PDS_Extractor module<a class="headerlink" href="#module-pdsimage.PDS_Extractor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pdsimage.PDS_Extractor.BinaryTable">
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to read image binary file from the LRO experiment</p>
+<p>For the moment, it can gather information about the topography
+(from LRO LOLA experiment) and texture (from the LRO WAC
+experiment). More information about the Lunar Reconnaissance
+Orbiter mission (LRO) can be found <a class="reference external" href="http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4">here</a></p>
+<p>LRO LOLA - Informations can be found at <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/aareadme.txt">LRO/LOLA website</a>.
+In particular, the header, located in  a separate file .LBL file,
+contains all the informations.</p>
+<p>LROC WAC - Informations can be found at <a class="reference external" href="http://lroc.sese.asu.edu/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/AAREADME.TXT">LROC/WAC website</a>.
+In particular, HEADER in the binary file that contain all the information -
+Read with the module <a class="reference external" href="http://pvl.readthedocs.org/en/latest/">pvl module</a> for informations about how the header is
+extracted directly from the file.</p>
+<p>This class has a method able to download the images,
+though it might be better to download them before
+as it takes a lot of time, especially for large resolution.</p>
+<p>Both are NASA PDS FILE - Meaning, they are binary table whose format depends on
+the file. All the information can be found in the Header whose
+reference are above. Line usualy index latitude while sample on the line
+refers to longitude.</p>
+<p>THIS CLASS SUPPORT ONLY CYLINDRICAL PROJECTION FOR THE MOMENT.
+PROJECTION : [WAC : &#8216;EQUIRECTANGULAR&#8217;, LOLA : &#8216;&#8220;SIMPLE&#8221;&#8217;]
+FURTHER WORK IS NEEDED FOR IT TO BECOMES MORE GENERAL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fname</strong> (<em>str</em>) &#8211; Name of the image.</li>
+<li><strong>path_pdsfiles</strong> (<em>Optional[str]</em>) &#8211; <p>Path where the pds files are stored.
+Defaults, the path is set to the folder <code class="docutils literal"><span class="pre">PDS_FILES</span></code> next to
+the module files where the library is install.</p>
+<p>See <code class="docutils literal"><span class="pre">defaut_pdsfile</span></code> variable of the class</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.fname">
+<code class="descname">fname</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.fname" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Name of the image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.path_pdsfiles">
+<code class="descname">path_pdsfiles</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.path_pdsfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; path where the pds files are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.lolapath">
+<code class="descname">lolapath</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.lolapath" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; path for LOLA images</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.wacpath">
+<code class="descname">wacpath</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.wacpath" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; path for WAC images</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.grid">
+<code class="descname">grid</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; WAC or LOLA</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.img">
+<code class="descname">img</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.img" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; name of the image</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.lbl">
+<code class="descname">lbl</code><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.lbl" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; name of the lbl file, where information are stored. Empty for WAC.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is important to respect the structure of the PDS_FILES folder. It
+should contain 2 subfolder called <code class="docutils literal"><span class="pre">LOLA</span></code> and <code class="docutils literal"><span class="pre">LROC_WAC</span></code> where the
+corresponding images should be download.</p>
+<p>I also integrate all the specification of the image contained in
+the header or the .LBL file as attribute of the class. However,
+the list is long and I do not introduce them into the
+documentation. See the file directly for details.</p>
+<p>The abreaviations correspond to:</p>
+<ul class="last simple">
+<li><strong>LRO</strong> Lunar Reconnaissance Orbiter</li>
+<li><strong>LOLA</strong> Lunar Orbiter Laser Altimeter</li>
+<li><strong>LROC</strong> Lunar Reconnaissance Orbiter Camera</li>
+<li><strong>WAC</strong> Wide Angle Camera</li>
+</ul>
+</div>
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.array">
+<code class="descname">array</code><span class="sig-paren">(</span><em>size_chunk</em>, <em>start</em>, <em>bytesize</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read part of the binary file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size_chunk</strong> (<em>int</em>) &#8211; Size of the chunk to read</li>
+<li><strong>start</strong> (<em>int</em>) &#8211; Starting byte</li>
+<li><strong>bytesize</strong> (<em>int</em>) &#8211; Ending byte</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">array of the corresponding values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(np.array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.boundary">
+<code class="descname">boundary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.boundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the image boundary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tupple composed by the westernmost_longitude,
+the westernmost_longitude, the minimum_latitude and
+the maximum_latitude.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.cylindrical_window">
+<code class="descname">cylindrical_window</code><span class="sig-paren">(</span><em>radius</em>, <em>lat0</em>, <em>long0</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.cylindrical_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cylindrical projection of a window centered
+at (lat0, long0) with a given radius (km).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>radius</strong> (<em>float</em>) &#8211; Radius of the window (km).</li>
+<li><strong>lat0</strong> (<em>float</em>) &#8211; Latitude at the center (degree).</li>
+<li><strong>long0</strong> (<em>float</em>) &#8211; Longitude at the center (degree).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)</span></code> with <code class="docutils literal"><span class="pre">longll</span></code>
+the longitude of the lower left corner, <code class="docutils literal"><span class="pre">longtr</span></code> the
+longitude of the top right corner, <code class="docutils literal"><span class="pre">latll</span></code> the latitude
+of the lower left corner and <code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the
+top right corner.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All return coordinates are in degree</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile">
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.extract_all">
+<code class="descname">extract_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.extract_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all the image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tupple of three arrays <code class="docutils literal"><span class="pre">(X,Y,Z)</span></code> with <code class="docutils literal"><span class="pre">X</span></code> contains the
+longitudes, <code class="docutils literal"><span class="pre">Y</span></code> contains the latitude and <code class="docutils literal"><span class="pre">Z</span></code> the values
+extracted from the image.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>All return arrays have the same size.</p>
+<p class="last">All coordinate are in degree.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.extract_grid">
+<code class="descname">extract_grid</code><span class="sig-paren">(</span><em>longmin</em>, <em>longmax</em>, <em>latmin</em>, <em>latmax</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.extract_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract part of the image <code class="docutils literal"><span class="pre">img</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>longmin</strong> (<em>float</em>) &#8211; Minimum longitude of the window</li>
+<li><strong>longmax</strong> (<em>float</em>) &#8211; Maximum longitude of the window</li>
+<li><strong>latmin</strong> (<em>float</em>) &#8211; Minimum latitude of the window</li>
+<li><strong>latmax</strong> (<em>float</em>) &#8211; Maximum latitude of the window</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tupple of three arrays <code class="docutils literal"><span class="pre">(X,Y,Z)</span></code> with <code class="docutils literal"><span class="pre">X</span></code> contains the
+longitudes, <code class="docutils literal"><span class="pre">Y</span></code> contains the latitude and <code class="docutils literal"><span class="pre">Z</span></code> the values
+extracted from the window.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>All return arrays have the same size.</p>
+<p class="last">All coordinate are in degree.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.lambert_window">
+<code class="descname">lambert_window</code><span class="sig-paren">(</span><em>radius</em>, <em>lat0</em>, <em>long0</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.lambert_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Square Lambert Azimuthal equal area projection of
+a window centered at (lat0, long0) with a given radius (km).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>radius</strong> (<em>float</em>) &#8211; Radius of the window (km).</li>
+<li><strong>lat0</strong> (<em>float</em>) &#8211; Latitude at the center (degree).</li>
+<li><strong>long0</strong> (<em>float</em>) &#8211; Longitude at the center (degree).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)`</span> <span class="pre">with</span> <span class="pre">``longll</span></code>
+the longitude of the lower left corner, <code class="docutils literal"><span class="pre">longtr</span></code> the
+longitude of the top right corner, <code class="docutils literal"><span class="pre">latll</span></code> the latitude
+of the lower left corner and <code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the
+top right corner.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All return coordinates are in degree</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.lat_id">
+<code class="descname">lat_id</code><span class="sig-paren">(</span><em>line</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.lat_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the corresponding latitude</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>line</strong> (<em>int</em>) &#8211; Line number</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Correponding latitude in degree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.line_id">
+<code class="descname">line_id</code><span class="sig-paren">(</span><em>lat</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.line_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the corresponding line</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lat</strong> (<em>int</em>) &#8211; latitude in degree</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Correponding line</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.long_id">
+<code class="descname">long_id</code><span class="sig-paren">(</span><em>sample</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.long_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the corresponding longitude</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sample</strong> (<em>int</em>) &#8211; sample number on a line</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Correponding longidude in degree</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.BinaryTable.sample_id">
+<code class="descname">sample_id</code><span class="sig-paren">(</span><em>lon</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.sample_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the corresponding sample</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lon</strong> (<em>int</em>) &#8211; longidute in degree</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Correponding sample</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pdsimage.PDS_Extractor.LolaMap">
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
+<p>Class to handle the creation of LRO LOLA images</p>
+<p>This class is specifically designed to handle the creation of image
+from LOLA images. It is able to identify the image (or the groupe
+of images) necessary to extract an array over a given window.
+Four cases are possible and taken care of:</p>
+<ol class="arabic simple">
+<li>The desired structure is entirely contained into one image.</li>
+<li>The span in latitude of the image is ok but not longitudes(2 images).</li>
+<li>The span in longitude of the image is ok but not latitudes (2 images).</li>
+<li>Both latitude and longitude are not contained in one image(4 images).</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ppd</strong> (<em>int</em>) &#8211; Required resolution</li>
+<li><strong>lonm</strong> (<em>float</em>) &#8211; Lower left window longitude (degree)</li>
+<li><strong>lonM</strong> (<em>float</em>) &#8211; Upper right window longitude (degree)</li>
+<li><strong>latm</strong> (<em>float</em>) &#8211; Lower left window latitude (degree)</li>
+<li><strong>latM</strong> (<em>float</em>) &#8211; Upper right window latitude (degree)</li>
+<li><strong>path_pdsfiles</strong> (<em>Optional[str]</em>) &#8211; <p>Path where the pds files are stored.
+Defaults, the path is set to the folder <code class="docutils literal"><span class="pre">PDS_FILES</span></code> next to
+the module files where the library is install.</p>
+<p>See <code class="docutils literal"><span class="pre">defaut_pdsfile</span></code> variable of the class</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.ppd">
+<code class="descname">ppd</code><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.ppd" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Required resolution</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.lonm">
+<code class="descname">lonm</code><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.lonm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Lower left window longitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.lonM">
+<code class="descname">lonM</code><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.lonM" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Upper right window longitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.latm">
+<code class="descname">latm</code><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.latm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Lower left window latitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.latM">
+<code class="descname">latM</code><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.latM" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Upper right window latitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.path_pdsfiles">
+<code class="descname">path_pdsfiles</code><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.path_pdsfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Path where the pds_files are stored.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is important to respect the structure of the PDS_FILES folder. WAC
+images should be contained within a subfolder called <code class="docutils literal"><span class="pre">LROC_WAC</span></code>.</p>
+<p>Possible resolution are stored in the class variable <code class="docutils literal"><span class="pre">implemented_res</span></code>.
+Longitude in the code spans 0 to 360.</p>
+<p>The abreviations correspond to:</p>
+<ul class="last simple">
+<li><strong>LRO</strong> Lunar Reconnaissance Orbiter</li>
+<li><strong>LOLA</strong> Lunar Orbiter Laser Altimeter</li>
+</ul>
+</div>
+<p class="rubric">Example</p>
+<p>This class allows to simply gather three arrays X, Y, Z given a specific
+window. For instance, if we want to gather the data for a window which
+span 10 to 20 degree in longitude and the same in latitude, simply ask.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">LolaMap</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">image</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.LolaMap.implemented_res">
+<code class="descname">implemented_res</code><em class="property"> = [4, 16, 64, 128, 256, 512, 1024]</em><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap.implemented_res" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pdsimage.PDS_Extractor.WacMap">
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to handle the creation of LROC WAC GLOBAL images</p>
+<p>This class is specifically designed to handle the creation of image
+from LROC WAC images. It is able to identify the image (or the groupe
+of images) necessary to extract an array over a given window.
+Four cases are possible and taken care of:</p>
+<ol class="arabic simple">
+<li>The desired structure is entirely contained into one image.</li>
+<li>The span in latitude of the image is ok but not longitudes(2 images).</li>
+<li>The span in longitude of the image is ok but not latitudes (2 images).</li>
+<li>Both latitude and longitude are not contained in one image(4 images).</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ppd</strong> (<em>int</em>) &#8211; Required resolution</li>
+<li><strong>lonm</strong> (<em>float</em>) &#8211; Lower left window longitude (degree)</li>
+<li><strong>lonM</strong> (<em>float</em>) &#8211; Upper right window longitude (degree)</li>
+<li><strong>latm</strong> (<em>float</em>) &#8211; Lower left window latitude (degree)</li>
+<li><strong>latM</strong> (<em>float</em>) &#8211; Upper right window latitude (degree)</li>
+<li><strong>path_pdsfiles</strong> (<em>Optional[str]</em>) &#8211; <p>Path where the pds files are stored.
+Defaults, the path is set to the folder <code class="docutils literal"><span class="pre">PDS_FILES</span></code> next to
+the module files where the library is install.</p>
+<p>See <code class="docutils literal"><span class="pre">defaut_pdsfile</span></code> variable of the class</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.ppd">
+<code class="descname">ppd</code><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.ppd" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Required resolution</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.lonm">
+<code class="descname">lonm</code><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.lonm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Lower left window longitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.lonM">
+<code class="descname">lonM</code><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.lonM" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Upper right window longitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.latm">
+<code class="descname">latm</code><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.latm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Lower left window latitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.latM">
+<code class="descname">latM</code><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.latM" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Upper right window latitude (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.path_pdsfiles">
+<code class="descname">path_pdsfiles</code><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.path_pdsfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Path where the pds_files are stored.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is important to respect the structure of the PDS_FILES folder. WAC
+images should be contained within a subfolder called <code class="docutils literal"><span class="pre">LROC_WAC</span></code>.</p>
+<p>Possible resolution are stored in the class variable <code class="docutils literal"><span class="pre">implemented_res</span></code>.
+Longitude in the code spans 0 to 360.</p>
+<p>The abreaviations correspond to:</p>
+<ul class="last simple">
+<li><strong>LROC</strong> Lunar Reconnaissance Orbiter Camera</li>
+<li><strong>WAC</strong> Wide Angle Camera</li>
+</ul>
+</div>
+<p class="rubric">Example</p>
+<p>This class allows to simply gather three arrays X, Y, Z given a specific
+window. For instance, if we want to gather the data for a window which
+spans 10 to 20 degree in longitude and the same in latitude, simply ask.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">WacMap</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">image</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.defaut_pdsfile">
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.PDS_Extractor.WacMap.image">
+<code class="descname">image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the values over the required window</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tupple of three arrays <code class="docutils literal"><span class="pre">(X,Y,Z)</span></code> with <code class="docutils literal"><span class="pre">X</span></code> contains the
+longitudes, <code class="docutils literal"><span class="pre">Y</span></code> contains the latitude and <code class="docutils literal"><span class="pre">Z</span></code> the values
+extracted over the window.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>All return arrays have the same size.</p>
+<p class="last">All coordinates are in degree.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.PDS_Extractor.WacMap.implemented_res">
+<code class="descname">implemented_res</code><em class="property"> = [4, 8, 16, 32, 64, 128, 256]</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.implemented_res" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pdsimage.Structure">
+<span id="pdsimage-structure-module"></span><h2>pdsimage.Structure module<a class="headerlink" href="#module-pdsimage.Structure" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pdsimage.Structure.Area">
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class which gather information on a specific location</p>
+<p>It is particularly useful to study a particular location at the
+surface of the Moon. For the moment, it can gather information
+about the topography (from LRO LOLA experiment) and texture (from
+the LRO WAC experiment). More information about the Lunar Reconnaissance
+Orbiter mission (LRO) can be found <a class="reference external" href="http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4">here</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lon0</strong> (<em>float</em>) &#8211; Center longitude of the region of interest.</li>
+<li><strong>lat0</strong> (<em>float</em>) &#8211; Center latitude of the region of interest.</li>
+<li><strong>size</strong> (<em>float</em>) &#8211; Radius of the region of interest.</li>
+<li><strong>path_pdsfiles</strong> (<em>Optional[str]</em>) &#8211; <p>Path where the pds files are stored.
+Defaults, the path is set to the folder <code class="docutils literal"><span class="pre">PDS_FILES</span></code> next to
+the module files where the library is install.</p>
+<p>See <code class="docutils literal"><span class="pre">defaut_pdsfile</span></code> variable of the class.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.path_pdsfiles">
+<code class="descname">path_pdsfiles</code><a class="headerlink" href="#pdsimage.Structure.Area.path_pdsfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path where the pds_files are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.lon0">
+<code class="descname">lon0</code><a class="headerlink" href="#pdsimage.Structure.Area.lon0" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Longitude of the region of interest.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.lat0">
+<code class="descname">lat0</code><a class="headerlink" href="#pdsimage.Structure.Area.lat0" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Latitude of the region of interest.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.ppdlola">
+<code class="descname">ppdlola</code><a class="headerlink" href="#pdsimage.Structure.Area.ppdlola" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Resolution for the topography</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.ppdwac">
+<code class="descname">ppdwac</code><a class="headerlink" href="#pdsimage.Structure.Area.ppdwac" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Resolution for the WAC image</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.size_window">
+<code class="descname">size_window</code><a class="headerlink" href="#pdsimage.Structure.Area.size_window" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Radius of the region of interest (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.window">
+<code class="descname">window</code><a class="headerlink" href="#pdsimage.Structure.Area.window" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float,float,float,float</em> &#8211; <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)</span></code>
+with:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">longll</span></code> the longitude of the lower left corner</li>
+<li><code class="docutils literal"><span class="pre">longtr</span></code> the longitude of the top right corner</li>
+<li><code class="docutils literal"><span class="pre">latll</span></code> the latitude of the lower left corner</li>
+<li><code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the top right corner</li>
+</ul>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is important to respect the structure of the PDS_FILES folder. It
+should contain 2 subfolder called <code class="docutils literal"><span class="pre">LOLA</span></code> and <code class="docutils literal"><span class="pre">LROC_WAC</span></code> where the
+corresponding images should be download.</p>
+<p>The abreviations correspond to:</p>
+<ul class="last simple">
+<li><strong>LRO</strong> Lunar Reconnaissance Orbiter</li>
+<li><strong>LOLA</strong> Lunar Orbiter Laser Altimeter</li>
+<li><strong>LROC</strong> Lunar Reconnaissance Orbiter Camera</li>
+<li><strong>WAC</strong> Wide Angle Camera</li>
+</ul>
+</div>
+<p class="rubric">Example</p>
+<p>For instance, say we want to get an overlay, the topography
+drawn over an wide angle camera image, of a region centred
+around 10 East and 10 North of about 20 km</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">overlay</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="pdsimage.Structure.Area.change_window">
+<code class="descname">change_window</code><span class="sig-paren">(</span><em>size_window</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.change_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the region of interest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size_window</strong> (<em>float</em>) &#8211; Radius of the region of interest (km)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Change the attributes <code class="docutils literal"><span class="pre">size_window</span></code> and <code class="docutils literal"><span class="pre">window</span></code> to
+correspond to the new region of interest.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.cylindrical_window">
+<code class="descname">cylindrical_window</code><span class="sig-paren">(</span><em>radius</em>, <em>lat0</em>, <em>long0</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.cylindrical_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cylindrical projection of a window centered
+at (lat0, long0) with a given radius (km).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>radius</strong> (<em>float</em>) &#8211; Radius of the window (km).</li>
+<li><strong>lat0</strong> (<em>float</em>) &#8211; Latitude at the center (degree).</li>
+<li><strong>long0</strong> (<em>float</em>) &#8211; Longitude at the center (degree).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)`</span> <span class="pre">with</span> <span class="pre">``longll</span></code>
+the longitude of the lower left corner, <code class="docutils literal"><span class="pre">longtr</span></code> the
+longitude of the top right corner, <code class="docutils literal"><span class="pre">latll</span></code> the latitude
+of the lower left corner and <code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the
+top right corner.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All return coordinates are in degree</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Area.defaut_pdsfile">
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.draw_profile">
+<code class="descname">draw_profile</code><span class="sig-paren">(</span><em>coordinates</em>, <em>num_points=500</em>, <em>save=False</em>, <em>name='BaseProfile.png'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.draw_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a profile between a point (lon0,lat0) and (lon1,lat1).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>coordinates</strong> &#8211; <p>Tupples which list the different desired
+profiles.</p>
+<p>Each profil has to be defined as a tupple which follows
+(lon0,lon1,lat0,lat1) with (lon0,lat0) the first point
+coordintes and (lon1,lat1) the second point
+coordinates. Both in degree.</p>
+</li>
+<li><strong>num_points</strong> (<em>Optional[int]</em>) &#8211; Number of points to use
+in the interpolation process. Defaults to 100.</li>
+<li><strong>save</strong> (<em>Optional[bool]</em>) &#8211; Weither or not to save the image.
+Defaults to False.</li>
+<li><strong>name</strong> (<em>Optional[str]</em>) &#8211; Absolut path to save the resulting
+image. Default to &#8216;BaseProfile.png&#8217; in the working
+directory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>Here is an example for a region located (10E,10N) 20 km
+in diameter with three different profiles:</p>
+<blockquote>
+<div><ul class="simple">
+<li>One North-South</li>
+<li>One East-West</li>
+<li>One inclined</li>
+</ul>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Region</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">midlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">midlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="c">#Vertical profile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span> <span class="c">#Horizontal profile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Region</span><span class="o">.</span><span class="n">draw_profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">,))</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>If only one profile is given, <code class="docutils literal"><span class="pre">coordinates</span> <span class="pre">=</span> <span class="pre">(profile1,)</span></code>.
+If more than one is given, use <code class="docutils literal"><span class="pre">coordinates</span> <span class="pre">=</span> <span class="pre">(profile1,profile2,profile3,)</span></code></p>
+<p>IF YOU DECIDE TO CHANGE THE PATH, YOU HAVE TO WRITE
+region.draw_profile((profile1,profile2,region.window,), save = True, name = newpath)</p>
+<p class="last">FOR SOME REASON, USING ONLY
+region.draw_profile((profile1,profile2,region.window,), True, newpath)
+IS NOT WORKING</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.get_arrays">
+<code class="descname">get_arrays</code><span class="sig-paren">(</span><em>type_img</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.get_arrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return arrays the region of interest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>type_img</strong> (<em>str</em>) &#8211; Either lola or wac.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tupple of three arrays <code class="docutils literal"><span class="pre">(X,Y,Z)</span></code> with <code class="docutils literal"><span class="pre">X</span></code> contains the
+longitudes, <code class="docutils literal"><span class="pre">Y</span></code> contains the latitude and <code class="docutils literal"><span class="pre">Z</span></code> the values
+extracted for the region of interest.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The argument has to be either lola or wac. Note case sensitive.
+All return arrays have the same size.</p>
+<p class="last">All coordinates are in degree.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.get_profile">
+<code class="descname">get_profile</code><span class="sig-paren">(</span><em>img_type</em>, <em>coordinate</em>, <em>num_points</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.get_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a profile from (lat1,lon1) to (lat2,lon2)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>img_type</strong> (<em>str</em>) &#8211; Either lola or wac.</li>
+<li><strong>coordinate</strong> (<em>float,float,float,flaot</em>) &#8211; <p>A tupple
+<code class="docutils literal"><span class="pre">(lon0,lon1,lat0,lat1)</span></code> with:</p>
+<ul>
+<li>lon0: First point longitude</li>
+<li>lat0: First point latitude</li>
+<li>lon1: Second point longitude</li>
+<li>lat1: Second point latitude</li>
+</ul>
+</li>
+<li><strong>num_points</strong> (<em>int</em>) &#8211; Number of points to use in the
+interpolation process.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Be carefull, longitude has to be in between 0-360 !</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.lambert_window">
+<code class="descname">lambert_window</code><span class="sig-paren">(</span><em>radius</em>, <em>lat0</em>, <em>long0</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.lambert_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Square Lambert Azimuthal equal area projection of
+a window centered at (lat0, long0) with a given radius (km).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>radius</strong> (<em>float</em>) &#8211; Radius of the window (km).</li>
+<li><strong>lat0</strong> (<em>float</em>) &#8211; Latitude at the center (degree).</li>
+<li><strong>long0</strong> (<em>float</em>) &#8211; Longitude at the center (degree).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)</span></code> with <code class="docutils literal"><span class="pre">longll</span></code>
+the longitude of the lower left corner, <code class="docutils literal"><span class="pre">longtr</span></code> the
+longitude of the top right corner, <code class="docutils literal"><span class="pre">latll</span></code> the latitude
+of the lower left corner and <code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the
+top right corner.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All return coordinates are in degree</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.lola_image">
+<code class="descname">lola_image</code><span class="sig-paren">(</span><em>save=False</em>, <em>name='BaseLola.png'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.lola_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the topography of the region of interest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>save</strong> (<em>Optional[bool]</em>) &#8211; Weither or not to save the image.
+Defaults to False.</li>
+<li><strong>name</strong> (<em>Optional[str]</em>) &#8211; Absolut path to save the resulting
+image. Default to &#8216;BaseLola.png&#8217; in the working
+directory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An image correponding to the region tography. Realized
+from the data taken by the LOLA instrument on board of LRO.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Nice to use in a jupyter notebook with <code class="docutils literal"><span class="pre">%matplotib</span> <span class="pre">inline</span></code>
+activated.</p>
+<p class="last">Feel free to modify this method to plot exactly what you need.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.overlay">
+<code class="descname">overlay</code><span class="sig-paren">(</span><em>save=False</em>, <em>name='Baseoverlay.png'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.overlay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the topography over a wide angle image  of the region</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>save</strong> (<em>Optional[bool]</em>) &#8211; Weither or not to save the image.
+Defaults to False.</li>
+<li><strong>name</strong> (<em>Optional[str]</em>) &#8211; Absolut path to save the resulting
+image. Default to &#8216;Baseoverlay.png&#8217; in the working
+directory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An image corresponding to an overaly of the topography
+and a wide angle image. Realized from the data taken
+by the LOLA and LROC instrument on board of LRO.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Nice to use in a jupyter notebook with <code class="docutils literal"><span class="pre">%matplotib</span> <span class="pre">inline</span></code>
+activated.</p>
+<p class="last">Feel free to modify this method to plot exactly what you need.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pdsimage.Structure.Area.wac_image">
+<code class="descname">wac_image</code><span class="sig-paren">(</span><em>save=False</em>, <em>name='BaseWac.png'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area.wac_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the wide angle image of the region of interest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>save</strong> (<em>Optional[bool]</em>) &#8211; Weither or not to save the image.
+Defaults to False.</li>
+<li><strong>name</strong> (<em>Optional[str]</em>) &#8211; Absolut path to save the resulting
+image. Default to &#8216;BaseWac.png&#8217; in the working
+directory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An image corresponding to the region wide angle image. Realized
+from the data taken by the LROC instrument on board of LRO.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Nice to use in a jupyter notebook with <code class="docutils literal"><span class="pre">%matplotib</span> <span class="pre">inline</span></code>
+activated.</p>
+<p class="last">Feel free to modify this method to plot exactly what you need.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pdsimage.Structure.Crater">
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
+<p>A class which gathers information on impact crater.</p>
+<p>It is particularly useful to study a particular impact crater at
+the lunar surface. For the moment, it can gather information about
+its topography (from LRO LOLA experiment) and texture (from the
+LRO WAC experiment). More information about the Lunar
+Reconnaissance Orbiter mission (LRO) can be found <a class="reference external" href="http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4">here</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ide</strong> (<em>str</em>) &#8211; <code class="docutils literal"><span class="pre">&quot;name&quot;</span></code> if you use the crater name or
+<code class="docutils literal"><span class="pre">&quot;index&quot;</span></code> if you use its index in the table.</li>
+<li><strong>idx</strong> &#8211; Name of the crater if you fill <code class="docutils literal"><span class="pre">&quot;name&quot;</span></code> as a first parameter or
+its index in the table if you fill <code class="docutils literal"><span class="pre">&quot;index&quot;</span></code> as a first parameter.</li>
+<li><strong>path_pdsfiles</strong> (<em>Optional[str]</em>) &#8211; <p>Path where the pds files are stored.
+Defaults, the path is set to the folder <code class="docutils literal"><span class="pre">PDS_FILES</span></code> next to
+the module files where the library is install.</p>
+<p>See <code class="docutils literal"><span class="pre">defaut_pdsfile</span></code> variable of the class.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.path_pdsfiles">
+<code class="descname">path_pdsfiles</code><a class="headerlink" href="#pdsimage.Structure.Crater.path_pdsfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path where the pds_files are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.ppdlola">
+<code class="descname">ppdlola</code><a class="headerlink" href="#pdsimage.Structure.Crater.ppdlola" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Resolution for the topography</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.ppdwac">
+<code class="descname">ppdwac</code><a class="headerlink" href="#pdsimage.Structure.Crater.ppdwac" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Resolution for the WAC image</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.racine">
+<code class="descname">racine</code><a class="headerlink" href="#pdsimage.Structure.Crater.racine" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Path where information about the impact crater
+dataset is stored as a table. Defaults to the folder Tables
+in the installation folder of the library.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.craters">
+<code class="descname">craters</code><a class="headerlink" href="#pdsimage.Structure.Crater.craters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pandas dataframes containing the information of
+all impact craters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.name">
+<code class="descname">name</code><a class="headerlink" href="#pdsimage.Structure.Crater.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Name of the crater considered.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.lat0">
+<code class="descname">lat0</code><a class="headerlink" href="#pdsimage.Structure.Crater.lat0" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Latitude of the crater center (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.lon0">
+<code class="descname">lon0</code><a class="headerlink" href="#pdsimage.Structure.Crater.lon0" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Longitude of the crater center (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.diameter">
+<code class="descname">diameter</code><a class="headerlink" href="#pdsimage.Structure.Crater.diameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Crater diameter (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.type">
+<code class="descname">type</code><a class="headerlink" href="#pdsimage.Structure.Crater.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; 1 if the crater is a Floor-fractured crater, 0 otherwise</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.radius">
+<code class="descname">radius</code><a class="headerlink" href="#pdsimage.Structure.Crater.radius" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Radius of the crater (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.index">
+<code class="descname">index</code><a class="headerlink" href="#pdsimage.Structure.Crater.index" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Index of the crater in the table</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.size_window">
+<code class="descname">size_window</code><a class="headerlink" href="#pdsimage.Structure.Crater.size_window" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Radius of the region of interest (km).
+Defaults to 80 % of the crater diameter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Crater.window">
+<code class="descname">window</code><a class="headerlink" href="#pdsimage.Structure.Crater.window" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float,float,float,float</em> &#8211; <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)</span></code>
+with:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">longll</span></code> the longitude of the lower left corner</li>
+<li><code class="docutils literal"><span class="pre">longtr</span></code> the longitude of the top right corner</li>
+<li><code class="docutils literal"><span class="pre">latll</span></code> the latitude of the lower left corner</li>
+<li><code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the top right corner</li>
+</ul>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is important to respect the structure of the PDS_FILES folder. It
+should contain 2 subfolder called <code class="docutils literal"><span class="pre">LOLA</span></code> and <code class="docutils literal"><span class="pre">LROC_WAC</span></code> where the
+corresponding images should be download.</p>
+<p>The abreviations correspond to:</p>
+<ul class="last simple">
+<li><strong>LRO</strong> Lunar Reconnaissance Orbiter</li>
+<li><strong>LOLA</strong> Lunar Orbiter Laser Altimeter</li>
+<li><strong>LROC</strong> Lunar Reconnaissance Orbiter Camera</li>
+<li><strong>WAC</strong> Wide Angle Camera</li>
+</ul>
+</div>
+<p class="rubric">Example</p>
+<p>For instance, say we want to get an overlay, the topography
+drawn over a wide angle camera image, of the famous crater
+Copernicus</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">overlay</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="pdsimage.Structure.Dome">
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
+<p>A class which gathers information on lunar low-slope dome.</p>
+<p>It is particularly useful to study a particular low-slope dome at
+the lunar surface. For the moment, it can gather information about
+its topography (from LRO LOLA experiment) and texture (from the
+LRO WAC experiment). More information about the Lunar
+Reconnaissance Orbiter mission (LRO) can be found <a class="reference external" href="http://www.nasa.gov/mission_pages/LRO/spacecraft/#.VpOMDpMrKL4">here</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ide</strong> (<em>str</em>) &#8211; <code class="docutils literal"><span class="pre">&quot;name&quot;</span></code> if you use the dome name or
+<code class="docutils literal"><span class="pre">&quot;index&quot;</span></code> if you use its index in the table.</li>
+<li><strong>idx</strong> &#8211; Name of the dome if you fill <code class="docutils literal"><span class="pre">&quot;name&quot;</span></code> as a first parameter or
+its index in the table if you fill <code class="docutils literal"><span class="pre">&quot;index&quot;</span></code> as a first parameter.</li>
+<li><strong>path_pdsfiles</strong> (<em>Optional[str]</em>) &#8211; <p>Path where the pds files are stored.
+Defaults, the path is set to the folder <code class="docutils literal"><span class="pre">PDS_FILES</span></code> next to
+the module files where the library is install.</p>
+<p>See <code class="docutils literal"><span class="pre">defaut_pdsfile</span></code> variable of the class.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.path_pdsfiles">
+<code class="descname">path_pdsfiles</code><a class="headerlink" href="#pdsimage.Structure.Dome.path_pdsfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path where the pds_files are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.ppdlola">
+<code class="descname">ppdlola</code><a class="headerlink" href="#pdsimage.Structure.Dome.ppdlola" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Resolution for the topography</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.ppdwac">
+<code class="descname">ppdwac</code><a class="headerlink" href="#pdsimage.Structure.Dome.ppdwac" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Resolution for the WAC image</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.racine">
+<code class="descname">racine</code><a class="headerlink" href="#pdsimage.Structure.Dome.racine" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Path where information about the low-slope dome
+dataset is stored as a table. Defaults to the folder Tables
+in the installation folder of the library.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.domes">
+<code class="descname">domes</code><a class="headerlink" href="#pdsimage.Structure.Dome.domes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pandas dataframes containing the information about
+the low-slope domes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.name">
+<code class="descname">name</code><a class="headerlink" href="#pdsimage.Structure.Dome.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Name of the crater considered.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.lat0">
+<code class="descname">lat0</code><a class="headerlink" href="#pdsimage.Structure.Dome.lat0" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Latitude of the dome center (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.lon0">
+<code class="descname">lon0</code><a class="headerlink" href="#pdsimage.Structure.Dome.lon0" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Longitude of the dome center (degree)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.diameter">
+<code class="descname">diameter</code><a class="headerlink" href="#pdsimage.Structure.Dome.diameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Dome diameter (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.radius">
+<code class="descname">radius</code><a class="headerlink" href="#pdsimage.Structure.Dome.radius" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Radius of the crater (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.diameter_err">
+<code class="descname">diameter_err</code><a class="headerlink" href="#pdsimage.Structure.Dome.diameter_err" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Error on the diameter (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.thickness">
+<code class="descname">thickness</code><a class="headerlink" href="#pdsimage.Structure.Dome.thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Dome thickness (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.thickness_err">
+<code class="descname">thickness_err</code><a class="headerlink" href="#pdsimage.Structure.Dome.thickness_err" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Error on the dome thickness (km)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.index">
+<code class="descname">index</code><a class="headerlink" href="#pdsimage.Structure.Dome.index" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Index of the dome in the table</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.size_window">
+<code class="descname">size_window</code><a class="headerlink" href="#pdsimage.Structure.Dome.size_window" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Radius of the region of interest (km).
+Defaults to 80 % of the crater diameter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pdsimage.Structure.Dome.window">
+<code class="descname">window</code><a class="headerlink" href="#pdsimage.Structure.Dome.window" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float,float,float,float</em> &#8211; <code class="docutils literal"><span class="pre">(longll,</span> <span class="pre">longtr,</span> <span class="pre">latll,</span> <span class="pre">lattr)</span></code>
+with:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">longll</span></code> the longitude of the lower left corner</li>
+<li><code class="docutils literal"><span class="pre">longtr</span></code> the longitude of the top right corner</li>
+<li><code class="docutils literal"><span class="pre">latll</span></code> the latitude of the lower left corner</li>
+<li><code class="docutils literal"><span class="pre">lattr</span></code> the latitude of the top right corner</li>
+</ul>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is important to respect the structure of the PDS_FILES folder. It
+should contain 2 subfolder called <code class="docutils literal"><span class="pre">LOLA</span></code> and <code class="docutils literal"><span class="pre">LROC_WAC</span></code> where the
+corresponding images should be download.</p>
+<p>The abreviations correspond to:</p>
+<ul class="last simple">
+<li><strong>LRO</strong> Lunar Reconnaissance Orbiter</li>
+<li><strong>LOLA</strong> Lunar Orbiter Laser Altimeter</li>
+<li><strong>LROC</strong> Lunar Reconnaissance Orbiter Camera</li>
+<li><strong>WAC</strong> Wide Angle Camera</li>
+</ul>
+</div>
+<p class="rubric">Example</p>
+<p>For instance, say we want to get an overlay, the topography
+drawn over an wide angle camera image, of the famous dome
+M13</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">overlay</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pdsimage">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pdsimage" title="Permalink to this headline">¶</a></h2>
+<p>A library to produce images from the LROC LOLA and LROC WAC experiment from NASA</p>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Clement Thorey.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
