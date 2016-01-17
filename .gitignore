@@ -7,4 +7,5 @@ build/*
 dist/*
 pdsimage.egg-info/*
 .#*
-
+Notebook/test*
+Notebook/.ipynb*

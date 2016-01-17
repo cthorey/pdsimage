@@ -69,7 +69,7 @@ dependencies:
   - jupyter-client==4.1.1
   - jupyter-console==4.0.3
   - jupyter-core==4.0.6
-  - pdsimage==1.1.1
+  - pdsimage==1.1.2
   - pockets==0.3
   - pvl==0.2.0
   - snowballstemmer==1.2.1
