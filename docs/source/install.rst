@@ -29,10 +29,10 @@ For those who don't use conda, you can:
 
            pip install pdsimage
 
-       Then,  if  the  basemap  tool_kit  is  not  installed  in  your
+       Then,  if the  basemap tool_kit  is not  installed yet  in your
        environment,  you will  need  to  install it  as  well for  the
-       library to work properly.
-       First, make sure to install the dependency GEOS/PROJ4::
+       library  to work  properly.  First,  make sure  to install  the
+       dependency GEOS/PROJ4::
 
            brew install geos
            brew install proj
