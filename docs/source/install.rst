@@ -25,16 +25,30 @@ For those who don't use conda, you can:
 
     1. follow the instruction available `here`_ to install it and give
        it a try. It really make everything easier ;)
-    2. Use pip on the commande line::
+    2. Use pip on the command line::
 
-           pip install -r requirements.txt
            pip install pdsimage
 
+       Then,  if  the  basemap  tool_kit  is  not  installed  in  your
+       environment,  you will  need  to  install it  as  well for  the
+       library to work properly.
+       First, make sure to install the dependency GEOS/PROJ4::
+
+           brew install geos
+           brew install proj
+
+       should give you a working  installation for both packages. Then,
+       install basemap from source::
+
+            pip install https://downloads.sourceforge.net/project/matplotlib/matplotlib-toolkits/basemap-1.0.7/basemap-1.0.7.tar.gz
+
+       Now, you are good to go as well.
+       
 Unix
 ----
 
-While I did  not try it myself, repeting the  same exercice than above
-on whatever unix distributed sytem should work properly.
+While I did  not try it myself, repeating the  same exercise than above
+on whatever Unix distributed system should work properly.
 
 .. _here:
     http://stiglerdiet.com/blog/2015/Nov/24/my-python-environment-workflow-with-conda/

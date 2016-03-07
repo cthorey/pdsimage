@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Studying specific region and making beautiful plot &mdash; pdsimage 1.1.1 documentation</title>
+  <title>Studying specific region and making beautiful plot &mdash; pdsimage 1.1.2 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pdsimage 1.1.1 documentation" href="index.html"/>
+    <link rel="top" title="pdsimage 1.1.2 documentation" href="index.html"/>
         <link rel="next" title="Support" href="support.html"/>
         <link rel="prev" title="Extracting data on a specific region" href="PDS_Extractor.html"/> 
 
@@ -153,7 +153,7 @@ data. It contains three <strong>Class</strong>:</p>
 <h2>Area<a class="headerlink" href="#area" title="Permalink to this headline">¶</a></h2>
 <p>This class aim to study a specific location at the surface of the Moon
 through images and its topography.  Indeed, given a region of interest
-defined by  its centred  (longitude,latitude) and  a radius  (km), the
+defined by  its centered  (longitude,latitude) and  a radius  (km), the
 class allows to plot different information:</p>
 <blockquote>
 <div><ul class="simple">
@@ -179,7 +179,7 @@ region.overlay(True, &#39;region.png&#39;)
 <img alt="_images/region.png" class="align-center" src="_images/region.png" />
 <p>If you want to zoom in, simply change the size of the window:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">region</span><span class="o">.</span><span class="n">change_window</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">region</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="s">&#39;region_zoomed_in.png&#39;</span><span class="p">)</span>
+<span class="n">region</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="s1">&#39;region_zoomed_in.png&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="_images/region_zoomed_in.png" class="align-center" src="_images/region_zoomed_in.png" />
@@ -188,8 +188,8 @@ region.overlay(True, &#39;region.png&#39;)
 the topography. It can be used as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">midlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
 <span class="n">midlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
-<span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="c">#Vertical profile</span>
-<span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span> <span class="c">#Horizontal profile</span>
+<span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="c1">#Vertical profile</span>
+<span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span> <span class="c1">#Horizontal profile</span>
 <span class="n">region</span><span class="o">.</span><span class="n">draw_profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">region</span><span class="o">.</span><span class="n">window</span><span class="p">,))</span>
 </pre></div>
 </div>
@@ -219,7 +219,7 @@ set as attribute of the class:</p>
 </div></blockquote>
 <p>For instance, say we want to study the crater Copernicus, a 93 km in
 diameter normal crater, simply use:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;Copernicus&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>As it is based on the Area  class, it inherits all of these method and
@@ -231,10 +231,10 @@ particular, you can easily figure what does it looks like:</p>
 <img alt="_images/Copernicus.png" class="align-center" src="_images/Copernicus.png" />
 <p>If you are not familiar with their  name, you can also use their index
 in the table such that:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">RandomCrater</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">,</span><span class="mi">53</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">RandomCrater</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span><span class="mi">53</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Also, you  can acces to the  table by using the  method <code class="docutils literal"><span class="pre">craters</span></code> of
+<p>Also, you  can access to the  table by using the  method <code class="docutils literal"><span class="pre">craters</span></code> of
 this class. For instance, using:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">df</span> <span class="o">=</span> <span class="n">RandomCrater</span><span class="o">.</span><span class="n">craters</span><span class="p">()</span>
 </pre></div>
@@ -247,10 +247,10 @@ this class. For instance, using:</p>
 contains information  about low-slope domes. To  get the corresponding
 table, simply used its method <code class="docutils literal"><span class="pre">domes</span></code>.</p>
 <p>For instance, the dome called <strong>M13</strong> looks like:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;M13&#39;</span><span class="p">)</span>
 <span class="n">M13</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
 <span class="n">M13</span><span class="o">.</span><span class="n">ppdwac</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">M13</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;M13.png&#39;</span><span class="p">))</span>
+<span class="n">M13</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s1">&#39;M13.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <img alt="_images/M13.png" class="align-center" src="_images/M13.png" />
@@ -259,7 +259,7 @@ table, simply used its method <code class="docutils literal"><span class="pre">d
 <span id="index"></span><h2>Index<a class="headerlink" href="#module-pdsimage.Structure" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.Structure.Area">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Area</code><span class="sig-paren">(</span><em>lon0</em>, <em>lat0</em>, <em>Size</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A class which gather information on a specific location</p>
 <p>It is particularly useful to study a particular location at the
@@ -405,7 +405,7 @@ top right corner.</p>
 
 <dl class="attribute">
 <dt id="pdsimage.Structure.Area.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><a class="headerlink" href="#pdsimage.Structure.Area.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -449,9 +449,7 @@ in diameter with three different profiles:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Region</span> <span class="o">=</span> <span class="n">Area</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">midlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">midlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
-<span class="go"># Vertical profile</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-<span class="go"># Horizontal profile</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Region</span><span class="o">.</span><span class="n">draw_profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">Region</span><span class="o">.</span><span class="n">window</span><span class="p">,))</span>
 </pre></div>
@@ -657,7 +655,7 @@ activated.</p>
 
 <dl class="class">
 <dt id="pdsimage.Structure.Crater">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Crater</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Crater" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
 <p>A class which gathers information on impact crater.</p>
 <p>It is particularly useful to study a particular impact crater at
@@ -796,7 +794,7 @@ corresponding images should be download.</p>
 <p>For instance, say we want to get an overlay, the topography
 drawn over a wide angle camera image, of the famous crater
 Copernicus</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;Copernicus&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">overlay</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -804,7 +802,7 @@ Copernicus</p>
 
 <dl class="class">
 <dt id="pdsimage.Structure.Dome">
-<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.Structure.</code><code class="descname">Dome</code><span class="sig-paren">(</span><em>ide</em>, <em>idx</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.Structure.Dome" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.Structure.Area" title="pdsimage.Structure.Area"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.Structure.Area</span></code></a></p>
 <p>A class which gathers information on lunar low-slope dome.</p>
 <p>It is particularly useful to study a particular low-slope dome at
@@ -955,7 +953,7 @@ corresponding images should be download.</p>
 <p>For instance, say we want to get an overlay, the topography
 drawn over an wide angle camera image, of the famous dome
 M13</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;M13&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="o">.</span><span class="n">overlay</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1005,7 +1003,7 @@ M13</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.1',
+            VERSION:'1.1.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

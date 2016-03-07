@@ -10,14 +10,14 @@ The Lunar Reconnaissance Orbiter  (`LRO`_) mission has gathered some
 fantastic data of the lunar surface  and, thanks to `NASA`_, all are
 available for free on the internet.
 
-However, using them can be criptic  without a bit of experience.  This
+However, using them can be cryptic  without a bit of experience.  This
 library aims to facilitate the extraction of knowledge from two set of
 data gathered by two experiments on board of LRO:
 
-   - The Lunar Orbiter Laser Altimer (`LOLA`_) experiment which
+   - The Lunar Orbiter Laser Altimeter (`LOLA`_) experiment which
      collected high resolution topographic data of the lunar surface 
    - The  Lunar  Reconnaissance  Orbiter Camera  (`LROC`_)  experiment
-     which collected images of the lunar surface. In particula, we
+     which collected images of the lunar surface. In particular, we
      focus on Wide Angle Images taken from the Wide Angle Camera (`WAC`_)
 
 

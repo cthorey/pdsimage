@@ -79,7 +79,7 @@ corresponding patch images at the lunar surface and proposed to download
 it for you. Be careful with large resolution though, downloads can be
 very long.
 
-The default window in centred on the crater with a radius equal to the
+The default window in centered on the crater with a radius equal to the
 80% of the crater diameter. However this can easily be changed and for
 instance, zooming in resume to
 

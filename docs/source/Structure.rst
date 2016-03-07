@@ -14,7 +14,7 @@ Area
 
 This class aim to study a specific location at the surface of the Moon
 through images and its topography.  Indeed, given a region of interest
-defined by  its centred  (longitude,latitude) and  a radius  (km), the
+defined by  its centered  (longitude,latitude) and  a radius  (km), the
 class allows to plot different information:
 
     - ``lola_image`` realize a plot of the region topography
@@ -103,7 +103,7 @@ in the table such that::
 
   RandomCrater = Crater('index',53)
 
-Also, you  can acces to the  table by using the  method ``craters`` of
+Also, you  can access to the  table by using the  method ``craters`` of
 this class. For instance, using::
 
   df = RandomCrater.craters()

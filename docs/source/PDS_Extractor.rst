@@ -12,7 +12,7 @@ detail in the following.
 BinaryTable
 -----------
 
-This class allows to read binary file from the PDS site to retreive
+This class allows to read binary file from the PDS site to retrieve
 the desired information.
 
 The different possible binary files are all the **ldem** files listed
@@ -27,7 +27,7 @@ For  instance,  if you  want  to  read  the information  contained  in
     ldem = BinaryTable('ldem_16')
 
 If the file is  not already on your computer, the  program is going to
-ask if you want to download it  on the fly.  Be carefull with the size
+ask if you want to download it  on the fly.  Be careful with the size
 of high resolution image though, the download can take a few minutes !
 
 When creating the object, the class store information contained in the
@@ -57,31 +57,31 @@ radius:
       projection of the region.
 
 For instance, taken  the object ``ldem`` we have just  created, we can
-ask to get the data covering a  region centred at (120 E, 60S) spaning
+ask to get the data covering a  region centred at (120 E, 60S) spanning
 a radius of 5 km by simply taping::
 
     boundary = ldem.lambert_window(5,-60,120)
     X,Y,Z = ldem.extract_grid(*boundary)
     
 By default, if the given regime  boundaries end up outside of the map,
-the class  will set resize them  so that they correspond  to the image
+the class  will re-size them  so that they correspond  to the image
 boundary. This should not happen for resolution smaller than 64 ppd as
 each image contains the whole lunar surface though.
 
 However, for  large resolution, the lunar  surface is cut off  in many
-subregions, i.e.  subimages of reasonable  size and it can be annowing
+subregions, i.e.  subimages of reasonable  size and it can be annoying
 to  identify  which one  is  relevant  for  the particular  region  of
 interest.
 
 For  this reason,  this module  also integrated  two other  class, one
 specialized in  the topography  and one  specialized for  images, that
-should be prefered to BinaryTable. 
+should be preferred to BinaryTable. 
 
 WacMap
 -----------
 WacMap is class which handle the treatment of WAC images.
 Indeed, getting an image over a specific region at the lunar
-surface can be annowing, you have to:
+surface can be annoying, you have to:
 
     - Identify the region of interest.
     - Identify  the  relevant *img*  file  (  possibly multiple  due  to
@@ -90,11 +90,11 @@ surface can be annowing, you have to:
       binary record into it.
     - Extract the data from the binary record.
 
-With WacMap, you basically only need to  feed it an imput region and a
+With WacMap, you basically only need to  feed it an input region and a
 desired resolution, and it does all that work for you.
 
 For instance, for an image  with a resolution of 512 ppd centred
-centred at (120 E, 60S) spaning a radius of 20 km, I simply use::
+centred at (120 E, 60S) spanning a radius of 20 km, I simply use::
 
     from PDS_Extractor import WacMap
     boundary = ldem.lambert_window(20,-60,120)
@@ -117,14 +117,14 @@ LolaMap
 Same for the topography !
 
 Say we'd like to overlap our nice images with the topography to get
-a beatufiful image to show off with, simply add::
+a beautiful image to show off with, simply add::
 
     from PDS_Extractor import LolaMap
     ldem_image = LolaMap(512,*boundary)
     Xl,Yl,Zl = ldem_image.Image()
 
 Now,  you  can  simply  overlay  Zl   and  Z  to  get  it.  While  the
-``PDS_Extractor``  is  designed to  facilate  the  extraction of  data
+``PDS_Extractor``  is  designed to  facilitate  the  extraction of  data
 (X,Y,Z) arrays,  the library also  contained a second module  that you
 can also use if you want to make beautiful images ``Structure``.
 
