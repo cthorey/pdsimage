@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Rapid overview &mdash; pdsimage 1.1.1 documentation</title>
+  <title>Rapid overview &mdash; pdsimage 1.1.3 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pdsimage 1.1.1 documentation" href="index.html"/>
+    <link rel="top" title="pdsimage 1.1.3 documentation" href="index.html"/>
         <link rel="next" title="Extracting data on a specific region" href="PDS_Extractor.html"/>
         <link rel="prev" title="Get the module up and running" href="install.html"/> 
 
@@ -149,7 +149,7 @@
 </div>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pdsimage.Structure</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pdsimage.PDS_Extractor</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">imagep</span> <span class="o">=</span> <span class="s">&#39;/Users/thorey/Documents/repos/pdsimage/docs/source/_static&#39;</span>
+<span class="n">imagep</span> <span class="o">=</span> <span class="s1">&#39;/Users/thorey/Documents/repos/pdsimage/docs/source/_static&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -163,7 +163,7 @@ images can be found
 (lon0,lat0) and at the upper right by (lon1,lat1) on the 128 ppd
 (pixel/degree) LOLA image.</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s">&#39;LDEM_16&#39;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s1">&#39;LDEM_16&#39;</span><span class="p">)</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">extract_grid</span><span class="p">(</span><span class="n">lon0</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat0</span><span class="p">,</span><span class="n">lat1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -177,10 +177,10 @@ the grid of altitude are contained in Z. No more. For a window 10° by
 <div class="section" id="looking-at-impact-crater">
 <h2>Looking at impact crater ?<a class="headerlink" href="#looking-at-impact-crater" title="Permalink to this headline">¶</a></h2>
 <p>Let&#8217;s say, we want to get some detail about the crater Copernicus.</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;Copernicus&#39;</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span> <span class="o">=</span> <span class="n">Crater</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;Copernicus&#39;</span><span class="p">)</span>
 <span class="n">Copernicus</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
 <span class="n">Copernicus</span><span class="o">.</span><span class="n">ppdwac</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">Copernicus</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;Corpernicus2.png&#39;</span><span class="p">))</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s1">&#39;Corpernicus2.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
@@ -196,11 +196,11 @@ LOLA image. Pixel/degree are pretty high by default.</p>
 corresponding patch images at the lunar surface and proposed to download
 it for you. Be careful with large resolution though, downloads can be
 very long.</p>
-<p>The default window in centred on the crater with a radius equal to the
+<p>The default window in centered on the crater with a radius equal to the
 80% of the crater diameter. However this can easily be changed and for
 instance, zooming in resume to</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">Copernicus</span><span class="o">.</span><span class="n">change_window</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">Copernicus</span><span class="o">.</span><span class="n">diameter</span><span class="p">)</span>
-<span class="n">Copernicus</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;CorpernicusZoom2.png&#39;</span><span class="p">))</span>
+<span class="n">Copernicus</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s1">&#39;CorpernicusZoom2.png&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
@@ -212,8 +212,8 @@ PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
 <img alt="_images/CorpernicusZoom2.png" class="align-center" src="_images/CorpernicusZoom2.png" />
 <p>If you prefer working with the array directly, use the method
 Get_Arrays...</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Xl</span> <span class="p">,</span> <span class="n">Yl</span> <span class="p">,</span> <span class="n">Zl</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">(</span><span class="s">&#39;Lola&#39;</span><span class="p">)</span>
-<span class="n">Xw</span> <span class="p">,</span> <span class="n">Yw</span> <span class="p">,</span> <span class="n">Zw</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">(</span><span class="s">&#39;Wac&#39;</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">Xl</span> <span class="p">,</span> <span class="n">Yl</span> <span class="p">,</span> <span class="n">Zl</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">(</span><span class="s1">&#39;Lola&#39;</span><span class="p">)</span>
+<span class="n">Xw</span> <span class="p">,</span> <span class="n">Yw</span> <span class="p">,</span> <span class="n">Zw</span> <span class="o">=</span> <span class="n">Copernicus</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">(</span><span class="s1">&#39;Wac&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>No overlap - Processing should be quick
@@ -233,7 +233,7 @@ instance, if we look at an intrusive dome called &#8216;M13&#8217; within the lu
 maria and we want to plot three topographic profile - one vertical
 passing through the centre - one horizontal passing through the centre -
 one oblique</p>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="s">&#39;M13&#39;</span><span class="p">)</span>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">M13</span> <span class="o">=</span> <span class="n">Dome</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;M13&#39;</span><span class="p">)</span>
 <span class="n">M13</span><span class="o">.</span><span class="n">change_window</span><span class="p">(</span><span class="o">.</span><span class="mi">9</span><span class="o">*</span><span class="n">M13</span><span class="o">.</span><span class="n">diameter</span><span class="p">)</span>
 <span class="n">M13</span><span class="o">.</span><span class="n">ppdlola</span> <span class="o">=</span> <span class="mi">64</span>
 <span class="n">midlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span>
@@ -241,7 +241,7 @@ one oblique</p>
 <span class="n">profile1</span> <span class="o">=</span> <span class="p">(</span><span class="n">midlon</span><span class="p">,</span><span class="n">midlon</span><span class="p">,</span><span class="mf">11.1</span><span class="p">,</span><span class="mf">12.5</span><span class="p">)</span>
 <span class="n">profile2</span> <span class="o">=</span> <span class="p">(</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mf">0.2</span><span class="p">,</span><span class="n">M13</span><span class="o">.</span><span class="n">window</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span><span class="n">midlat</span><span class="p">,</span><span class="n">midlat</span><span class="p">)</span>
 <span class="n">profile3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span><span class="o">-</span><span class="mf">32.1</span><span class="p">,</span><span class="mi">360</span><span class="o">-</span><span class="mf">31.3</span><span class="p">,</span><span class="mf">11.1</span><span class="p">,</span><span class="mf">12.5</span><span class="p">)</span>
-<span class="n">save_figure</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s">&#39;BaseProfile.png&#39;</span><span class="p">)</span>
+<span class="n">save_figure</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagep</span><span class="p">,</span><span class="s1">&#39;BaseProfile.png&#39;</span><span class="p">)</span>
 <span class="n">M13</span><span class="o">.</span><span class="n">draw_profile</span><span class="p">((</span><span class="n">profile1</span><span class="p">,</span><span class="n">profile2</span><span class="p">,</span><span class="n">profile3</span><span class="p">),</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">,</span><span class="n">name</span> <span class="o">=</span> <span class="n">save_figure</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -307,7 +307,7 @@ PDS FILES used are in: /Users/thorey/Documents/repos/pdsimage/pdsimage/PDS_FILE
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.1',
+            VERSION:'1.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

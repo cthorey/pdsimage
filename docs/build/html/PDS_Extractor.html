@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Extracting data on a specific region &mdash; pdsimage 1.1.1 documentation</title>
+  <title>Extracting data on a specific region &mdash; pdsimage 1.1.3 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pdsimage 1.1.1 documentation" href="index.html"/>
+    <link rel="top" title="pdsimage 1.1.3 documentation" href="index.html"/>
         <link rel="next" title="Studying specific region and making beautiful plot" href="Structure.html"/>
         <link rel="prev" title="Rapid overview" href="cookbook.html"/> 
 
@@ -147,7 +147,7 @@ future.</p>
 detail in the following.</p>
 <div class="section" id="binarytable">
 <h2>BinaryTable<a class="headerlink" href="#binarytable" title="Permalink to this headline">¶</a></h2>
-<p>This class allows to read binary file from the PDS site to retreive
+<p>This class allows to read binary file from the PDS site to retrieve
 the desired information.</p>
 <p>The different possible binary files are all the <strong>ldem</strong> files listed
 here <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/">LRO/LOLA ldem</a> for topography and all the images listed here
@@ -156,11 +156,11 @@ here <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lr
 <strong>ldem_512_90s_45s_090_180.img</strong>, simply load it  in a variable called
 <strong>ldem</strong> here for the example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PDS_Extractor</span> <span class="kn">import</span> <span class="n">BinaryTable</span>
-<span class="n">ldem</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s">&#39;ldem_16&#39;</span><span class="p">)</span>
+<span class="n">ldem</span> <span class="o">=</span> <span class="n">BinaryTable</span><span class="p">(</span><span class="s1">&#39;ldem_16&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If the file is  not already on your computer, the  program is going to
-ask if you want to download it  on the fly.  Be carefull with the size
+ask if you want to download it  on the fly.  Be careful with the size
 of high resolution image though, the download can take a few minutes !</p>
 <p>When creating the object, the class store information contained in the
 header,  either a  separate <em>.lbl</em>  file  for files  on the  <a class="reference external" href="http://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/img/">LRO/LOLA
@@ -191,29 +191,29 @@ projection of the region.</li>
 </ul>
 </div></blockquote>
 <p>For instance, taken  the object <code class="docutils literal"><span class="pre">ldem</span></code> we have just  created, we can
-ask to get the data covering a  region centred at (120 E, 60S) spaning
+ask to get the data covering a  region centred at (120 E, 60S) spanning
 a radius of 5 km by simply taping:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">boundary</span> <span class="o">=</span> <span class="n">ldem</span><span class="o">.</span><span class="n">lambert_window</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">60</span><span class="p">,</span><span class="mi">120</span><span class="p">)</span>
 <span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span> <span class="o">=</span> <span class="n">ldem</span><span class="o">.</span><span class="n">extract_grid</span><span class="p">(</span><span class="o">*</span><span class="n">boundary</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, if the given regime  boundaries end up outside of the map,
-the class  will set resize them  so that they correspond  to the image
+the class  will re-size them  so that they correspond  to the image
 boundary. This should not happen for resolution smaller than 64 ppd as
 each image contains the whole lunar surface though.</p>
 <p>However, for  large resolution, the lunar  surface is cut off  in many
-subregions, i.e.  subimages of reasonable  size and it can be annowing
+subregions, i.e.  subimages of reasonable  size and it can be annoying
 to  identify  which one  is  relevant  for  the particular  region  of
 interest.</p>
 <p>For  this reason,  this module  also integrated  two other  class, one
 specialized in  the topography  and one  specialized for  images, that
-should be prefered to BinaryTable.</p>
+should be preferred to BinaryTable.</p>
 </div>
 <div class="section" id="wacmap">
 <h2>WacMap<a class="headerlink" href="#wacmap" title="Permalink to this headline">¶</a></h2>
 <p>WacMap is class which handle the treatment of WAC images.
 Indeed, getting an image over a specific region at the lunar
-surface can be annowing, you have to:</p>
+surface can be annoying, you have to:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Identify the region of interest.</li>
@@ -224,10 +224,10 @@ binary record into it.</li>
 <li>Extract the data from the binary record.</li>
 </ul>
 </div></blockquote>
-<p>With WacMap, you basically only need to  feed it an imput region and a
+<p>With WacMap, you basically only need to  feed it an input region and a
 desired resolution, and it does all that work for you.</p>
 <p>For instance, for an image  with a resolution of 512 ppd centred
-centred at (120 E, 60S) spaning a radius of 20 km, I simply use:</p>
+centred at (120 E, 60S) spanning a radius of 20 km, I simply use:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PDS_Extractor</span> <span class="kn">import</span> <span class="n">WacMap</span>
 <span class="n">boundary</span> <span class="o">=</span> <span class="n">ldem</span><span class="o">.</span><span class="n">lambert_window</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">60</span><span class="p">,</span><span class="mi">120</span><span class="p">)</span>
 <span class="n">wac_image</span> <span class="o">=</span> <span class="n">WacMap</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="o">*</span><span class="n">boundary</span><span class="p">)</span>
@@ -247,14 +247,14 @@ you want to take a rapid look, just try:</p>
 <h2>LolaMap<a class="headerlink" href="#lolamap" title="Permalink to this headline">¶</a></h2>
 <p>Same for the topography !</p>
 <p>Say we&#8217;d like to overlap our nice images with the topography to get
-a beatufiful image to show off with, simply add:</p>
+a beautiful image to show off with, simply add:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PDS_Extractor</span> <span class="kn">import</span> <span class="n">LolaMap</span>
 <span class="n">ldem_image</span> <span class="o">=</span> <span class="n">LolaMap</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="o">*</span><span class="n">boundary</span><span class="p">)</span>
 <span class="n">Xl</span><span class="p">,</span><span class="n">Yl</span><span class="p">,</span><span class="n">Zl</span> <span class="o">=</span> <span class="n">ldem_image</span><span class="o">.</span><span class="n">Image</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Now,  you  can  simply  overlay  Zl   and  Z  to  get  it.  While  the
-<code class="docutils literal"><span class="pre">PDS_Extractor</span></code>  is  designed to  facilate  the  extraction of  data
+<code class="docutils literal"><span class="pre">PDS_Extractor</span></code>  is  designed to  facilitate  the  extraction of  data
 (X,Y,Z) arrays,  the library also  contained a second module  that you
 can also use if you want to make beautiful images <code class="docutils literal"><span class="pre">Structure</span></code>.</p>
 </div>
@@ -262,7 +262,7 @@ can also use if you want to make beautiful images <code class="docutils literal"
 <span id="index"></span><h2>Index<a class="headerlink" href="#module-pdsimage.PDS_Extractor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.BinaryTable">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">BinaryTable</code><span class="sig-paren">(</span><em>fname</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class to read image binary file from the LRO experiment</p>
 <p>For the moment, it can gather information about the topography
@@ -435,7 +435,7 @@ top right corner.</p>
 
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.BinaryTable.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -588,7 +588,7 @@ top right corner.</p>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.LolaMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">LolaMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.LolaMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pdsimage.PDS_Extractor.WacMap" title="pdsimage.PDS_Extractor.WacMap"><code class="xref py py-class docutils literal"><span class="pre">pdsimage.PDS_Extractor.WacMap</span></code></a></p>
 <p>Class to handle the creation of LRO LOLA images</p>
 <p>This class is specifically designed to handle the creation of image
@@ -685,7 +685,7 @@ span 10 to 20 degree in longitude and the same in latitude, simply ask.</p>
 
 <dl class="class">
 <dt id="pdsimage.PDS_Extractor.WacMap">
-<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pdsimage.PDS_Extractor.</code><code class="descname">WacMap</code><span class="sig-paren">(</span><em>ppd</em>, <em>lonm</em>, <em>lonM</em>, <em>latm</em>, <em>latM</em>, <em>path_pdsfile='/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><span class="sig-paren">)</span><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class to handle the creation of LROC WAC GLOBAL images</p>
 <p>This class is specifically designed to handle the creation of image
@@ -775,7 +775,7 @@ spans 10 to 20 degree in longitude and the same in latitude, simply ask.</p>
 </div>
 <dl class="attribute">
 <dt id="pdsimage.PDS_Extractor.WacMap.defaut_pdsfile">
-<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/miniconda2/envs/pdsimage/lib/python2.7/site-packages/pdsimage/PDS_FILE'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">defaut_pdsfile</code><em class="property"> = '/Users/thorey/miniconda2/envs/bayescrat/lib/python2.7/site-packages/pdsimage/PDS_FILES'</em><a class="headerlink" href="#pdsimage.PDS_Extractor.WacMap.defaut_pdsfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -850,7 +850,7 @@ extracted over the window.</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.1',
+            VERSION:'1.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
