@@ -1,0 +1,186 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b1021;
+  --panel: #141a33;
+  --border: #2a3b6b;
+  --accent: #7fd1ff;
+  --text: #e6ecf7;
+  --muted: #9fb3d1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  height: fit-content;
+}
+
+.tabs,
+.seg {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.tabs button,
+.seg button {
+  flex: 1;
+  padding: 0.45rem;
+  background: #0e1430;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.tabs button.active,
+.seg button.active {
+  background: var(--accent);
+  color: #03101d;
+  font-weight: 600;
+}
+
+.group {
+  margin: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+input,
+select {
+  background: #0e1430;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.catalog-list {
+  height: auto;
+}
+
+button.render {
+  width: 100%;
+  padding: 0.6rem;
+  background: var(--accent);
+  color: #03101d;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+button.render:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.viewer {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 480px;
+}
+
+.image-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.image-wrap img {
+  max-width: 100%;
+  border-radius: 6px;
+  cursor: crosshair;
+}
+
+.pick {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #ff5a5a;
+  border: 2px solid #fff;
+  pointer-events: none;
+}
+
+.placeholder {
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  height: 440px;
+  font-size: 1rem;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.error {
+  color: #ff8b8b;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.profile-chart {
+  margin-top: 0.5rem;
+  border-radius: 6px;
+}

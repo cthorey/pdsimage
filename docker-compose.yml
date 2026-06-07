@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PDSIMAGE_CACHE_DIR: /cache
+    volumes:
+      - pds-cache:/cache
+
+  # One-shot test runner: `docker compose run --rm test`
+  test:
+    build: .
+    environment:
+      PDSIMAGE_CACHE_DIR: /cache
+    volumes:
+      - pds-cache:/cache
+    command: ["pytest", "-q"]
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # Vite dev server proxies /api -> backend service inside the compose network.
+      VITE_PROXY_TARGET: http://backend:8000
+    depends_on:
+      - backend
+
+volumes:
+  pds-cache:
