@@ -1,0 +1,11 @@
+.git
+.venv
+**/__pycache__
+**/*.pyc
+docs
+Notebook
+frontend/node_modules
+frontend/dist
+*.png
+.env
+pdsimage/PDS_FILES

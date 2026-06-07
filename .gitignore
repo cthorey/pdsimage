@@ -1,11 +1,25 @@
+# Data tiles (downloaded PDS files)
 *.IMG
 *.LBL
+
+# Python
 *.pyc
-*testing*
-*Image/test/*
-build/*
-dist/*
-pdsimage.egg-info/*
+__pycache__/
+build/
+dist/
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+uv.lock
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Misc
 .#*
+*.png
 Notebook/test*
 Notebook/.ipynb*
