@@ -14,17 +14,46 @@ and `mpl_toolkits.basemap`; now Python 3.10+, packaged with **uv**, plotting on
 
 > Everything runs in Docker — you should not need a host Python/Node toolchain.
 
-## Quick start (Docker)
+## Running the app
+
+**Prerequisites:** Docker with the Compose plugin (`docker compose`). No host
+Python or Node toolchain is needed — everything runs in containers.
 
 ```bash
-# Run the test suite (network mocked)
+git clone git@github.com:cthorey/pdsimage.git
+cd pdsimage
+
+# Build + start backend (API) and frontend (UI) together
+docker compose up --build backend frontend
+```
+
+Then open **http://localhost:5173** for the UI. The API is on
+**http://localhost:8000** (interactive docs at
+**http://localhost:8000/docs**). The frontend dev server proxies `/api` to the
+backend over the compose network.
+
+Stop everything with `Ctrl-C`, or from another terminal:
+
+```bash
+docker compose down            # stop + remove containers
+docker compose down -v         # also wipe the pds-cache volume (re-downloads tiles)
+```
+
+Downloaded PDS tiles are cached in the `pds-cache` volume, so they persist
+across restarts and are shared by every service.
+
+### Other commands
+
+```bash
+# Run the test suite (network mocked) — one-shot
 docker compose run --rm test
 
-# Start the API on http://localhost:8000
+# Start only the API, detached, on http://localhost:8000
 docker compose up -d backend
 
-# Start the React UI on http://localhost:5173
-docker compose up frontend
+# Tail logs / check status
+docker compose logs -f backend
+docker compose ps
 ```
 
 Smoke-test the API (LOLA data server is the reliable one):
